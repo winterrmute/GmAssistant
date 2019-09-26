@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Soundboard</string>
+    <string name="playlist">PlayList</string>
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="shuffle">Shuffle</string>
+    <string name="end">End</string>
+
+
+</resources>
