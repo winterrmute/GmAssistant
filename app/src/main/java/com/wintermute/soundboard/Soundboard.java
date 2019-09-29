@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import com.wintermute.soundboard.client.ClientPlayer;
 import com.wintermute.soundboard.client.FileBrowser;
 
 public class Soundboard extends AppCompatActivity
@@ -20,19 +21,18 @@ public class Soundboard extends AppCompatActivity
         grantUserPermission();
 
         Button playlist = findViewById(R.id.playlist);
+        Button browseFiles = findViewById(R.id.browse_files);
 
-        playlist.setOnClickListener(new View.OnClickListener()
+        browseFiles.setOnClickListener(v ->
         {
+            Intent fileBrowser = new Intent(Soundboard.this, FileBrowser.class);
+            startActivity(fileBrowser);
+        });
 
-            @Override
-            public void onClick(View v)
-            {
-                //Intent mediaPlayerClient = new Intent(Soundboard.this, ClientPlayer.class);
-                //startActivity(mediaPlayerClient);
-
-                Intent fileBrowser = new Intent(Soundboard.this, FileBrowser.class);
-                startActivity(fileBrowser);
-            }
+        playlist.setOnClickListener(v ->
+        {
+            Intent mediaPlayerClient = new Intent(Soundboard.this, ClientPlayer.class);
+            startActivity(mediaPlayerClient);
         });
     }
 
