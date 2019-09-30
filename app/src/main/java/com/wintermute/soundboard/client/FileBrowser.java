@@ -25,15 +25,7 @@ public class FileBrowser extends AppCompatActivity
         setContentView(R.layout.activity_file_browser);
 
         path = this.getExternalFilesDir("");
-
-        try
-        {
-            renderFilesAsList(path.toString());
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
+        renderFilesAsList(path.toString());
         browseParent();
     }
 
@@ -45,13 +37,7 @@ public class FileBrowser extends AppCompatActivity
         Button explore_parent = findViewById(R.id.parent_content);
         explore_parent.setOnClickListener(v -> browseParent());
         path = new File(path.getParent());
-        try
-        {
-            renderFilesAsList(path.toString());
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        renderFilesAsList(path.toString());
     }
 
     /**
@@ -60,7 +46,7 @@ public class FileBrowser extends AppCompatActivity
      * @param targetPath to scan for files and directories
      * @throws IOException
      */
-    void renderFilesAsList(String targetPath) throws IOException
+    void renderFilesAsList(String targetPath)
     {
         FileBrowserService fileBrowserService = new FileBrowserService();
         ArrayList<File> browsedFiles = fileBrowserService.scanDir(targetPath);
@@ -74,13 +60,7 @@ public class FileBrowser extends AppCompatActivity
         {
             if (browsedFiles.get(position).isDirectory())
             {
-                try
-                {
-                    renderFilesAsList(browsedFiles.get(position).getAbsolutePath());
-                } catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
+                renderFilesAsList(browsedFiles.get(position).getAbsolutePath());
             } else
             {
                 Toast.makeText(FileBrowser.this, browsedFiles.get(position) + "", Toast.LENGTH_SHORT).show();

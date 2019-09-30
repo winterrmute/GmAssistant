@@ -1,20 +1,9 @@
 package com.wintermute.soundboard.services;
 
-import android.app.Service;
-import android.content.Context;
-import android.content.Intent;
 import android.media.MediaMetadataRetriever;
-import android.os.Environment;
-import android.os.IBinder;
-import android.widget.Toast;
-import androidx.annotation.Nullable;
-import com.wintermute.soundboard.client.FileBrowser;
 import com.wintermute.soundboard.model.Song;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class FileBrowserService
@@ -26,7 +15,7 @@ public class FileBrowserService
      *
      * @return
      */
-    public ArrayList<File> scanDir(String path) throws IOException
+    public ArrayList<File> scanDir(String path)
     {
         File seekPath = new File(path);
 
