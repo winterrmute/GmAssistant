@@ -6,6 +6,7 @@
     <string name="pause">Pause</string>
     <string name="shuffle">Shuffle</string>
     <string name="end">End</string>
+    <string name="browse_back">..</string>
 
 
 </resources>
