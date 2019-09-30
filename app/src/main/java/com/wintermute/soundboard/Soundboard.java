@@ -12,7 +12,7 @@ import com.wintermute.soundboard.client.FileBrowser;
 /**
  * User management panel.
  *
- * @author wintermute 
+ * @author wintermute
  */
 public class Soundboard extends AppCompatActivity
 {
