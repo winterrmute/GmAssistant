@@ -4,15 +4,10 @@ import static android.media.MediaPlayer.create;
 
 import android.app.Service;
 import android.content.Intent;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Environment;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
-import com.wintermute.soundboard.model.Song;
-
-import java.util.ArrayList;
 
 /**
  * Handles the media player and client requests.
@@ -64,11 +59,6 @@ public class MediaPlayerService extends Service
     {
         mediaPlayer = create(this, Uri.parse(path));
         mediaPlayer.start();
-    }
-
-    Song currentSong(ArrayList<Song> playlist, int position)
-    {
-        return playlist.get(position);
     }
 
     @Override

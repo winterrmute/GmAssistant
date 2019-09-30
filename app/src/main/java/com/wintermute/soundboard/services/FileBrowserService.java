@@ -1,6 +1,7 @@
 package com.wintermute.soundboard.services;
 
 import android.media.MediaMetadataRetriever;
+import com.wintermute.soundboard.model.BrowsedFile;
 import com.wintermute.soundboard.model.Song;
 
 import java.io.File;
@@ -8,33 +9,31 @@ import java.util.ArrayList;
 
 public class FileBrowserService
 {
-    ArrayList<File> browsedFiles;
+    ArrayList<BrowsedFile> browsedFiles;
 
     /**
      * Scans directory for files.
      *
      * @return
      */
-    public ArrayList<File> scanDir(String path)
+    public ArrayList<BrowsedFile> scanDir(String path)
     {
-        File seekPath = new File(path);
-
-        File[] filesList = seekPath.listFiles();
-        browsedFiles = new ArrayList<>();
+        File[] filesList = new File(path).listFiles();
 
         if (filesList != null)
         {
+            browsedFiles = new ArrayList<>();
             for (File file : filesList)
             {
-                browsedFiles.add(file);
+                browsedFiles.add(new BrowsedFile.Builder(file.getName()).withPath(file.getPath()).build());
             }
         }
         return browsedFiles;
     }
 
     /**
-     * Creates Playlist. Will be removed from here.
-     * //TODO: Refactor or move me.
+     * Creates Playlist. Will be removed from here. //TODO: Refactor or move me.
+     *
      * @param file
      */
     private void addToPlaylist(File file)
@@ -51,8 +50,8 @@ public class FileBrowserService
     }
 
     /**
-     * Extract the audio file duration.
-     * TODO: important, but not at this class. Must be moved.
+     * Extract the audio file duration. TODO: important, but not at this class. Must be moved.
+     *
      * @param song
      * @return
      */

@@ -1,22 +1,29 @@
 package com.wintermute.soundboard.client;
 
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.soundboard.R;
+import com.wintermute.soundboard.adapters.FileAdapter;
+import com.wintermute.soundboard.model.BrowsedFile;
 import com.wintermute.soundboard.services.FileBrowserService;
 
 import java.io.File;
-import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
+/**
+ * FileBrowser client selecting whole directories or single files to create playlists.
+ *
+ * @author wintermute
+ */
 public class FileBrowser extends AppCompatActivity
 {
 
-    File path;
+    private File path;
+    private ListView fileView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -25,46 +32,66 @@ public class FileBrowser extends AppCompatActivity
         setContentView(R.layout.activity_file_browser);
 
         path = this.getExternalFilesDir("");
-        renderFilesAsList(path.toString());
+        renderFiles(path.toString());
         browseParent();
     }
 
     /**
-     * Requests the FileBrowserService for content of parent directory.
+     * Checks whether the parent directory is accessible. Requests the FileBrowserService for content of parent
+     * directory.
      */
     void browseParent()
     {
         Button explore_parent = findViewById(R.id.parent_content);
-        explore_parent.setOnClickListener(v -> browseParent());
-        path = new File(path.getParent());
-        renderFilesAsList(path.toString());
+        explore_parent.setOnClickListener(v ->
+        {
+            if (path.getParent() != null)
+            {
+                if (Paths.get(path.getParent()).toFile().canRead())
+                {
+                    renderFiles(path.getParent());
+                    path = Paths.get(path.getParent()).toFile();
+                } else
+                {
+                    Toast.makeText(FileBrowser.this, "Permission denied!", Toast.LENGTH_SHORT).show();
+                }
+            } else
+            {
+                Toast.makeText(FileBrowser.this, "Operation not possible", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**
      * Requests the FileBrowserService for content of currently browsed directory.
      *
      * @param targetPath to scan for files and directories
-     * @throws IOException
      */
-    void renderFilesAsList(String targetPath)
+    void renderFiles(String targetPath)
     {
         FileBrowserService fileBrowserService = new FileBrowserService();
-        ArrayList<File> browsedFiles = fileBrowserService.scanDir(targetPath);
+        ArrayList<BrowsedFile> browsedFiles = fileBrowserService.scanDir(targetPath);
+        setListView(browsedFiles);
 
-        ListView dirContent = findViewById(R.id.dir_content);
-        ArrayAdapter adapter =
-            new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_2, android.R.id.text1, browsedFiles);
-        dirContent.setAdapter(adapter);
-
-        dirContent.setOnItemClickListener((parent, view, position, id) ->
+        fileView.setOnItemClickListener(((parent, view, position, id) ->
         {
-            if (browsedFiles.get(position).isDirectory())
+            if (Paths.get(browsedFiles.get(position).getPath()).toFile().isDirectory())
             {
-                renderFilesAsList(browsedFiles.get(position).getAbsolutePath());
-            } else
-            {
-                Toast.makeText(FileBrowser.this, browsedFiles.get(position) + "", Toast.LENGTH_SHORT).show();
+                renderFiles(browsedFiles.get(position).getPath());
+                path = Paths.get(browsedFiles.get(position).getPath()).toFile();
             }
-        });
+        }));
+    }
+
+    /**
+     * Creates the listView and sets the {@link FileAdapter}.
+     *
+     * @param browsedFiles to render in the listView.
+     */
+    private void setListView(ArrayList<BrowsedFile> browsedFiles)
+    {
+        fileView = findViewById(R.id.files_list);
+        FileAdapter fileAdapter = new FileAdapter(this, browsedFiles);
+        fileView.setAdapter(fileAdapter);
     }
 }

@@ -7,6 +7,11 @@ import com.wintermute.soundboard.R;
 import com.wintermute.soundboard.adapters.SongAdapter;
 import com.wintermute.soundboard.services.FileBrowserService;
 
+/**
+ * Playlists manager.
+ *
+ * @author wintermute
+ */
 public class Playlist extends AppCompatActivity
 {
 
@@ -18,6 +23,9 @@ public class Playlist extends AppCompatActivity
         renderFilesAsList();
     }
 
+    /**
+     * Renders songs contained by playlist.
+     */
     void renderFilesAsList()
     {
         ListView songView = (ListView) findViewById(R.id.song_list);

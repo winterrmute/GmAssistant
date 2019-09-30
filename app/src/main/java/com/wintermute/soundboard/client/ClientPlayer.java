@@ -8,7 +8,9 @@ import com.wintermute.soundboard.R;
 import com.wintermute.soundboard.services.MediaPlayerService;
 
 /**
- * This class interacts with the MediaPlayerService. Allows to start, stop and pause music.
+ * This client interacts with the MediaPlayerService. Allows to start, stop and pause music.
+ *
+ * @author wintermute
  */
 public class ClientPlayer extends AppCompatActivity implements MediaController.MediaPlayerControl
 {
@@ -21,6 +23,9 @@ public class ClientPlayer extends AppCompatActivity implements MediaController.M
         startPlayerService();
     }
 
+    /**
+     * Starts the service and plays requested song.
+     */
     void startPlayerService(){
         Intent playerService = new Intent(ClientPlayer.this, MediaPlayerService.class);
         playerService.putExtra("path", "/storage/emulated/0/Download/song.mp3");

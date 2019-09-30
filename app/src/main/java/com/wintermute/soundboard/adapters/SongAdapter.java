@@ -12,6 +12,11 @@ import com.wintermute.soundboard.model.Song;
 
 import java.util.ArrayList;
 
+/**
+ * Creates adapter for song view.
+ *
+ * @author wintermute
+ */
 public class SongAdapter extends BaseAdapter
 {
 

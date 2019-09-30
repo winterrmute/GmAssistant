@@ -1,5 +1,10 @@
 package com.wintermute.soundboard.model;
 
+/**
+ * Represents song contained by playlist.
+ *
+ * @author wintermute
+ */
 public class Song
 {
     //    private long id;
@@ -34,6 +39,9 @@ public class Song
         return artist;
     }
 
+    /**
+     * Object builder.
+     */
     public static class Builder
     {
         private String title;

@@ -3,13 +3,17 @@ package com.wintermute.soundboard;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.view.View;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.wintermute.soundboard.client.ClientPlayer;
 import com.wintermute.soundboard.client.FileBrowser;
 
+/**
+ * User management panel.
+ *
+ * @author wintermute 
+ */
 public class Soundboard extends AppCompatActivity
 {
 
@@ -37,7 +41,7 @@ public class Soundboard extends AppCompatActivity
     }
 
     /**
-     * Grants permissions for browsing directories the storage to access audio files.
+     * Grants permissions to the application to access the storage.
      */
     void grantUserPermission()
     {
