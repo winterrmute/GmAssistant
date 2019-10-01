@@ -1,7 +1,8 @@
 package com.wintermute.soundboard.client;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Environment;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -9,7 +10,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.soundboard.R;
 import com.wintermute.soundboard.adapters.FileAdapter;
 import com.wintermute.soundboard.model.BrowsedFile;
+import com.wintermute.soundboard.model.Song;
 import com.wintermute.soundboard.services.FileBrowserService;
+import com.wintermute.soundboard.services.database.DatabaseConnector;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -25,6 +28,7 @@ public class FileBrowser extends AppCompatActivity
 
     private File path;
     private ListView fileView;
+    FileBrowserService fileBrowserService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -35,6 +39,23 @@ public class FileBrowser extends AppCompatActivity
         path = this.getExternalFilesDir("");
         renderFiles(path.toString());
         browseParent();
+
+        Button selectDirectory = findViewById(R.id.select_directory);
+        selectDirectory.setOnClickListener((v) -> {
+            ArrayList<BrowsedFile> selectedFiles = fileBrowserService.scanDir(path.toString());
+            selectedFiles.stream().forEach(e -> dbConnection(e));
+        });
+    }
+
+    private void dbConnection(BrowsedFile song){
+        DatabaseConnector dbc = new DatabaseConnector(this);
+        SQLiteDatabase db = dbc.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("song", song.getName());
+        values.put("path", song.getPath());
+        long newRowId = db.insert("playlist", null, values);
+        System.out.println(newRowId);
     }
 
     /**
@@ -43,7 +64,7 @@ public class FileBrowser extends AppCompatActivity
      */
     void browseParent()
     {
-        Button explore_parent = findViewById(R.id.parent_content);
+        Button explore_parent = findViewById(R.id.parent_directory);
         explore_parent.setOnClickListener(v ->
         {
             if (path.getParent() != null)
@@ -70,7 +91,7 @@ public class FileBrowser extends AppCompatActivity
      */
     void renderFiles(String targetPath)
     {
-        FileBrowserService fileBrowserService = new FileBrowserService();
+        fileBrowserService = new FileBrowserService();
         ArrayList<BrowsedFile> browsedFiles = fileBrowserService.scanDir(targetPath);
         setListView(browsedFiles);
 
@@ -85,10 +106,8 @@ public class FileBrowser extends AppCompatActivity
             else {
                 browsedFiles.get(position).setChecked(!browsedFiles.get(position).getCheckStatus());
                 System.out.println(browsedFiles.get(position).getCheckStatus());
-
             }
         }));
-
     }
 
     /**

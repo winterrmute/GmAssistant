@@ -8,17 +8,59 @@
 
     <ListView
             android:id="@+id/files_list"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"></ListView>
 
     <Button
-            android:id="@+id/parent_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/parent_directory"
             android:text="@string/browse_back"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="4dp"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintRight_toLeftOf="@+id/select_directory"
+            app:layout_constraintHorizontal_chainStyle="spread"  />
+
+    <Button
+            android:id="@+id/select_directory"
+            android:text="@string/select_directory"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintLeft_toRightOf="@+id/parent_directory"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:orientation="vertical">-->
+
+<!--    <ListView-->
+<!--            android:id="@+id/files_list"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dip"-->
+<!--            android:layout_weight="1" />-->
+
+<!--    <Button-->
+<!--            android:id="@+id/parent_directory"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/browse_back" />-->
+
+<!--    <Button-->
+<!--            android:id="@+id/select_directory"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/browse_back" />-->
+
+<!--</LinearLayout>-->
