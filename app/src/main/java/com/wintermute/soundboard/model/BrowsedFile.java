@@ -17,8 +17,18 @@ public class BrowsedFile
         return path;
     }
 
+    public Boolean getCheckStatus()
+    {
+        return checked;
+    }
+
+    public void setChecked(boolean checked){
+        this.checked = checked;
+    }
+
     private String name;
     private String path;
+    private boolean checked;
 
     /**
      * Object builder.
@@ -27,6 +37,7 @@ public class BrowsedFile
     {
         private String name;
         private String path;
+        private boolean checked;
 
         public Builder(String name)
         {
@@ -38,10 +49,16 @@ public class BrowsedFile
             return this;
         }
 
+        public Builder withCheckStatus(boolean checked){
+            this.checked = checked;
+            return this;
+        }
+
         public BrowsedFile build(){
             BrowsedFile result = new BrowsedFile();
             result.name = name;
             result.path = path;
+            result.checked = checked;
             return result;
         }
     }

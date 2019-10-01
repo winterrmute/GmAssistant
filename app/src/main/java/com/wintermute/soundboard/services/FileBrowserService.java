@@ -25,7 +25,12 @@ public class FileBrowserService
             browsedFiles = new ArrayList<>();
             for (File file : filesList)
             {
-                browsedFiles.add(new BrowsedFile.Builder(file.getName()).withPath(file.getPath()).build());
+                if (!file.getName().startsWith("."))
+                {
+                    browsedFiles.add(new BrowsedFile.Builder(file.getName())
+                        .withPath(file.getPath())
+                        .build());
+                }
             }
         }
         return browsedFiles;

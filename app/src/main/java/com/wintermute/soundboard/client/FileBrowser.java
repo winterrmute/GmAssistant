@@ -1,6 +1,7 @@
 package com.wintermute.soundboard.client;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -73,6 +74,7 @@ public class FileBrowser extends AppCompatActivity
         ArrayList<BrowsedFile> browsedFiles = fileBrowserService.scanDir(targetPath);
         setListView(browsedFiles);
 
+        fileView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         fileView.setOnItemClickListener(((parent, view, position, id) ->
         {
             if (Paths.get(browsedFiles.get(position).getPath()).toFile().isDirectory())
@@ -80,7 +82,13 @@ public class FileBrowser extends AppCompatActivity
                 renderFiles(browsedFiles.get(position).getPath());
                 path = Paths.get(browsedFiles.get(position).getPath()).toFile();
             }
+            else {
+                browsedFiles.get(position).setChecked(!browsedFiles.get(position).getCheckStatus());
+                System.out.println(browsedFiles.get(position).getCheckStatus());
+
+            }
         }));
+
     }
 
     /**
