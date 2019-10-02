@@ -1,6 +1,7 @@
 package com.wintermute.soundboard.client;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.Button;
@@ -17,6 +18,7 @@ import com.wintermute.soundboard.services.database.DatabaseConnector;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * FileBrowser client selecting whole directories or single files to create playlists.
@@ -41,13 +43,19 @@ public class FileBrowser extends AppCompatActivity
         browseParent();
 
         Button selectDirectory = findViewById(R.id.select_directory);
-        selectDirectory.setOnClickListener((v) -> {
+        selectDirectory.setOnClickListener((v) ->
+        {
             ArrayList<BrowsedFile> selectedFiles = fileBrowserService.scanDir(path.toString());
             selectedFiles.stream().forEach(e -> dbConnection(e));
         });
     }
 
-    private void dbConnection(BrowsedFile song){
+    /**
+     * TODO: Refactor me. I am not ready.
+     * @param song
+     */
+    private void dbConnection(BrowsedFile song)
+    {
         DatabaseConnector dbc = new DatabaseConnector(this);
         SQLiteDatabase db = dbc.getWritableDatabase();
 
@@ -55,7 +63,37 @@ public class FileBrowser extends AppCompatActivity
         values.put("song", song.getName());
         values.put("path", song.getPath());
         long newRowId = db.insert("playlist", null, values);
-        System.out.println(newRowId);
+
+        readDatabase();
+    }
+
+    /**
+     * TODO: Refactor me. I was only for test purposes.
+     */
+    private void readDatabase()
+    {
+        DatabaseConnector dbc = new DatabaseConnector(this);
+        SQLiteDatabase db = dbc.getReadableDatabase();
+
+        String[] projection = {"id", "song", "path"};
+
+        String selection = "song = ?";
+        String[] selectionArgs = {"CoJG Hunt Sneak.mp3"};
+
+        String sortOrder = "song DESC";
+
+
+        Cursor cursor = db.query("playlist", projection, selection, selectionArgs, null, null, sortOrder);
+        String data[] = new String[cursor.getCount()];
+        cursor.moveToFirst();
+        int i = 0;
+        while (!cursor.isAfterLast()) {
+            data[i] = cursor.getString(cursor.getColumnIndex("song"));
+            System.out.println(data[i]);
+            cursor.moveToNext();
+            i ++;
+        }
+
     }
 
     /**
@@ -102,8 +140,8 @@ public class FileBrowser extends AppCompatActivity
             {
                 renderFiles(browsedFiles.get(position).getPath());
                 path = Paths.get(browsedFiles.get(position).getPath()).toFile();
-            }
-            else {
+            } else
+            {
                 browsedFiles.get(position).setChecked(!browsedFiles.get(position).getCheckStatus());
                 System.out.println(browsedFiles.get(position).getCheckStatus());
             }

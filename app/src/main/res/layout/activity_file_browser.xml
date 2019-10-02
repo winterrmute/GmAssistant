@@ -39,28 +39,3 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:orientation="vertical">-->
-
-<!--    <ListView-->
-<!--            android:id="@+id/files_list"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="0dip"-->
-<!--            android:layout_weight="1" />-->
-
-<!--    <Button-->
-<!--            android:id="@+id/parent_directory"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/browse_back" />-->
-
-<!--    <Button-->
-<!--            android:id="@+id/select_directory"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/browse_back" />-->
-
-<!--</LinearLayout>-->

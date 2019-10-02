@@ -8,18 +8,22 @@ import java.util.UUID;
 
 public class DatabaseConnector extends SQLiteOpenHelper
 {
-    private static final String SQL_CREATE_ENTRIES =
-        "CREATE TABLE playlist (" + UUID.randomUUID().toString().replace("-", "")
-            + "INTEGER PRIMARY KEY, song TEXT, path TEXT)";
 
-    private static final String SQL_DELETE_ENTRIES =
-        "DROP TABLE IF EXISTS playlist";
+    private static final String SQL_CREATE_ENTRIES =
+        "CREATE TABLE playlist ( id INTEGER PRIMARY KEY, song TEXT, path TEXT)";
+
+    //    private static final String SQL_CREATE_ENTRIES =
+    //        "CREATE TABLE playlist (" + UUID.randomUUID().toString().replace("-", "")
+    //            + "INTEGER PRIMARY KEY, song TEXT, path TEXT)";
+
+    private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS playlist";
 
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "Playlist.db";
 
-    public DatabaseConnector(Context ctx){
-        super (ctx, DATABASE_NAME, null, DATABASE_VERSION);
+    public DatabaseConnector(Context ctx)
+    {
+        super(ctx, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
@@ -35,7 +39,8 @@ public class DatabaseConnector extends SQLiteOpenHelper
         onCreate(db);
     }
 
-    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion){
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion)
+    {
         onUpgrade(db, oldVersion, newVersion);
     }
 }
