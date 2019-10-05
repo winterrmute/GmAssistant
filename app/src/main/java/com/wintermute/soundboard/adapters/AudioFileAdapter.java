@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.wintermute.soundboard.R;
-import com.wintermute.soundboard.model.Song;
+import com.wintermute.soundboard.services.database.entities.AudioFile;
 
 import java.util.ArrayList;
 
@@ -17,13 +17,13 @@ import java.util.ArrayList;
  *
  * @author wintermute
  */
-public class SongAdapter extends BaseAdapter
+public class AudioFileAdapter extends BaseAdapter
 {
 
-    private ArrayList<Song> songs;
+    private ArrayList<AudioFile> songs;
     private LayoutInflater songInf;
 
-    public SongAdapter(Context ctx, ArrayList<Song> theSongs)
+    public AudioFileAdapter(Context ctx, ArrayList<AudioFile> theSongs)
     {
         songs = theSongs;
         songInf = LayoutInflater.from(ctx);
@@ -51,9 +51,9 @@ public class SongAdapter extends BaseAdapter
     public View getView(int position, View convertView, ViewGroup parent)
     {
         LinearLayout songLayout = (LinearLayout) songInf.inflate(R.layout.song, parent, false);
-        TextView songView = songLayout.findViewById(R.id.song_title);
-        TextView artistView = songLayout.findViewById(R.id.song_artist);
-        Song currentSong = songs.get(position);
+        TextView songView = songLayout.findViewById(R.id.title);
+        TextView artistView = songLayout.findViewById(R.id.artist);
+        AudioFile currentSong = songs.get(position);
         songView.setText(currentSong.getTitle());
         artistView.setText(currentSong.getArtist());
         songLayout.setTag(position);

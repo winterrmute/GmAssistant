@@ -4,8 +4,6 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.wintermute.soundboard.R;
-import com.wintermute.soundboard.adapters.SongAdapter;
-import com.wintermute.soundboard.services.FileBrowserService;
 
 /**
  * Playlists manager.
@@ -28,8 +26,8 @@ public class Playlist extends AppCompatActivity
      */
     void renderFilesAsList()
     {
-        ListView songView = (ListView) findViewById(R.id.song_list);
-//        SongAdapter songAdapter = new SongAdapter(this, new FileBrowserService().scanDir());
+        ListView songView = findViewById(R.id.audio_list);
+//        AudioFileAdapter songAdapter = new AudioFileAdapter(this, new FileBrowserService().scanDir());
 //        songView.setAdapter(songAdapter);
     }
 }

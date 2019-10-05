@@ -22,7 +22,8 @@ public class BrowsedFile
         return checked;
     }
 
-    public void setChecked(boolean checked){
+    public void setChecked(boolean checked)
+    {
         this.checked = checked;
     }
 
@@ -44,17 +45,20 @@ public class BrowsedFile
             this.name = name;
         }
 
-        public Builder withPath(String path){
+        public Builder withPath(String path)
+        {
             this.path = path;
             return this;
         }
 
-        public Builder withCheckStatus(boolean checked){
+        public Builder withCheckStatus(boolean checked)
+        {
             this.checked = checked;
             return this;
         }
 
-        public BrowsedFile build(){
+        public BrowsedFile build()
+        {
             BrowsedFile result = new BrowsedFile();
             result.name = name;
             result.path = path;

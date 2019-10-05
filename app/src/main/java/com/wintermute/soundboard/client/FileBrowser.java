@@ -1,8 +1,5 @@
 package com.wintermute.soundboard.client;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ListView;
@@ -11,14 +8,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.soundboard.R;
 import com.wintermute.soundboard.adapters.FileAdapter;
 import com.wintermute.soundboard.model.BrowsedFile;
-import com.wintermute.soundboard.model.Song;
 import com.wintermute.soundboard.services.FileBrowserService;
-import com.wintermute.soundboard.services.database.DatabaseConnector;
 
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * FileBrowser client selecting whole directories or single files to create playlists.
@@ -46,54 +40,7 @@ public class FileBrowser extends AppCompatActivity
         selectDirectory.setOnClickListener((v) ->
         {
             ArrayList<BrowsedFile> selectedFiles = fileBrowserService.scanDir(path.toString());
-            selectedFiles.stream().forEach(e -> dbConnection(e));
         });
-    }
-
-    /**
-     * TODO: Refactor me. I am not ready.
-     * @param song
-     */
-    private void dbConnection(BrowsedFile song)
-    {
-        DatabaseConnector dbc = new DatabaseConnector(this);
-        SQLiteDatabase db = dbc.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put("song", song.getName());
-        values.put("path", song.getPath());
-        long newRowId = db.insert("playlist", null, values);
-
-        readDatabase();
-    }
-
-    /**
-     * TODO: Refactor me. I was only for test purposes.
-     */
-    private void readDatabase()
-    {
-        DatabaseConnector dbc = new DatabaseConnector(this);
-        SQLiteDatabase db = dbc.getReadableDatabase();
-
-        String[] projection = {"id", "song", "path"};
-
-        String selection = "song = ?";
-        String[] selectionArgs = {"CoJG Hunt Sneak.mp3"};
-
-        String sortOrder = "song DESC";
-
-
-        Cursor cursor = db.query("playlist", projection, selection, selectionArgs, null, null, sortOrder);
-        String data[] = new String[cursor.getCount()];
-        cursor.moveToFirst();
-        int i = 0;
-        while (!cursor.isAfterLast()) {
-            data[i] = cursor.getString(cursor.getColumnIndex("song"));
-            System.out.println(data[i]);
-            cursor.moveToNext();
-            i ++;
-        }
-
     }
 
     /**
