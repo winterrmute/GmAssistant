@@ -1,18 +1,20 @@
 package com.wintermute.soundboard.services.database;
 
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static junit.framework.TestCase.assertEquals;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import androidx.test.platform.app.InstrumentationRegistry;
+import com.wintermute.soundboard.model.Playlist;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import java.util.UUID;
 
 /**
  * Test db functionality.
@@ -32,9 +34,6 @@ public class DbManagerAndroidTest
     public void createDb()
     {
         ctx = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        db = new DbManager(ctx).getWritableDatabase();
-        dbManager = new DbManager(ctx);
-        assertTrue(db.isOpen());
     }
 
     /**
@@ -43,13 +42,37 @@ public class DbManagerAndroidTest
     @Test
     public void writeAndRead()
     {
+        db = new DbManager(ctx).getWritableDatabase();
+        dbManager = new DbManager(ctx);
 
-    }
+        long playlistId = UUID.randomUUID().getMostSignificantBits();
+        long relatedPlaylistId = UUID.randomUUID().getMostSignificantBits();
 
-    @Test
-    public void createTable(){
-        dbManager.createTable("tableName");
-        dbManager.dropTable("tableName");
+        Playlist playlist = new Playlist();
+        playlist.setName("userPlaylist");
+        playlist.setId(playlistId);
+        playlist.setPlaylistId(relatedPlaylistId);
+
+        String idColumn = "id";
+        String nameColumn = "name";
+        String playlistIdColumn = "playlist_id";
+
+        ContentValues values = new ContentValues();
+        values.put(idColumn, playlist.getId());
+        values.put(nameColumn, playlist.getName());
+        values.put(playlistIdColumn, playlist.getPlaylistId());
+
+        String tableName = "user_playlist";
+        db.insert(tableName, null, values);
+
+        Cursor cursor = db.rawQuery("SELECT name FROM " + tableName + " WHERE id ='" + playlistId + "'", null);
+        String name = "";
+        if (cursor != null)
+        {
+            cursor.moveToFirst();
+            name = cursor.getString(cursor.getColumnIndexOrThrow(nameColumn));
+        }
+        assertEquals("userPlaylist", name);
     }
 
     /**
@@ -58,7 +81,6 @@ public class DbManagerAndroidTest
     @After
     public void tearDown()
     {
-
-        dbManager.close();
+        ctx.deleteDatabase("soundboard");
     }
 }

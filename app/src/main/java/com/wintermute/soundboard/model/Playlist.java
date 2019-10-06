@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class Playlist
 {
-    long playlistId;
+    long id;
     String name;
-    String songs;
+    long playlistId;
 }

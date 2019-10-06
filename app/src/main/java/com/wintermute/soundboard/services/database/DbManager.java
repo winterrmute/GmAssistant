@@ -1,6 +1,5 @@
 package com.wintermute.soundboard.services.database;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -11,9 +10,10 @@ public class DbManager extends SQLiteOpenHelper
     public static final int DB_VERSION = 1;
     public static final String DB_NAME = "soundboard";
     private static final String SQL_CREATE_ENTRIES =
-        "CREATE TABLE test ( id INTEGER PRIMARY KEY, title VARCHAR(255), path VARCHAR(255))";
+        "CREATE TABLE user_playlist ( id INTEGER PRIMARY KEY, name TEXT NOT NULL, playlist_id INTEGER, FOREIGN KEY (playlist_id)  "
+            + "REFERENCES playlist (id))";
 
-    private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS test";
+    private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS user_playlist";
 
     public DbManager(Context ctx)
     {
@@ -38,11 +38,17 @@ public class DbManager extends SQLiteOpenHelper
         onUpgrade(db, oldVersion, newVersion);
     }
 
-    public void createTable(String tableName){
-
+    public void insertIntoUserPlaylist(SQLiteDatabase db, long id, String valueName){
+        db.execSQL("INSERT INTO user_playlist ( id, name ) VALUES ( " + id + ", " +  valueName + " )");
     }
 
-    public void dropTable(String tableName){
-        
+    public void dropTable(SQLiteDatabase db, String tableName)
+    {
+        db.execSQL("DROP TABLE " + tableName);
+    }
+
+    public void getItemById(SQLiteDatabase db, String tableName,long itemId)
+    {
+        db.execSQL("SELECT id FROM " + tableName + "WHERE id = " + itemId);
     }
 }
