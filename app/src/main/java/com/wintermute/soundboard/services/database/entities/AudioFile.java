@@ -15,7 +15,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * Represents song contained by playlist.
+ * Represents audiofile as an java object, database entity and DAO.
  *
  * @author wintermute
  */

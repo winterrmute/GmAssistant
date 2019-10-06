@@ -4,17 +4,17 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.widget.Button;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import com.wintermute.soundboard.client.ClientPlayer;
+import androidx.fragment.app.FragmentActivity;
 import com.wintermute.soundboard.client.FileBrowser;
+import com.wintermute.soundboard.dialogs.PlaylistSubmitter;
 
 /**
  * User management panel.
  *
  * @author wintermute
  */
-public class Soundboard extends AppCompatActivity
+public class Soundboard extends FragmentActivity implements PlaylistSubmitter.OnInputListener
 {
 
     @Override
@@ -35,8 +35,9 @@ public class Soundboard extends AppCompatActivity
 
         playlist.setOnClickListener(v ->
         {
-            Intent mediaPlayerClient = new Intent(Soundboard.this, ClientPlayer.class);
-            startActivity(mediaPlayerClient);
+            PlaylistSubmitter playlistSubmitter = new PlaylistSubmitter();
+            playlistSubmitter.show(getSupportFragmentManager(), "playlist_submitter");
+
         });
     }
 
@@ -53,5 +54,11 @@ public class Soundboard extends AppCompatActivity
             requestPermissions(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
             return;
         }
+    }
+
+    @Override
+    public void sendInput(String playlistName)
+    {
+        //implementMe
     }
 }

@@ -53,7 +53,7 @@ public class MediaPlayerService extends Service
     }
 
     /**
-     * Prepares playlist.
+     * Creates the media player containing an audio file to play.
      */
     private void startPlayback(String path)
     {

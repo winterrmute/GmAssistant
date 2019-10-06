@@ -22,11 +22,13 @@ public class DbManagerAndroidTest
     private AudioFile.AudioFileDao audioFileDao;
     private DbManager db;
 
+    /**
+     * Prepare the test environment.
+     */
     @Before
     public void createDb()
     {
         Context ctx = InstrumentationRegistry.getInstrumentation().getContext();
-
         db = Room.inMemoryDatabaseBuilder(ctx, DbManager.class).build();
         audioFileDao = db.audioFileDao();
     }
@@ -54,6 +56,9 @@ public class DbManagerAndroidTest
 
     }
 
+    /**
+     * Cleans up the test environment.
+     */
     @After
     public void tearDown()
     {
