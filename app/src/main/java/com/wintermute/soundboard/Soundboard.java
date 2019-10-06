@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.widget.Button;
 import android.os.Bundle;
+import android.widget.ListView;
 import androidx.fragment.app.FragmentActivity;
+import com.wintermute.soundboard.adapters.PlaylistAdapter;
 import com.wintermute.soundboard.client.FileBrowser;
 import com.wintermute.soundboard.dialogs.PlaylistSubmitter;
+import java.util.ArrayList;
 
 /**
  * User management panel.
@@ -24,6 +27,8 @@ public class Soundboard extends FragmentActivity implements PlaylistSubmitter.On
         setContentView(R.layout.activity_soundboard);
         grantUserPermission();
 
+        getUserPlaylists();
+
         Button playlist = findViewById(R.id.playlist);
         Button browseFiles = findViewById(R.id.browse_files);
 
@@ -37,7 +42,6 @@ public class Soundboard extends FragmentActivity implements PlaylistSubmitter.On
         {
             PlaylistSubmitter playlistSubmitter = new PlaylistSubmitter();
             playlistSubmitter.show(getSupportFragmentManager(), "playlist_submitter");
-
         });
     }
 
@@ -54,6 +58,15 @@ public class Soundboard extends FragmentActivity implements PlaylistSubmitter.On
             requestPermissions(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
             return;
         }
+    }
+
+    void getUserPlaylists()
+    {
+        //TODO: implement generating playlists
+
+        ListView playlists = findViewById(R.id.playlists);
+        PlaylistAdapter playlistAdapter = new PlaylistAdapter(this, new ArrayList<>());
+        playlists.setAdapter(playlistAdapter);
     }
 
     @Override

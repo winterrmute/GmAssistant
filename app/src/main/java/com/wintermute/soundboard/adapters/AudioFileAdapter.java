@@ -13,26 +13,32 @@ import com.wintermute.soundboard.services.database.entities.AudioFile;
 import java.util.ArrayList;
 
 /**
- * Creates adapter for song view.
+ * Adapter for displaying audio files inner playlists.
  *
  * @author wintermute
  */
 public class AudioFileAdapter extends BaseAdapter
 {
 
-    private ArrayList<AudioFile> songs;
+    private ArrayList<AudioFile> tracks;
     private LayoutInflater songInf;
 
-    public AudioFileAdapter(Context ctx, ArrayList<AudioFile> theSongs)
+    /**
+     * Creates an instance.
+     *
+     * @param ctx application context.
+     * @param tracks displayed by a playlist.
+     */
+    public AudioFileAdapter(Context ctx, ArrayList<AudioFile> tracks)
     {
-        songs = theSongs;
+        tracks = tracks;
         songInf = LayoutInflater.from(ctx);
     }
 
     @Override
     public int getCount()
     {
-        return songs.size();
+        return tracks.size();
     }
 
     @Override
@@ -50,13 +56,13 @@ public class AudioFileAdapter extends BaseAdapter
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        LinearLayout songLayout = (LinearLayout) songInf.inflate(R.layout.song, parent, false);
-        TextView songView = songLayout.findViewById(R.id.title);
-        TextView artistView = songLayout.findViewById(R.id.artist);
-        AudioFile currentSong = songs.get(position);
+        LinearLayout result = (LinearLayout) songInf.inflate(R.layout.song, parent, false);
+        TextView songView = result.findViewById(R.id.title);
+        TextView artistView = result.findViewById(R.id.artist);
+        AudioFile currentSong = tracks.get(position);
         songView.setText(currentSong.getTitle());
         artistView.setText(currentSong.getArtist());
-        songLayout.setTag(position);
-        return songLayout;
+        result.setTag(position);
+        return result;
     }
 }

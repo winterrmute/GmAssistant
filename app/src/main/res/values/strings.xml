@@ -1,7 +1,7 @@
 <resources>
 <!--  Soundboard App  -->
     <string name="app_name">Soundboard</string>
-    <string name="playlist">PlayList</string>
+    <string name="playlist">add new playlist</string>
     <string name="file_browser">Browse files</string>
 
     <string name="play">Play</string>

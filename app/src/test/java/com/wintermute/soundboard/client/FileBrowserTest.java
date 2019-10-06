@@ -5,7 +5,8 @@ import org.junit.Test;
 public class FileBrowserTest
 {
     @Test
-    public void test(){
+    public void test()
+    {
 
     }
 }

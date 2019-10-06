@@ -6,23 +6,28 @@
         android:layout_height="match_parent"
         tools:context=".Soundboard">
 
+    <ListView
+            android:id="@+id/playlists"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
     <Button
             android:id="@+id/playlist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/playlist"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
             android:id="@+id/browse_files"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/file_browser"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/playlist" />
+            app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

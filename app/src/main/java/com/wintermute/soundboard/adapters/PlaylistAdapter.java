@@ -8,29 +8,35 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.wintermute.soundboard.R;
-import com.wintermute.soundboard.model.BrowsedFile;
 
 import java.util.ArrayList;
 
 /**
- * Creates view of browsed files.
+ * Adapter for displaying browsed files.
  *
  * @author wintermute
  */
-public class FileAdapter extends BaseAdapter
+public class PlaylistAdapter extends BaseAdapter
 {
-    private ArrayList<BrowsedFile> browsedFiles;
+    private ArrayList<String> userPlaylists;
     private LayoutInflater inflater;
 
-    public FileAdapter(Context ctx, ArrayList<BrowsedFile> files){
-        browsedFiles = files;
+    /**
+     * Creates an instance.
+     *
+     * @param ctx application context
+     * @param playlists to display within the list view.
+     */
+    public PlaylistAdapter(Context ctx, ArrayList<String> playlists)
+    {
+        this.userPlaylists = playlists;
         inflater = LayoutInflater.from(ctx);
     }
 
     @Override
     public int getCount()
     {
-        return browsedFiles.size();
+        return userPlaylists.size();
     }
 
     @Override
@@ -50,8 +56,8 @@ public class FileAdapter extends BaseAdapter
     {
         LinearLayout result = (LinearLayout) inflater.inflate(R.layout.file, parent, false);
         TextView fileName = result.findViewById(R.id.file_name);
-        BrowsedFile file = browsedFiles.get(position);
-        fileName.setText(file.getName());
+        String userPlaylist = userPlaylists.get(position);
+        fileName.setText(userPlaylist);
         result.setTag(position);
         return result;
     }
