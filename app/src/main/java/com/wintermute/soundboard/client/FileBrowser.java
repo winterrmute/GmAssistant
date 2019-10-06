@@ -13,6 +13,7 @@ import com.wintermute.soundboard.services.FileBrowserService;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * FileBrowser client selecting whole directories or single files to create playlists.
@@ -33,7 +34,7 @@ public class FileBrowser extends AppCompatActivity
         setContentView(R.layout.activity_file_browser);
 
         path = this.getExternalFilesDir("");
-        renderFiles(path.toString());
+        renderFiles(Optional.of(path.toString()).orElse(""));
         browseParent();
 
         Button selectDirectory = findViewById(R.id.select_directory);
@@ -89,8 +90,8 @@ public class FileBrowser extends AppCompatActivity
                 path = Paths.get(browsedFiles.get(position).getPath()).toFile();
             } else
             {
-                browsedFiles.get(position).setChecked(!browsedFiles.get(position).getCheckStatus());
-                System.out.println(browsedFiles.get(position).getCheckStatus());
+                browsedFiles.get(position).setChecked(!browsedFiles.get(position).isChecked());
+                System.out.println(browsedFiles.get(position).isChecked());
             }
         }));
     }

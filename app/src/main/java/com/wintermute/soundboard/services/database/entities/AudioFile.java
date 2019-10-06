@@ -1,5 +1,6 @@
 package com.wintermute.soundboard.services.database.entities;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -9,6 +10,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.PrimaryKey;
 import androidx.room.Query;
 import androidx.room.Update;
+import lombok.Data;
 
 import java.util.List;
 
@@ -17,6 +19,7 @@ import java.util.List;
  *
  * @author wintermute
  */
+@Data
 @Entity(tableName = "audiofile")
 public class AudioFile
 {
@@ -35,61 +38,13 @@ public class AudioFile
     @ColumnInfo(name = "duration")
     private long duration;
 
-    public String getPath()
-    {
-        return path;
-    }
-
-    public long getId()
-    {
-        return id;
-    }
-
-    public String getTitle()
-    {
-        return title;
-    }
-
-    public String getArtist()
-    {
-        return artist;
-    }
-
-    public long getDuration()
-    {
-        return duration;
-    }
-
-    public void setId(long id)
-    {
-        this.id = id;
-    }
-
-    public void setTitle(String title)
-    {
-        this.title = title;
-    }
-
-    public void setArtist(String artist)
-    {
-        this.artist = artist;
-    }
-
-    public void setPath(String path)
-    {
-        this.path = path;
-    }
-
-    public void setDuration(long duration)
-    {
-        this.duration = duration;
-    }
 
     /**
      * Object builder.
      */
     public static class Builder
     {
+        private long id;
         private String title;
         private String artist;
         private String path;
@@ -120,12 +75,12 @@ public class AudioFile
 
         public AudioFile build()
         {
-            AudioFile song = new AudioFile();
-            song.title = this.title;
-            song.artist = this.artist;
-            song.path = this.path;
-            //            song.duration = this.duration;
-            return song;
+            AudioFile result = new AudioFile();
+            result.title = this.title;
+            result.artist = this.artist;
+            result.path = this.path;
+            //            result.duration = this.duration;
+            return result;
         }
     }
 
@@ -144,7 +99,6 @@ public class AudioFile
         @Update
         void updateAudioFile(AudioFile... audioFiles);
 
-//        @Query("DELETE FROM audiofile WHERE id = :audioFileId")
         @Delete
         void deleteAudioFile(AudioFile audioFile);
 

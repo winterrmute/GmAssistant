@@ -1,32 +1,15 @@
 package com.wintermute.soundboard.model;
 
+import lombok.Data;
+
 /**
  * Represents a file browsed by {@link com.wintermute.soundboard.services.FileBrowserService}
  *
  * @author wintermute
  */
+@Data
 public class BrowsedFile
 {
-    public String getName()
-    {
-        return name;
-    }
-
-    public String getPath()
-    {
-        return path;
-    }
-
-    public Boolean getCheckStatus()
-    {
-        return checked;
-    }
-
-    public void setChecked(boolean checked)
-    {
-        this.checked = checked;
-    }
-
     private String name;
     private String path;
     private boolean checked;

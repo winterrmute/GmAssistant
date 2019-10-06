@@ -32,18 +32,16 @@ public class DbManagerAndroidTest
     }
 
     /**
-     * Test CRUD
+     * Creates an object, updates it and removes it at last.
      */
     @Test
     public void writeAndRead()
     {
-        AudioFile audioFile = new AudioFile.Builder("title")
-            .withArtist("artist")
-            .withDuration(5)
-            .withPath("/this/is/path")
-            .build();
 
-        audioFileDao.insertAudioFile(audioFile);
+        AudioFile audioFile =
+            new AudioFile.Builder("title").withArtist("artist").withDuration(5).withPath("/this/is/path").build();
+        audioFile.setId(audioFileDao.insertAudioFile(audioFile));
+
         assertTrue(db.audioFileDao().getAll().size() > 0);
         assertEquals("title", db.audioFileDao().getAll().get(0).getTitle());
 
@@ -53,10 +51,12 @@ public class DbManagerAndroidTest
 
         audioFileDao.deleteAudioFile(audioFile);
         assertEquals(0, audioFileDao.getAll().size());
+
     }
 
     @After
-    public void tearDown(){
+    public void tearDown()
+    {
         db.clearAllTables();
         db.close();
     }
