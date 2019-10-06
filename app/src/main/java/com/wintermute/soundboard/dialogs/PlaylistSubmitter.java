@@ -28,7 +28,7 @@ public class PlaylistSubmitter extends DialogFragment
     /**
      * Creates an instance.
      */
-    public PlaylistSubmitter(){}
+    public PlaylistSubmitter() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -39,11 +39,13 @@ public class PlaylistSubmitter extends DialogFragment
         submit = view.findViewById(R.id.submit);
         cancel = view.findViewById(R.id.cancel);
 
-        cancel.setOnClickListener(v -> {
+        cancel.setOnClickListener(v ->
+        {
             getDialog().dismiss();
         });
 
-        submit.setOnClickListener(v -> {
+        submit.setOnClickListener(v ->
+        {
             String result = playlistName.getText().toString();
             onInputListener.sendInput(result);
             getDialog().dismiss();
@@ -53,16 +55,20 @@ public class PlaylistSubmitter extends DialogFragment
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(Context context)
+    {
         super.onAttach(context);
-        try {
+        try
+        {
             onInputListener = (OnInputListener) getActivity();
-        } catch (ClassCastException e) {
+        } catch (ClassCastException e)
+        {
             Log.e(TAG, "onAttach: " + e.getMessage());
         }
     }
 
-    public interface OnInputListener {
+    public interface OnInputListener
+    {
         void sendInput(String playlistName);
     }
 }

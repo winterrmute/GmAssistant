@@ -9,7 +9,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.wintermute.soundboard.R;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Adapter for displaying browsed files.

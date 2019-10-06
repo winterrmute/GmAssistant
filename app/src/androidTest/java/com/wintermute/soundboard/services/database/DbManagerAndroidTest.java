@@ -2,11 +2,12 @@ package com.wintermute.soundboard.services.database;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 import android.content.Context;
-import androidx.room.Room;
+import android.database.sqlite.SQLiteDatabase;
 import androidx.test.platform.app.InstrumentationRegistry;
-import com.wintermute.soundboard.services.database.entities.AudioFile;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,8 +20,10 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class DbManagerAndroidTest
 {
-    private AudioFile.AudioFileDao audioFileDao;
-    private DbManager db;
+
+    SQLiteDatabase db;
+    DbManager dbManager;
+    Context ctx;
 
     /**
      * Prepare the test environment.
@@ -28,9 +31,10 @@ public class DbManagerAndroidTest
     @Before
     public void createDb()
     {
-        Context ctx = InstrumentationRegistry.getInstrumentation().getContext();
-        db = Room.inMemoryDatabaseBuilder(ctx, DbManager.class).build();
-        audioFileDao = db.audioFileDao();
+        ctx = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        db = new DbManager(ctx).getWritableDatabase();
+        dbManager = new DbManager(ctx);
+        assertTrue(db.isOpen());
     }
 
     /**
@@ -40,20 +44,12 @@ public class DbManagerAndroidTest
     public void writeAndRead()
     {
 
-        AudioFile audioFile =
-            new AudioFile.Builder("title").withArtist("artist").withDuration(5).withPath("/this/is/path").build();
-        audioFile.setId(audioFileDao.insertAudioFile(audioFile));
+    }
 
-        assertTrue(db.audioFileDao().getAll().size() > 0);
-        assertEquals("title", db.audioFileDao().getAll().get(0).getTitle());
-
-        audioFile.setArtist("yo-mama");
-        audioFileDao.updateAudioFile(audioFile);
-        assertEquals("yo-mama", audioFileDao.getAudioFile("title").getArtist());
-
-        audioFileDao.deleteAudioFile(audioFile);
-        assertEquals(0, audioFileDao.getAll().size());
-
+    @Test
+    public void createTable(){
+        dbManager.createTable("tableName");
+        dbManager.dropTable("tableName");
     }
 
     /**
@@ -62,7 +58,7 @@ public class DbManagerAndroidTest
     @After
     public void tearDown()
     {
-        db.clearAllTables();
-        db.close();
+
+        dbManager.close();
     }
 }

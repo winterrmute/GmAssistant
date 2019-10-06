@@ -46,11 +46,6 @@ dependencies {
     implementation 'org.projectlombok:lombok:1.18.10'
     annotationProcessor 'org.projectlombok:lombok:1.18.10'
 
-    // Room
-    implementation "android.arch.persistence.room:runtime:1.1.1"
-    annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
-    implementation "android.arch.persistence.room:rxjava2:1.1.1"
-
 //    testImplementation 'org.assertj:assertj-core:3.13.2'
 //    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
 //    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
@@ -58,4 +53,5 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
 }

@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.wintermute.soundboard.R;
-import com.wintermute.soundboard.services.database.entities.AudioFile;
+import com.wintermute.soundboard.model.AudioFile;
 
 import java.util.ArrayList;
 

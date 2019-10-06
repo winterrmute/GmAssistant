@@ -13,7 +13,7 @@
     <string name="browse_back">../</string>
     <string name="select_directory">Select current directory</string>
 
-<!--  Playlist Submitter  -->
+<!--  PlaylistView Submitter  -->
     <string name="create">Submit</string>
     <string name="cancel_creating">Cancel</string>
     <string name="name_placeholder">Insert playlist name</string>

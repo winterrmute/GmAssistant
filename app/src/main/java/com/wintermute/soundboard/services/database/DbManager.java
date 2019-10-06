@@ -1,27 +1,48 @@
 package com.wintermute.soundboard.services.database;
 
+import android.content.ContentValues;
 import android.content.Context;
-import androidx.room.Database;
-import androidx.room.Room;
-import androidx.room.RoomDatabase;
-import com.wintermute.soundboard.services.database.entities.AudioFile;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 
-@Database(entities = {AudioFile.class}, version = 1)
-public abstract class DbManager extends RoomDatabase
+public class DbManager extends SQLiteOpenHelper
 {
 
-    private static DbManager INSTANCE;
+    public static final int DB_VERSION = 1;
+    public static final String DB_NAME = "soundboard";
+    private static final String SQL_CREATE_ENTRIES =
+        "CREATE TABLE test ( id INTEGER PRIMARY KEY, title VARCHAR(255), path VARCHAR(255))";
 
-    public abstract AudioFile.AudioFileDao audioFileDao();
+    private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS test";
 
-    public static DbManager getDbManager(Context ctx){
-        if (INSTANCE == null){
-            INSTANCE = Room.databaseBuilder(ctx.getApplicationContext(), DbManager.class, "playlist").build();
-        }
-        return INSTANCE;
+    public DbManager(Context ctx)
+    {
+        super(ctx, DB_NAME, null, DB_VERSION);
     }
 
-    public static void destroyInstance(){
-        INSTANCE = null;
+    @Override
+    public void onCreate(SQLiteDatabase db)
+    {
+        db.execSQL(SQL_CREATE_ENTRIES);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
+    {
+        db.execSQL(SQL_DELETE_ENTRIES);
+        onCreate(db);
+    }
+
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion)
+    {
+        onUpgrade(db, oldVersion, newVersion);
+    }
+
+    public void createTable(String tableName){
+
+    }
+
+    public void dropTable(String tableName){
+        
     }
 }

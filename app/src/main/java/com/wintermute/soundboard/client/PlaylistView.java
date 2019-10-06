@@ -10,7 +10,7 @@ import com.wintermute.soundboard.R;
  *
  * @author wintermute
  */
-public class Playlist extends AppCompatActivity
+public class PlaylistView extends AppCompatActivity
 {
 
     @Override
