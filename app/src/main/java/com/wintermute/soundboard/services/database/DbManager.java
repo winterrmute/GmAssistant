@@ -11,13 +11,11 @@ public class DbManager extends SQLiteOpenHelper
     public static final String DB_NAME = "soundboard";
 
     //TODO: find better way that is less failure tolerant
-    private static final String SQL_CREATE_ENTRIES =
+    private static final String CREATE_PLAYLIST =
         "CREATE TABLE playlist ( id INTEGER PRIMARY KEY, name TEXT NOT NULL, content_id INTEGER, FOREIGN KEY (content_id)  "
             + "REFERENCES playlist (id))";
 
-    private static final String USER =
-        "CREATE TABLE user_playlist ( id INTEGER PRIMARY KEY, name TEXT NOT NULL, playlist_id INTEGER, FOREIGN KEY (playlist_id)  "
-            + "REFERENCES playlist (id))";
+    private static final String CREATE_TRACK = "CREATE TABLE track ( id INTEGER PRIMARY KEY, name TEXT, artist TEXT, path TEXT, scene_id, FOREIGN KEY (scene_id) REFERENCES scene (id) )";
 
     private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS user_playlist";
 
@@ -29,7 +27,8 @@ public class DbManager extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase db)
     {
-        db.execSQL(SQL_CREATE_ENTRIES);
+        db.execSQL(CREATE_PLAYLIST);
+        db.execSQL(CREATE_TRACK);
     }
 
     @Override

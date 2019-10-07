@@ -40,7 +40,9 @@ public class FileBrowser extends AppCompatActivity
         Button selectDirectory = findViewById(R.id.select_directory);
         selectDirectory.setOnClickListener((v) ->
         {
-            ArrayList<BrowsedFile> selectedFiles = fileBrowserService.scanDir(path.toString());
+            //ArrayList<BrowsedFile> selectedFiles = fileBrowserService.scanDir(path.toString());
+            fileBrowserService.collectTracks(this, path.toString());
+            finish();
         });
     }
 

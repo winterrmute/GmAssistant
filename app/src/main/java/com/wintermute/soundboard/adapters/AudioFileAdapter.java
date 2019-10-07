@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.wintermute.soundboard.R;
-import com.wintermute.soundboard.model.AudioFile;
 
 import java.util.ArrayList;
 
@@ -20,19 +19,18 @@ import java.util.ArrayList;
 public class AudioFileAdapter extends BaseAdapter
 {
 
-    private ArrayList<AudioFile> tracks;
-    private LayoutInflater songInf;
+    private ArrayList<String> tracks;
+    private LayoutInflater inflater;
 
     /**
      * Creates an instance.
-     *
-     * @param ctx application context.
+     *  @param ctx application context.
      * @param tracks displayed by a playlist.
      */
-    public AudioFileAdapter(Context ctx, ArrayList<AudioFile> tracks)
+    public AudioFileAdapter(Context ctx, ArrayList<String> tracks)
     {
-        tracks = tracks;
-        songInf = LayoutInflater.from(ctx);
+        this.tracks = tracks;
+        inflater = LayoutInflater.from(ctx);
     }
 
     @Override
@@ -56,12 +54,19 @@ public class AudioFileAdapter extends BaseAdapter
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        LinearLayout result = (LinearLayout) songInf.inflate(R.layout.song, parent, false);
-        TextView songView = result.findViewById(R.id.title);
-        TextView artistView = result.findViewById(R.id.artist);
-        AudioFile currentSong = tracks.get(position);
-        songView.setText(currentSong.getTitle());
-        artistView.setText(currentSong.getArtist());
+//        LinearLayout result = (LinearLayout) inflater.inflate(R.layout.song, parent, false);
+//        TextView songView = result.findViewById(R.id.title);
+//        TextView artistView = result.findViewById(R.id.artist);
+//        Track currentSong = tracks.get(position);
+//        songView.setText(currentSong.getName());
+//        artistView.setText(currentSong.getArtist());
+//        result.setTag(position);
+//        return result;
+        //TODO: must take ArrayList<Track> instead of ArrayList<String>
+        LinearLayout result = (LinearLayout) inflater.inflate(R.layout.file, parent, false);
+        TextView fileName = result.findViewById(R.id.file_name);
+        String userPlaylist = tracks.get(position);
+        fileName.setText(userPlaylist);
         result.setTag(position);
         return result;
     }

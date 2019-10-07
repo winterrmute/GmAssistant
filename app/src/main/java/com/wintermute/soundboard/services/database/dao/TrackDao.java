@@ -4,27 +4,29 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import com.wintermute.soundboard.model.Playlist;
+import com.wintermute.soundboard.model.Track;
 import com.wintermute.soundboard.services.database.DbManager;
 
 import java.util.ArrayList;
 
 /**
- * Represents database access object for playlist.
+ * Represents database access object for track.
  *
  * @author wintermute
  */
-public class PlaylistDao
+public class TrackDao
 {
-    private static final String TABLE_NAME = "playlist";
+    private static final String TABLE_NAME = "track";
     private static final String ID_COLUMN = "id";
     private static final String NAME_COLUMN = "name";
-    private static final String CONTENT_COLUMN = "content_id";
+    private static final String ARTIST_COLUMN = "artist";
+    private static final String PATH_COLUMN = "path";
+    private static final String SCENE_COLUMN = "scene_id";
 
     private SQLiteDatabase dbRead;
     private SQLiteDatabase dbWrite;
 
-    public PlaylistDao(Context ctx)
+    public TrackDao(Context ctx)
     {
         DbManager dbManager = new DbManager(ctx);
         dbRead = dbManager.getReadableDatabase();
@@ -34,12 +36,14 @@ public class PlaylistDao
     /**
      * Insert row into playlist table.
      */
-    public void insert(Playlist playlist)
+    public void insert(Track track)
     {
         ContentValues values = new ContentValues();
-        values.put(ID_COLUMN, playlist.getId());
-        values.put(NAME_COLUMN, playlist.getName());
-        values.put(CONTENT_COLUMN, playlist.getContentId());
+        values.put(ID_COLUMN, track.getId());
+        values.put(NAME_COLUMN, track.getName());
+        values.put(ARTIST_COLUMN, track.getArtist());
+        values.put(PATH_COLUMN, track.getPath());
+        values.put(SCENE_COLUMN, track.getScene_id());
 
         dbWrite.insert(TABLE_NAME, null, values);
     }
@@ -47,25 +51,54 @@ public class PlaylistDao
     /**
      * Select item by name.
      *
-     * @param name to identify database entry.
-     * @return selected playlist.
+     * @param title to identify database entry.
+     * @return selected track.
      */
-    public Playlist getByName(String name)
+    public Track getByName(String title)
     {
-        Playlist result = new Playlist();
+        Track result = new Track();
         StringBuilder query = new StringBuilder("SELECT * FROM ")
             .append(TABLE_NAME)
             .append("  WHERE ")
             .append(NAME_COLUMN)
             .append("  =  '")
-            .append(name)
+            .append(title)
             .append("'");
 
         Cursor cursor = dbRead.rawQuery(query.toString(), null);
         cursor.moveToFirst();
         result.setId(Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(ID_COLUMN))));
         result.setName(cursor.getString(cursor.getColumnIndexOrThrow(NAME_COLUMN)));
-        result.setContentId(Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(ID_COLUMN))));
+        result.setArtist(cursor.getString(cursor.getColumnIndexOrThrow(ARTIST_COLUMN)));
+        result.setPath(cursor.getString(cursor.getColumnIndexOrThrow(PATH_COLUMN)));
+        result.setScene_id(Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(SCENE_COLUMN))));
+        return result;
+    }
+
+    /**
+     * Select item by name.
+     *
+     * @param id to identify database entry.
+     * @return selected track.
+     */
+    public Track getById(long id)
+    {
+        Track result = new Track();
+        StringBuilder query = new StringBuilder("SELECT * FROM ")
+            .append(TABLE_NAME)
+            .append("  WHERE ")
+            .append(ID_COLUMN)
+            .append("  =  '")
+            .append(id)
+            .append("'");
+
+        Cursor cursor = dbRead.rawQuery(query.toString(), null);
+        cursor.moveToFirst();
+        result.setId(Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(ID_COLUMN))));
+        result.setName(cursor.getString(cursor.getColumnIndexOrThrow(NAME_COLUMN)));
+        result.setArtist(cursor.getString(cursor.getColumnIndexOrThrow(ARTIST_COLUMN)));
+        result.setPath(cursor.getString(cursor.getColumnIndexOrThrow(PATH_COLUMN)));
+        result.setScene_id(Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(SCENE_COLUMN))));
         return result;
     }
 
@@ -81,11 +114,11 @@ public class PlaylistDao
     }
 
     /**
-     * Get all records from table playlist as list.
+     * Get all records from table track as list.
      *
-     * @return list of playlist names.
+     * @return list of track names.
      */
-    public ArrayList<String> getPlaylistNames()
+    public ArrayList<String> getAllTracks()
     {
         ArrayList<String> playlist = new ArrayList<>();
         Cursor cursor = getAll();
@@ -97,24 +130,43 @@ public class PlaylistDao
     }
 
     /**
-     * Insert row into playlist table.
+     * Insert row into track table.
      */
-    public void update(Playlist playlist)
+    public void update(Track track)
     {
         StringBuilder query = new StringBuilder("UPDATE ")
             .append(TABLE_NAME)
             .append(" SET ")
             .append(NAME_COLUMN)
             .append(" = '")
-            .append(playlist.getName())
+            .append(track.getName())
             .append("', ")
-            .append(CONTENT_COLUMN)
+            .append(ARTIST_COLUMN)
+            .append(" = ")
+            .append(track.getArtist())
+            .append(", ")
+            .append(PATH_COLUMN)
             .append(" = '")
-            .append(playlist.getContentId())
+            .append(track.getPath())
+            .append("', ")
+            .append(SCENE_COLUMN).append(" = '").append(track.getScene_id())
             .append("' WHERE id = '")
-            .append(playlist.getId())
+            .append(track.getId())
             .append("'");
         dbWrite.execSQL(query.toString());
+    }
+
+    public String getPath(String name){
+        StringBuilder query = new StringBuilder("SELECT path FROM ")
+            .append(TABLE_NAME)
+            .append("  WHERE ")
+            .append(NAME_COLUMN)
+            .append("  =  '")
+            .append(name)
+            .append("'");
+        Cursor cursor = dbRead.rawQuery(query.toString(), null);
+
+        return cursor.getString(cursor.getColumnIndexOrThrow(PATH_COLUMN));
     }
 
     /**
@@ -145,40 +197,33 @@ public class PlaylistDao
      *
      * @param conditionArg to define identifying method.
      */
-    private void deleteByName(Playlist playlist, String conditionArg)
+    private void deleteByName(Track track, String conditionArg)
     {
-        delete(NAME_COLUMN, playlist.getName(), conditionArg);
+        delete(NAME_COLUMN, track.getName(), conditionArg);
     }
 
     /**
      * Deletes a row identified by containing the provided string.
      */
-    public void deleteByNameLike(Playlist playlist)
+    public void deleteByNameLike(Track track)
     {
-        deleteByName(playlist, "LIKE");
+        deleteByName(track, "LIKE");
     }
 
     /**
      * Deletes a row identified exactly matching the provided string.
      */
-    public void deleteByNameMatching(Playlist playlist)
+    public void deleteByNameMatching(Track track)
     {
-        deleteByName(playlist, "=");
+        deleteByName(track, "=");
     }
 
     /**
      * Deletes a row identified by exactly matching provided id.
      */
-    public void deleteById(Playlist playlist)
+    public void deleteById(Track track)
     {
-        delete(ID_COLUMN, String.valueOf(playlist.getId()), "=");
+        delete(ID_COLUMN, String.valueOf(track.getId()), "=");
     }
 
-    /**
-     * Deletes all row in current table.
-     */
-    public void clearData()
-    {
-
-    }
 }

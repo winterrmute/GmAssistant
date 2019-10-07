@@ -45,11 +45,11 @@ public class PlaylistDaoTest
 
         playlistDao.insert(playlist);
 
-        assertNotNull(playlistDao.getItemByName("customPlaylist"));
+        assertNotNull(playlistDao.getByName("customPlaylist"));
 
         playlist.setName("Lolz");
         playlistDao.update(playlist);
-        assertEquals("Lolz", playlistDao.getItemByName("Lolz").getName() );
+        assertEquals("Lolz", playlistDao.getByName("Lolz").getName() );
 
         playlistDao.deleteByNameMatching(playlist);
         assertEquals(0, playlistDao.getPlaylistNames().size());

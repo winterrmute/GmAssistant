@@ -8,8 +8,11 @@ import android.widget.Button;
 import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.soundboard.adapters.PlaylistAdapter;
+import com.wintermute.soundboard.client.PlaylistView;
 import com.wintermute.soundboard.dialogs.CreatePlaylist;
+import com.wintermute.soundboard.model.Playlist;
 import com.wintermute.soundboard.services.database.dao.PlaylistDao;
+import com.wintermute.soundboard.services.database.dao.TrackDao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +26,7 @@ public class Soundboard extends AppCompatActivity
 {
     private ListView playlistView;
     private PlaylistDao playlistDao;
-    private List<String> toRender;
+    private List<String> listOfPlaylists;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -42,7 +45,8 @@ public class Soundboard extends AppCompatActivity
 
         playlistView.setOnItemClickListener((parent, view, position, id) ->
         {
-            //doStuff onClick
+            Intent playlistIntent = new Intent(Soundboard.this, PlaylistView.class);
+            startActivity(playlistIntent);
         });
     }
 
@@ -69,9 +73,9 @@ public class Soundboard extends AppCompatActivity
     }
 
     private void renderPlaylist(){
-        toRender = playlistDao.getPlaylistNames();
-        toRender = (toRender != null || toRender.size() != 0) ? toRender : new ArrayList<>() ;
-        PlaylistAdapter playlistAdapter = new PlaylistAdapter(this, (ArrayList<String>) toRender);
+        listOfPlaylists = playlistDao.getPlaylistNames();
+        listOfPlaylists = (listOfPlaylists != null || listOfPlaylists.size() != 0) ? listOfPlaylists : new ArrayList<>() ;
+        PlaylistAdapter playlistAdapter = new PlaylistAdapter(this, (ArrayList<String>) listOfPlaylists);
         playlistView.setAdapter(playlistAdapter);
     }
 
