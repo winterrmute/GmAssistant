@@ -9,7 +9,13 @@ public class DbManager extends SQLiteOpenHelper
 
     public static final int DB_VERSION = 1;
     public static final String DB_NAME = "soundboard";
+
+    //TODO: find better way that is less failure tolerant
     private static final String SQL_CREATE_ENTRIES =
+        "CREATE TABLE playlist ( id INTEGER PRIMARY KEY, name TEXT NOT NULL, content_id INTEGER, FOREIGN KEY (content_id)  "
+            + "REFERENCES playlist (id))";
+
+    private static final String USER =
         "CREATE TABLE user_playlist ( id INTEGER PRIMARY KEY, name TEXT NOT NULL, playlist_id INTEGER, FOREIGN KEY (playlist_id)  "
             + "REFERENCES playlist (id))";
 
@@ -36,10 +42,6 @@ public class DbManager extends SQLiteOpenHelper
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
         onUpgrade(db, oldVersion, newVersion);
-    }
-
-    public void insertIntoUserPlaylist(SQLiteDatabase db, long id, String valueName){
-        db.execSQL("INSERT INTO user_playlist ( id, name ) VALUES ( " + id + ", " +  valueName + " )");
     }
 
     public void dropTable(SQLiteDatabase db, String tableName)

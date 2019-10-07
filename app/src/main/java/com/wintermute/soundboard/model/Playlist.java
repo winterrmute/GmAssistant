@@ -7,5 +7,5 @@ public class Playlist
 {
     long id;
     String name;
-    long playlistId;
+    long contentId;
 }

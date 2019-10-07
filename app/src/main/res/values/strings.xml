@@ -9,6 +9,7 @@
     <string name="name_placeholder">Insert playlist name</string>
     <string name="submit">Submit</string>
     <string name="cancel">Cancel</string>
+    <string name="browse_device">Browse device for playlist</string>
 
     <string name="play">Play</string>
     <string name="pause">Pause</string>

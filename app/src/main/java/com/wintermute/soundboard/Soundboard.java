@@ -3,19 +3,16 @@ package com.wintermute.soundboard;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.soundboard.adapters.PlaylistAdapter;
-import com.wintermute.soundboard.client.FileBrowser;
 import com.wintermute.soundboard.dialogs.CreatePlaylist;
-import com.wintermute.soundboard.model.Playlist;
-import com.wintermute.soundboard.services.database.DbManager;
+import com.wintermute.soundboard.services.database.dao.PlaylistDao;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User management panel.
@@ -24,7 +21,9 @@ import java.util.ArrayList;
  */
 public class Soundboard extends AppCompatActivity
 {
-    private ListView playlists;
+    private ListView playlistView;
+    private PlaylistDao playlistDao;
+    private List<String> toRender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -34,24 +33,25 @@ public class Soundboard extends AppCompatActivity
 
         init();
 
-//        Button browseFiles = findViewById(R.id.browse_files);
-//        browseFiles.setOnClickListener(v ->
-//        {
-//            Intent fileBrowser = new Intent(Soundboard.this, FileBrowser.class);
-//            startActivity(fileBrowser);
-//        });
-
         Button playlist = findViewById(R.id.playlist);
         playlist.setOnClickListener(v ->
         {
             Intent createPlaylist = new Intent(Soundboard.this, CreatePlaylist.class);
             startActivity(createPlaylist);
+        });
 
-            finish();
-            startActivity(getIntent());
+        playlistView.setOnItemClickListener((parent, view, position, id) ->
+        {
+            //doStuff onClick
         });
     }
 
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        renderPlaylist();
+    }
 
     /**
      * Grants permissions to the application to access the storage.
@@ -66,36 +66,20 @@ public class Soundboard extends AppCompatActivity
             requestPermissions(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
             return;
         }
-        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-        {
-            if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE))
-            {
-            }
-            requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
-            return;
-        }
-
     }
 
-    void renderPlaylists()
-    {
-        SQLiteDatabase db = new DbManager(this).getWritableDatabase();
-
-        Cursor cursor = db.rawQuery("SELECT name FROM user_playlist", null);
-        ArrayList<String> userList = new ArrayList<>();
-        while (cursor.moveToNext()) {
-            userList.add(cursor.getString(cursor.getColumnIndexOrThrow("name")));
-        }
-        if (userList != null) {
-            PlaylistAdapter playlistAdapter = new PlaylistAdapter(this, userList);
-            playlists.setAdapter(playlistAdapter);
-        }
+    private void renderPlaylist(){
+        toRender = playlistDao.getPlaylistNames();
+        toRender = (toRender != null || toRender.size() != 0) ? toRender : new ArrayList<>() ;
+        PlaylistAdapter playlistAdapter = new PlaylistAdapter(this, (ArrayList<String>) toRender);
+        playlistView.setAdapter(playlistAdapter);
     }
 
-    void init()
+    private void init()
     {
         grantUserPermission();
-        playlists = findViewById(R.id.playlists);
-        renderPlaylists();
+        playlistDao = new PlaylistDao(this);
+        playlistView = findViewById(R.id.playlists);
+        renderPlaylist();
     }
 }
