@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.wintermute.soundboard.R;
+import com.wintermute.soundboard.model.Track;
 
 import java.util.ArrayList;
 
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 public class AudioFileAdapter extends BaseAdapter
 {
 
-    private ArrayList<String> tracks;
+    private ArrayList<Track> tracks;
     private LayoutInflater inflater;
 
     /**
@@ -27,7 +28,7 @@ public class AudioFileAdapter extends BaseAdapter
      *  @param ctx application context.
      * @param tracks displayed by a playlist.
      */
-    public AudioFileAdapter(Context ctx, ArrayList<String> tracks)
+    public AudioFileAdapter(Context ctx, ArrayList<Track> tracks)
     {
         this.tracks = tracks;
         inflater = LayoutInflater.from(ctx);
@@ -54,19 +55,12 @@ public class AudioFileAdapter extends BaseAdapter
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-//        LinearLayout result = (LinearLayout) inflater.inflate(R.layout.song, parent, false);
-//        TextView songView = result.findViewById(R.id.title);
-//        TextView artistView = result.findViewById(R.id.artist);
-//        Track currentSong = tracks.get(position);
-//        songView.setText(currentSong.getName());
-//        artistView.setText(currentSong.getArtist());
-//        result.setTag(position);
-//        return result;
-        //TODO: must take ArrayList<Track> instead of ArrayList<String>
-        LinearLayout result = (LinearLayout) inflater.inflate(R.layout.file, parent, false);
-        TextView fileName = result.findViewById(R.id.file_name);
-        String userPlaylist = tracks.get(position);
-        fileName.setText(userPlaylist);
+        LinearLayout result = (LinearLayout) inflater.inflate(R.layout.song, parent, false);
+        TextView trackView = result.findViewById(R.id.title);
+        TextView artistView = result.findViewById(R.id.artist);
+        Track target = tracks.get(position);
+        trackView.setText(target.getName());
+        artistView.setText(target.getArtist());
         result.setTag(position);
         return result;
     }

@@ -10,9 +10,9 @@ import lombok.Data;
 @Data
 public class Track
 {
-    private long id;
+    private String id;
     private String name;
     private String artist;
     private String path;
-    private long scene_id;
+    private String scene_id;
 }

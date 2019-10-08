@@ -15,7 +15,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity android:name=".dialogs.CreatePlaylist"></activity>
-        <activity android:name=".client.PlaylistView" />
+        <activity android:name=".client.PlaylistContentView" />
         <activity android:name=".client.FileBrowser" />
         <activity android:name=".client.ClientPlayer" />
         <activity android:name=".Soundboard">

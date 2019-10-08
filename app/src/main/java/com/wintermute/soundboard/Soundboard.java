@@ -8,11 +8,9 @@ import android.widget.Button;
 import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.soundboard.adapters.PlaylistAdapter;
-import com.wintermute.soundboard.client.PlaylistView;
+import com.wintermute.soundboard.client.PlaylistContentView;
 import com.wintermute.soundboard.dialogs.CreatePlaylist;
-import com.wintermute.soundboard.model.Playlist;
 import com.wintermute.soundboard.services.database.dao.PlaylistDao;
-import com.wintermute.soundboard.services.database.dao.TrackDao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +43,7 @@ public class Soundboard extends AppCompatActivity
 
         playlistView.setOnItemClickListener((parent, view, position, id) ->
         {
-            Intent playlistIntent = new Intent(Soundboard.this, PlaylistView.class);
+            Intent playlistIntent = new Intent(Soundboard.this, PlaylistContentView.class);
             startActivity(playlistIntent);
         });
     }

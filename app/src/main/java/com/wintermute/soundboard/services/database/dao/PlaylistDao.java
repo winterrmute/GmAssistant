@@ -71,6 +71,7 @@ public class PlaylistDao
 
     /**
      * Select all from playlist.
+     * TODO: Return list instead of cursor
      *
      * @return query result as Cursor.
      */

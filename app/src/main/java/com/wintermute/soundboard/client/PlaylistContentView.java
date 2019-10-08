@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.wintermute.soundboard.R;
 import com.wintermute.soundboard.adapters.AudioFileAdapter;
+import com.wintermute.soundboard.model.Track;
 import com.wintermute.soundboard.services.MediaPlayerService;
 import com.wintermute.soundboard.services.database.dao.TrackDao;
 
@@ -16,11 +17,11 @@ import java.util.ArrayList;
  *
  * @author wintermute
  */
-public class PlaylistView extends AppCompatActivity
+public class PlaylistContentView extends AppCompatActivity
 {
 
     private ListView songView;
-    private ArrayList<String> allTracks;
+    private ArrayList<Track> allTracks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -32,15 +33,13 @@ public class PlaylistView extends AppCompatActivity
         songView.setOnItemClickListener((parent, view, position, id) ->
         {
             MediaPlayerService mediaPlayerService = new MediaPlayerService();
-            Intent playerService = new Intent(PlaylistView.this, MediaPlayerService.class);
+            Intent playerService = new Intent(PlaylistContentView.this, MediaPlayerService.class);
 
             TrackDao dao = new TrackDao(this);
-            int count = dao.getAll().getCount();
+            Track track = allTracks.get(position);
+            dao.getPath(track.getName());
 
-            String name = allTracks.get(position);
-            dao.getPath(name);
-
-            playerService.putExtra("path", dao.getPath(allTracks.get(position)));
+            playerService.putExtra("path", dao.getPath(allTracks.get(position).getName()));
             startService(playerService);
         });
     }
@@ -54,7 +53,6 @@ public class PlaylistView extends AppCompatActivity
         TrackDao trackDao = new TrackDao(this);
 
         allTracks = trackDao.getAllTracks();
-        int size = allTracks.size();
 
         AudioFileAdapter songAdapter = new AudioFileAdapter(this, allTracks);
         songView.setAdapter(songAdapter);

@@ -63,11 +63,11 @@ public class FileBrowserService
     {
         Track result = new Track();
 
-        result.setId(UUID.randomUUID().getMostSignificantBits());
+//        result.setId(UUID.randomUUID().getMostSignificantBits());
         result.setName(file.getName());
         result.setArtist("");
         result.setPath(file.getPath());
-        result.setScene_id(0);
+        result.setScene_id("0");
 
         TrackDao trackDao = new TrackDao(ctx);
         trackDao.insert(result);

@@ -65,14 +65,7 @@ public class TrackDao
             .append(title)
             .append("'");
 
-        Cursor cursor = dbRead.rawQuery(query.toString(), null);
-        cursor.moveToFirst();
-        result.setId(Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(ID_COLUMN))));
-        result.setName(cursor.getString(cursor.getColumnIndexOrThrow(NAME_COLUMN)));
-        result.setArtist(cursor.getString(cursor.getColumnIndexOrThrow(ARTIST_COLUMN)));
-        result.setPath(cursor.getString(cursor.getColumnIndexOrThrow(PATH_COLUMN)));
-        result.setScene_id(Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(SCENE_COLUMN))));
-        return result;
+        return mapObject(dbRead.rawQuery(query.toString(), null));
     }
 
     /**
@@ -92,25 +85,7 @@ public class TrackDao
             .append(id)
             .append("'");
 
-        Cursor cursor = dbRead.rawQuery(query.toString(), null);
-        cursor.moveToFirst();
-        result.setId(Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(ID_COLUMN))));
-        result.setName(cursor.getString(cursor.getColumnIndexOrThrow(NAME_COLUMN)));
-        result.setArtist(cursor.getString(cursor.getColumnIndexOrThrow(ARTIST_COLUMN)));
-        result.setPath(cursor.getString(cursor.getColumnIndexOrThrow(PATH_COLUMN)));
-        result.setScene_id(Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(SCENE_COLUMN))));
-        return result;
-    }
-
-    /**
-     * Select all from playlist.
-     *
-     * @return query result as Cursor.
-     */
-    public Cursor getAll()
-    {
-        StringBuilder query = new StringBuilder("SELECT * FROM " + TABLE_NAME);
-        return dbRead.rawQuery(query.toString(), null);
+        return mapObject(dbRead.rawQuery(query.toString(), null));
     }
 
     /**
@@ -118,15 +93,29 @@ public class TrackDao
      *
      * @return list of track names.
      */
-    public ArrayList<String> getAllTracks()
+    public ArrayList<Track> getAllTracks()
     {
-        ArrayList<String> playlist = new ArrayList<>();
-        Cursor cursor = getAll();
+        ArrayList<Track> playlist = new ArrayList<>();
+
+        StringBuilder query = new StringBuilder("SELECT * FROM " + TABLE_NAME);
+        Cursor cursor = dbRead.rawQuery(query.toString(), null);
         while (cursor.moveToNext())
         {
-            playlist.add(cursor.getString(cursor.getColumnIndexOrThrow(NAME_COLUMN)));
+            playlist.add(mapObject(cursor));
         }
         return playlist;
+    }
+
+    private Track mapObject(Cursor cursor){
+        Track result = new Track();
+        while (cursor.moveToNext()){
+                result.setId(cursor.getString(cursor.getColumnIndexOrThrow(ID_COLUMN)));
+                result.setName(cursor.getString(cursor.getColumnIndexOrThrow(NAME_COLUMN)));
+                result.setArtist(cursor.getString(cursor.getColumnIndexOrThrow(ARTIST_COLUMN)));
+                result.setPath(cursor.getString(cursor.getColumnIndexOrThrow(PATH_COLUMN)));
+                result.setScene_id(cursor.getString(cursor.getColumnIndexOrThrow(SCENE_COLUMN)));
+        }
+        return result;
     }
 
     /**
