@@ -1,5 +1,4 @@
-package com.wintermute.soundboard.services.database.dao;
-
+package com.wintermute.soundboard.database.dao;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
@@ -7,10 +6,9 @@ import static junit.framework.TestCase.assertTrue;
 
 import android.content.Context;
 import androidx.test.platform.app.InstrumentationRegistry;
-import com.wintermute.soundboard.model.Track;
+import com.wintermute.soundboard.model.Playlist;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -19,12 +17,10 @@ import org.junit.runners.JUnit4;
  * Test PlaylistDao.
  */
 @RunWith(JUnit4.class)
-public class TrackDaoTest
+public class PlaylistDaoTest
 {
 
-    private static Context ctx;
-    private static Track track;
-    private static TrackDao dao;
+    Context ctx;
 
     /**
      * Prepare the test environment.
@@ -41,28 +37,21 @@ public class TrackDaoTest
     @Test
     public void writeAndRead()
     {
-        track.setId(dao.insert(track));
+        PlaylistDao dao = new PlaylistDao(ctx);
+
+        Playlist playlist = new Playlist();
+        playlist.setName("customPlaylist");
+        playlist.setContentId("-1");
+
+        playlist.setId(dao.insert(playlist));
         assertTrue(dao.getAll().size() > 0);
-        assertNotNull(track.getId());
-        assertEquals("/here/be/path", dao.getTrack(track).getPath());
 
-        track.setName("changed");
-        dao.update(track);
-        assertEquals("changed", dao.getTrack(track).getName());
+        playlist.setName("Lolz");
+        dao.update(playlist);
+        assertEquals("Lolz", dao.getPlaylist(playlist).getName());
 
-        dao.delete(track);
-        assertEquals(0, dao.getAll().size());
-    }
-
-    @BeforeClass
-    public static void setUp(){
-        ctx = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        dao = new TrackDao(ctx);
-        track = new Track();
-        track.setName("sample");
-        track.setPath("/here/be/path");
-        track.setArtist("Dj-yo-mama");
-        track.setScene_id("0");
+        dao.delete(playlist);
+        assertEquals(0, dao.getPlaylistNames().size());
     }
 
     /**

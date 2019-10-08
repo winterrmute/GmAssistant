@@ -1,11 +1,11 @@
-package com.wintermute.soundboard.services.database.dao;
+package com.wintermute.soundboard.database.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.soundboard.model.Track;
-import com.wintermute.soundboard.services.database.DbManager;
+import com.wintermute.soundboard.database.DbManager;
 
 import java.util.ArrayList;
 
@@ -69,19 +69,19 @@ public class TrackDao
         }
 
     /**
-     * Select item by name.
+     * Select item by id.
      *
-     * @param track to identify database entry by id.
+     * @param id to identify database entry.
      * @return selected track.
      */
-    public Track getTrack(Track track)
+    public Track getTrack(String id)
     {
         StringBuilder query = new StringBuilder("SELECT * FROM ")
             .append(TABLE_NAME)
             .append("  WHERE ")
             .append(ID_COLUMN)
             .append("  =  '")
-            .append(track.getId())
+            .append(id)
             .append("'");
         return mapObject(dbRead.rawQuery(query.toString(), null)).get(0);
     }

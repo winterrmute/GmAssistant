@@ -6,11 +6,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.wintermute.soundboard.R;
 import com.wintermute.soundboard.adapters.AudioFileAdapter;
+import com.wintermute.soundboard.model.Playlist;
+import com.wintermute.soundboard.model.PlaylistContent;
 import com.wintermute.soundboard.model.Track;
 import com.wintermute.soundboard.services.MediaPlayerService;
-import com.wintermute.soundboard.services.database.dao.TrackDao;
+import com.wintermute.soundboard.database.dao.PlaylistContentDao;
+import com.wintermute.soundboard.database.dao.PlaylistDao;
+import com.wintermute.soundboard.database.dao.TrackDao;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Playlists manager.
@@ -21,13 +25,16 @@ public class PlaylistContentView extends AppCompatActivity
 {
 
     private ListView songView;
-    private ArrayList<Track> allTracks;
+    private List<Track> allTracks;
+    private TrackDao trackDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist);
+
+        this.getIntent().getStringExtra("id");
         renderFilesAsList();
 
         songView.setOnItemClickListener((parent, view, position, id) ->
@@ -43,12 +50,13 @@ public class PlaylistContentView extends AppCompatActivity
      */
     void renderFilesAsList()
     {
-        songView = findViewById(R.id.audio_list);
-        TrackDao trackDao = new TrackDao(this);
-
+        trackDao = new TrackDao(this);
         allTracks = trackDao.getAll();
 
+        PlaylistContentDao dao = new PlaylistContentDao(this);
+
         AudioFileAdapter songAdapter = new AudioFileAdapter(this, allTracks);
+        songView = findViewById(R.id.audio_list);
         songView.setAdapter(songAdapter);
     }
 }

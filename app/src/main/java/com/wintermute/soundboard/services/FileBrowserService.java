@@ -1,26 +1,33 @@
 package com.wintermute.soundboard.services;
 
 import android.content.Context;
-import com.wintermute.soundboard.model.BrowsedFile;
 import com.wintermute.soundboard.model.Track;
-import com.wintermute.soundboard.services.database.dao.TrackDao;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class FileBrowserService
 {
-    ArrayList<BrowsedFile> browsedFiles;
+    private Context ctx;
+
+    /**
+     * Creates an instance with context of activity which called this service.
+     *
+     * @param ctx context of activity which called this class.
+     */
+    public FileBrowserService(Context ctx) {
+        this.ctx = ctx;
+    }
 
     /**
      * Scans directory for files.
      *
-     * @return
+     * @return list of BrowsedFiles
      */
-    public ArrayList<BrowsedFile> scanDir(String path)
+    public ArrayList<File> scanDir(String path)
     {
+        ArrayList<File> browsedFiles = new ArrayList<>();
         File[] filesList = new File(path).listFiles();
 
         if (filesList != null)
@@ -30,16 +37,21 @@ public class FileBrowserService
             {
                 if (!file.getName().startsWith("."))
                 {
-                    browsedFiles.add(new BrowsedFile.Builder(file.getName()).withPath(file.getPath()).build());
+                    browsedFiles.add(file);
                 }
             }
         }
         return browsedFiles;
     }
 
-    public List<Track> collectTracks(Context ctx, String path)
+    /**
+     * Scans directory for audio tracks.
+     *
+     * @param path to browse for files.
+     * @return list of found tracks.
+     */
+    public List<Track> collectTracks(String path)
     {
-
         List<Track> result = new ArrayList<>();
         File[] files = new File(path).listFiles();
 
@@ -49,26 +61,25 @@ public class FileBrowserService
             {
                 if (file.isDirectory())
                 {
-                    collectTracks(ctx, file.getPath());
-                } else if (file.toString().endsWith(".mp3"))
+                    collectTracks(file.getPath());
+                } else if (file.toString().endsWith(".mp3") || file.toString().endsWith(".wav"))
                 {
-                    mapTracks(ctx, file);
+                    result.add(storeTracks(file));
                 }
             }
         }
         return result;
     }
 
-    public void mapTracks(Context ctx, File file)
+
+    //TODO: do something with me
+    private Track storeTracks(File file)
     {
         Track result = new Track();
-
         result.setName(file.getName());
         result.setArtist("");
         result.setPath(file.getPath());
         result.setScene_id("0");
-
-        TrackDao trackDao = new TrackDao(ctx);
-        trackDao.insert(result);
+        return result;
     }
 }

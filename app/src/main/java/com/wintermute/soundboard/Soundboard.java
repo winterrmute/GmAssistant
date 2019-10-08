@@ -9,8 +9,9 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.soundboard.adapters.PlaylistAdapter;
 import com.wintermute.soundboard.client.PlaylistContentView;
-import com.wintermute.soundboard.dialogs.CreatePlaylist;
-import com.wintermute.soundboard.services.database.dao.PlaylistDao;
+import com.wintermute.soundboard.client.NewPlaylist;
+import com.wintermute.soundboard.model.Playlist;
+import com.wintermute.soundboard.database.dao.PlaylistDao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ public class Soundboard extends AppCompatActivity
 {
     private ListView playlistView;
     private PlaylistDao playlistDao;
-    private List<String> listOfPlaylists;
+    private List<Playlist> listOfPlaylists;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -37,14 +38,15 @@ public class Soundboard extends AppCompatActivity
         Button playlist = findViewById(R.id.playlist);
         playlist.setOnClickListener(v ->
         {
-            Intent createPlaylist = new Intent(Soundboard.this, CreatePlaylist.class);
+            Intent createPlaylist = new Intent(Soundboard.this, NewPlaylist.class);
             startActivity(createPlaylist);
         });
 
         playlistView.setOnItemClickListener((parent, view, position, id) ->
         {
-            Intent playlistIntent = new Intent(Soundboard.this, PlaylistContentView.class);
-            startActivity(playlistIntent);
+            Intent playlistContent = new Intent(Soundboard.this, PlaylistContentView.class);
+            playlistContent.putExtra("id", listOfPlaylists.get(position).getId());
+            startActivity(playlistContent);
         });
     }
 
@@ -71,9 +73,9 @@ public class Soundboard extends AppCompatActivity
     }
 
     private void renderPlaylist(){
-        listOfPlaylists = playlistDao.getPlaylistNames();
+        listOfPlaylists = playlistDao.getAll();
         listOfPlaylists = (listOfPlaylists != null || listOfPlaylists.size() != 0) ? listOfPlaylists : new ArrayList<>() ;
-        PlaylistAdapter playlistAdapter = new PlaylistAdapter(this, (ArrayList<String>) listOfPlaylists);
+        PlaylistAdapter playlistAdapter = new PlaylistAdapter(this, listOfPlaylists);
         playlistView.setAdapter(playlistAdapter);
     }
 

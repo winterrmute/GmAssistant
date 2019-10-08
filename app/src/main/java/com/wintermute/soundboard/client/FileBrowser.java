@@ -1,5 +1,6 @@
 package com.wintermute.soundboard.client;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ListView;
@@ -7,7 +8,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.soundboard.R;
 import com.wintermute.soundboard.adapters.FileAdapter;
-import com.wintermute.soundboard.model.BrowsedFile;
 import com.wintermute.soundboard.services.FileBrowserService;
 
 import java.io.File;
@@ -33,6 +33,8 @@ public class FileBrowser extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_browser);
 
+        fileBrowserService = new FileBrowserService(this);
+
         path = this.getExternalFilesDir("");
         renderFiles(Optional.of(path.toString()).orElse(""));
         browseParent();
@@ -40,8 +42,7 @@ public class FileBrowser extends AppCompatActivity
         Button selectDirectory = findViewById(R.id.select_directory);
         selectDirectory.setOnClickListener((v) ->
         {
-            //ArrayList<BrowsedFile> selectedFiles = fileBrowserService.scanDir(path.toString());
-            fileBrowserService.collectTracks(this, path.toString());
+            setResult(1, new Intent().putExtra("path", path.toString()));
             finish();
         });
     }
@@ -79,21 +80,15 @@ public class FileBrowser extends AppCompatActivity
      */
     void renderFiles(String targetPath)
     {
-        fileBrowserService = new FileBrowserService();
-        ArrayList<BrowsedFile> browsedFiles = fileBrowserService.scanDir(targetPath);
+        ArrayList<File> browsedFiles = fileBrowserService.scanDir(targetPath);
         setListView(browsedFiles);
 
-        fileView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         fileView.setOnItemClickListener(((parent, view, position, id) ->
         {
             if (Paths.get(browsedFiles.get(position).getPath()).toFile().isDirectory())
             {
                 renderFiles(browsedFiles.get(position).getPath());
                 path = Paths.get(browsedFiles.get(position).getPath()).toFile();
-            } else
-            {
-                browsedFiles.get(position).setChecked(!browsedFiles.get(position).isChecked());
-                System.out.println(browsedFiles.get(position).isChecked());
             }
         }));
     }
@@ -103,7 +98,7 @@ public class FileBrowser extends AppCompatActivity
      *
      * @param browsedFiles to render in the listView.
      */
-    private void setListView(ArrayList<BrowsedFile> browsedFiles)
+    private void setListView(ArrayList<File> browsedFiles)
     {
         fileView = findViewById(R.id.files_list);
         FileAdapter fileAdapter = new FileAdapter(this, browsedFiles);

@@ -8,8 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.wintermute.soundboard.R;
-import com.wintermute.soundboard.model.BrowsedFile;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -19,10 +19,10 @@ import java.util.ArrayList;
  */
 public class FileAdapter extends BaseAdapter
 {
-    private ArrayList<BrowsedFile> browsedFiles;
+    private ArrayList<File> browsedFiles;
     private LayoutInflater inflater;
 
-    public FileAdapter(Context ctx, ArrayList<BrowsedFile> files){
+    public FileAdapter(Context ctx, ArrayList<File> files){
         browsedFiles = files;
         inflater = LayoutInflater.from(ctx);
     }
@@ -50,7 +50,7 @@ public class FileAdapter extends BaseAdapter
     {
         LinearLayout result = (LinearLayout) inflater.inflate(R.layout.file, parent, false);
         TextView fileName = result.findViewById(R.id.file_name);
-        BrowsedFile file = browsedFiles.get(position);
+        File file = browsedFiles.get(position);
         fileName.setText(file.getName());
         result.setTag(position);
         return result;

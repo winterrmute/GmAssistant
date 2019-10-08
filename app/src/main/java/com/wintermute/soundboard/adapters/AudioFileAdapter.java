@@ -11,6 +11,7 @@ import com.wintermute.soundboard.R;
 import com.wintermute.soundboard.model.Track;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Adapter for displaying audio files inner playlists.
@@ -20,15 +21,16 @@ import java.util.ArrayList;
 public class AudioFileAdapter extends BaseAdapter
 {
 
-    private ArrayList<Track> tracks;
+    private List<Track> tracks;
     private LayoutInflater inflater;
 
     /**
      * Creates an instance.
-     *  @param ctx application context.
+     *
+     * @param ctx application context.
      * @param tracks displayed by a playlist.
      */
-    public AudioFileAdapter(Context ctx, ArrayList<Track> tracks)
+    public AudioFileAdapter(Context ctx, List<Track> tracks)
     {
         this.tracks = tracks;
         inflater = LayoutInflater.from(ctx);

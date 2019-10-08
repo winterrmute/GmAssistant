@@ -1,11 +1,11 @@
-package com.wintermute.soundboard.services.database.dao;
+package com.wintermute.soundboard.database.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.soundboard.model.Playlist;
-import com.wintermute.soundboard.services.database.DbManager;
+import com.wintermute.soundboard.database.DbManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,17 +50,17 @@ public class PlaylistDao
     /**
      * Select item by id.
      *
-     * @param playlist to get from database.
+     * @param id to get from database.
      * @return specified playlist.
      */
-    public Playlist getPlaylist(Playlist playlist)
+    public Playlist getPlaylist(String id)
     {
         StringBuilder query = new StringBuilder("SELECT * FROM ")
             .append(TABLE_NAME)
             .append("  WHERE ")
             .append(ID_COLUMN)
             .append("  =  '")
-            .append(playlist.getId())
+            .append(id)
             .append("'");
         return mapObject(dbRead.rawQuery(query.toString(), null)).get(0);
     }
@@ -178,5 +178,4 @@ public class PlaylistDao
             .append("'");
         dbWrite.execSQL(query.toString());
     }
-
 }

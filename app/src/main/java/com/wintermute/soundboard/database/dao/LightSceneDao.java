@@ -1,4 +1,4 @@
-package com.wintermute.soundboard.services.database.dao;
+package com.wintermute.soundboard.database.dao;
 
 public class LightSceneDao
 {

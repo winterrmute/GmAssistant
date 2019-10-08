@@ -7,9 +7,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import androidx.lifecycle.LiveData;
 import com.wintermute.soundboard.R;
+import com.wintermute.soundboard.model.Playlist;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Adapter for displaying browsed files.
@@ -18,7 +21,7 @@ import java.util.ArrayList;
  */
 public class PlaylistAdapter extends BaseAdapter
 {
-    private ArrayList<String> userPlaylists;
+    private List<Playlist> userPlaylists;
     private LayoutInflater inflater;
 
     /**
@@ -27,7 +30,7 @@ public class PlaylistAdapter extends BaseAdapter
      * @param ctx application context
      * @param playlists to display within the list view.
      */
-    public PlaylistAdapter(Context ctx, ArrayList<String> playlists)
+    public PlaylistAdapter(Context ctx, List<Playlist> playlists)
     {
         this.userPlaylists = playlists;
         inflater = LayoutInflater.from(ctx);
@@ -56,8 +59,8 @@ public class PlaylistAdapter extends BaseAdapter
     {
         LinearLayout result = (LinearLayout) inflater.inflate(R.layout.file, parent, false);
         TextView fileName = result.findViewById(R.id.file_name);
-        String userPlaylist = userPlaylists.get(position);
-        fileName.setText(userPlaylist);
+        Playlist userPlaylist = userPlaylists.get(position);
+        fileName.setText(userPlaylist.getName());
         result.setTag(position);
         return result;
     }

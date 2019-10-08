@@ -14,7 +14,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".dialogs.CreatePlaylist"></activity>
+        <activity android:name=".client.NewPlaylist"></activity>
         <activity android:name=".client.PlaylistContentView" />
         <activity android:name=".client.FileBrowser" />
         <activity android:name=".client.ClientPlayer" />

@@ -1,4 +1,4 @@
-package com.wintermute.soundboard.services.database;
+package com.wintermute.soundboard.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -12,10 +12,16 @@ public class DbManager extends SQLiteOpenHelper
 
     //TODO: find better way that is less failure tolerant
     private static final String CREATE_PLAYLIST =
-        "CREATE TABLE IF NOT EXISTS playlist ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, content_id INTEGER, FOREIGN KEY (content_id)  "
+        "CREATE TABLE IF NOT EXISTS playlist ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, content_id "
+            + "INTEGER, FOREIGN KEY (content_id)  "
             + "REFERENCES playlist (id))";
 
-    private static final String CREATE_TRACK = "CREATE TABLE IF NOT EXISTS track ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, artist TEXT, path TEXT, scene_id, FOREIGN KEY (scene_id) REFERENCES scene (id) )";
+    private static final String CREATE_TRACK =
+        "CREATE TABLE IF NOT EXISTS track ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, artist TEXT, path TEXT, "
+            + "scene_id, FOREIGN KEY (scene_id) REFERENCES scene (id) )";
+    private static final String CREATE_PLAYLIST_CONTENT =
+        "CREATE TABLE IF NOT EXISTS playlist_content ( id INTEGER, track_id INTEGER, FOREIGN KEY "
+            + "(track_id) REFERENCES track (id) )";
 
     private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS user_playlist";
 
@@ -29,6 +35,7 @@ public class DbManager extends SQLiteOpenHelper
     {
         db.execSQL(CREATE_PLAYLIST);
         db.execSQL(CREATE_TRACK);
+        db.execSQL(CREATE_PLAYLIST_CONTENT);
     }
 
     @Override
@@ -41,15 +48,5 @@ public class DbManager extends SQLiteOpenHelper
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
         onUpgrade(db, oldVersion, newVersion);
-    }
-
-    public void dropTable(SQLiteDatabase db, String tableName)
-    {
-        db.execSQL("DROP TABLE " + tableName);
-    }
-
-    public void getItemById(SQLiteDatabase db, String tableName,long itemId)
-    {
-        db.execSQL("SELECT id FROM " + tableName + "WHERE id = " + itemId);
     }
 }
