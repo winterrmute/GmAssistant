@@ -63,7 +63,6 @@ public class FileBrowserService
     {
         Track result = new Track();
 
-//        result.setId(UUID.randomUUID().getMostSignificantBits());
         result.setName(file.getName());
         result.setArtist("");
         result.setPath(file.getPath());

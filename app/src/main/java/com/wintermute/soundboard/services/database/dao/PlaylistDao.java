@@ -8,6 +8,8 @@ import com.wintermute.soundboard.model.Playlist;
 import com.wintermute.soundboard.services.database.DbManager;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Represents database access object for playlist.
@@ -34,7 +36,7 @@ public class PlaylistDao
     /**
      * Insert row into playlist table.
      */
-    public void insert(Playlist playlist)
+    public String insert(Playlist playlist)
     {
         ContentValues values = new ContentValues();
         values.put(ID_COLUMN, playlist.getId());
@@ -42,31 +44,79 @@ public class PlaylistDao
         values.put(CONTENT_COLUMN, playlist.getContentId());
 
         dbWrite.insert(TABLE_NAME, null, values);
+        return getIdByName(playlist.getName());
+    }
+
+    /**
+     * Select item by id.
+     *
+     * @param playlist to get from database.
+     * @return specified playlist.
+     */
+    public Playlist getPlaylist(Playlist playlist)
+    {
+        StringBuilder query = new StringBuilder("SELECT * FROM ")
+            .append(TABLE_NAME)
+            .append("  WHERE ")
+            .append(ID_COLUMN)
+            .append("  =  '")
+            .append(playlist.getId())
+            .append("'");
+        return mapObject(dbRead.rawQuery(query.toString(), null)).get(0);
     }
 
     /**
      * Select item by name.
      *
-     * @param name to identify database entry.
-     * @return selected playlist.
+     * @param title to identify database entry.
+     * @return selected track.
      */
-    public Playlist getByName(String name)
+    private String getIdByName(String title)
     {
-        Playlist result = new Playlist();
-        StringBuilder query = new StringBuilder("SELECT * FROM ")
+        StringBuilder query = new StringBuilder("SELECT id FROM ")
             .append(TABLE_NAME)
             .append("  WHERE ")
             .append(NAME_COLUMN)
             .append("  =  '")
-            .append(name)
+            .append(title)
             .append("'");
+        return mapObject(dbRead.rawQuery(query.toString(), null)).get(0).getId();
+    }
 
-        Cursor cursor = dbRead.rawQuery(query.toString(), null);
-        cursor.moveToFirst();
-        result.setId(Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(ID_COLUMN))));
-        result.setName(cursor.getString(cursor.getColumnIndexOrThrow(NAME_COLUMN)));
-        result.setContentId(Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(ID_COLUMN))));
+    /**
+     * Translates the data from database to java objects.
+     *
+     * @param cursor to iterate over database rows.
+     * @return list of track objects.
+     */
+    private ArrayList<Playlist> mapObject(Cursor cursor)
+    {
+        ArrayList<Playlist> result = new ArrayList<>();
+        while (cursor.moveToNext())
+        {
+            Playlist playlist = new Playlist();
+            playlist.setId(getColumnValue(cursor, ID_COLUMN));
+            playlist.setName(getColumnValue(cursor, NAME_COLUMN));
+            playlist.setContentId(getColumnValue(cursor, CONTENT_COLUMN));
+            result.add(playlist);
+        }
         return result;
+    }
+
+    /**
+     * Safely gets data from database.
+     *
+     * @param cursor to pick data from database
+     * @param column containing value
+     * @return value stored in db if possible, otherwise "-1"
+     */
+    private String getColumnValue(Cursor cursor, String column)
+    {
+        if (cursor.getColumnIndex(column) != -1)
+        {
+            return cursor.getString(cursor.getColumnIndex(column));
+        }
+        return "-1";
     }
 
     /**
@@ -75,10 +125,10 @@ public class PlaylistDao
      *
      * @return query result as Cursor.
      */
-    public Cursor getAll()
+    public ArrayList<Playlist> getAll()
     {
         StringBuilder query = new StringBuilder("SELECT * FROM " + TABLE_NAME);
-        return dbRead.rawQuery(query.toString(), null);
+        return mapObject(dbRead.rawQuery(query.toString(), null));
     }
 
     /**
@@ -86,15 +136,9 @@ public class PlaylistDao
      *
      * @return list of playlist names.
      */
-    public ArrayList<String> getPlaylistNames()
+    public List<String> getPlaylistNames()
     {
-        ArrayList<String> playlist = new ArrayList<>();
-        Cursor cursor = getAll();
-        while (cursor.moveToNext())
-        {
-            playlist.add(cursor.getString(cursor.getColumnIndexOrThrow(NAME_COLUMN)));
-        }
-        return playlist;
+        return getAll().stream().map(Playlist::getName).collect(Collectors.toList());
     }
 
     /**
@@ -119,67 +163,20 @@ public class PlaylistDao
     }
 
     /**
-     * Convinience method to delete rows from database by different conditions.
+     * Deletes row by id.
      *
-     * @param conditionColumn by which the delete operation will be specified.
-     * @param targetValue to identify the row.
-     * @param conditionArg specifies whether identifying should match or contain.
+     * @param playlist to delete by id.
      */
-    private void delete(String conditionColumn, String targetValue, String conditionArg)
+    public void delete(Playlist playlist)
     {
-        targetValue = (conditionArg.equals("LIKE")) ? "%" + targetValue + "%" : targetValue;
-
         StringBuilder query = new StringBuilder("DELETE FROM ")
             .append(TABLE_NAME)
             .append(" WHERE ")
-            .append(conditionColumn)
-            .append(" ")
-            .append(conditionArg)
-            .append(" '")
-            .append(targetValue)
+            .append(ID_COLUMN)
+            .append(" = '")
+            .append(playlist.getId())
             .append("'");
         dbWrite.execSQL(query.toString());
     }
 
-    /**
-     * Convinience method to determine whether deletion by name should exactly match or just contain string.
-     *
-     * @param conditionArg to define identifying method.
-     */
-    private void deleteByName(Playlist playlist, String conditionArg)
-    {
-        delete(NAME_COLUMN, playlist.getName(), conditionArg);
-    }
-
-    /**
-     * Deletes a row identified by containing the provided string.
-     */
-    public void deleteByNameLike(Playlist playlist)
-    {
-        deleteByName(playlist, "LIKE");
-    }
-
-    /**
-     * Deletes a row identified exactly matching the provided string.
-     */
-    public void deleteByNameMatching(Playlist playlist)
-    {
-        deleteByName(playlist, "=");
-    }
-
-    /**
-     * Deletes a row identified by exactly matching provided id.
-     */
-    public void deleteById(Playlist playlist)
-    {
-        delete(ID_COLUMN, String.valueOf(playlist.getId()), "=");
-    }
-
-    /**
-     * Deletes all row in current table.
-     */
-    public void clearData()
-    {
-
-    }
 }

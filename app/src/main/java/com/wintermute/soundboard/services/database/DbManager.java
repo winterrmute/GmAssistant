@@ -12,10 +12,10 @@ public class DbManager extends SQLiteOpenHelper
 
     //TODO: find better way that is less failure tolerant
     private static final String CREATE_PLAYLIST =
-        "CREATE TABLE playlist ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, content_id INTEGER, FOREIGN KEY (content_id)  "
+        "CREATE TABLE IF NOT EXISTS playlist ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, content_id INTEGER, FOREIGN KEY (content_id)  "
             + "REFERENCES playlist (id))";
 
-    private static final String CREATE_TRACK = "CREATE TABLE track ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, artist TEXT, path TEXT, scene_id, FOREIGN KEY (scene_id) REFERENCES scene (id) )";
+    private static final String CREATE_TRACK = "CREATE TABLE IF NOT EXISTS track ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, artist TEXT, path TEXT, scene_id, FOREIGN KEY (scene_id) REFERENCES scene (id) )";
 
     private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS user_playlist";
 

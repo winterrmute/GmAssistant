@@ -32,14 +32,8 @@ public class PlaylistContentView extends AppCompatActivity
 
         songView.setOnItemClickListener((parent, view, position, id) ->
         {
-            MediaPlayerService mediaPlayerService = new MediaPlayerService();
             Intent playerService = new Intent(PlaylistContentView.this, MediaPlayerService.class);
-
-            TrackDao dao = new TrackDao(this);
-            Track track = allTracks.get(position);
-            dao.getPath(track.getName());
-
-            playerService.putExtra("path", dao.getPath(allTracks.get(position).getName()));
+            playerService.putExtra("path", allTracks.get(position).getPath());
             startService(playerService);
         });
     }
@@ -52,7 +46,7 @@ public class PlaylistContentView extends AppCompatActivity
         songView = findViewById(R.id.audio_list);
         TrackDao trackDao = new TrackDao(this);
 
-        allTracks = trackDao.getAllTracks();
+        allTracks = trackDao.getAll();
 
         AudioFileAdapter songAdapter = new AudioFileAdapter(this, allTracks);
         songView.setAdapter(songAdapter);

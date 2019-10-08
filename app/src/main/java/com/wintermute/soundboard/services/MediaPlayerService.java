@@ -64,6 +64,7 @@ public class MediaPlayerService extends Service
     @Override
     public void onCreate()
     {
+        mediaPlayer.stop();
         mediaPlayer = new MediaPlayer();
     }
 }
