@@ -4,8 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import com.wintermute.soundboard.model.Track;
 import com.wintermute.soundboard.database.DbManager;
+import com.wintermute.soundboard.model.Track;
 
 import java.util.ArrayList;
 
@@ -50,23 +50,23 @@ public class TrackDao
         return getIdByName(track.getName());
     }
 
-        /**
-         * Select item by name.
-         *
-         * @param title to identify database entry.
-         * @return selected track.
-         */
-        private String getIdByName(String title)
-        {
-            StringBuilder query = new StringBuilder("SELECT id FROM ")
-                .append(TABLE_NAME)
-                .append("  WHERE ")
-                .append(NAME_COLUMN)
-                .append("  =  '")
-                .append(title)
-                .append("'");
-            return mapObject(dbRead.rawQuery(query.toString(), null)).get(0).getId();
-        }
+    /**
+     * Select item by name.
+     *
+     * @param title to identify database entry.
+     * @return selected track.
+     */
+    private String getIdByName(String title)
+    {
+        StringBuilder query = new StringBuilder("SELECT id FROM ")
+            .append(TABLE_NAME)
+            .append("  WHERE ")
+            .append(NAME_COLUMN)
+            .append("  =  '")
+            .append(title)
+            .append("'");
+        return mapObject(dbRead.rawQuery(query.toString(), null)).get(0).getId();
+    }
 
     /**
      * Select item by id.
@@ -84,6 +84,16 @@ public class TrackDao
             .append(id)
             .append("'");
         return mapObject(dbRead.rawQuery(query.toString(), null)).get(0);
+    }
+
+    public ArrayList<Track> getReferencedTracks()
+    {
+        StringBuilder query = new StringBuilder("SELECT name, path FROM ")
+            .append(TABLE_NAME)
+            .append(" INNER JOIN ")
+            .append("playlist_content ON playlist_content.track_id = track.id");
+        dbRead.rawQuery(query.toString(), null);
+        return mapObject(dbRead.rawQuery(query.toString(), null));
     }
 
     /**
@@ -171,7 +181,6 @@ public class TrackDao
      */
     public void delete(Track track)
     {
-
         StringBuilder query = new StringBuilder("DELETE FROM ")
             .append(TABLE_NAME)
             .append(" WHERE ")

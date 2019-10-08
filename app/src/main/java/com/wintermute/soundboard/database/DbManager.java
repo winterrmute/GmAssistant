@@ -14,7 +14,7 @@ public class DbManager extends SQLiteOpenHelper
     private static final String CREATE_PLAYLIST =
         "CREATE TABLE IF NOT EXISTS playlist ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, content_id "
             + "INTEGER, FOREIGN KEY (content_id)  "
-            + "REFERENCES playlist (id))";
+            + "REFERENCES playlist_content (id))";
 
     private static final String CREATE_TRACK =
         "CREATE TABLE IF NOT EXISTS track ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, artist TEXT, path TEXT, "

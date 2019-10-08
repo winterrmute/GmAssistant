@@ -51,9 +51,7 @@ public class PlaylistContentView extends AppCompatActivity
     void renderFilesAsList()
     {
         trackDao = new TrackDao(this);
-        allTracks = trackDao.getAll();
-
-        PlaylistContentDao dao = new PlaylistContentDao(this);
+        allTracks = trackDao.getReferencedTracks();
 
         AudioFileAdapter songAdapter = new AudioFileAdapter(this, allTracks);
         songView = findViewById(R.id.audio_list);
