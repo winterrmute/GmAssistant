@@ -1,6 +1,5 @@
 package com.wintermute.soundboard.services;
 
-import android.content.Context;
 import com.wintermute.soundboard.model.Track;
 
 import java.io.File;
@@ -9,17 +8,6 @@ import java.util.List;
 
 public class FileBrowserService
 {
-    private Context ctx;
-
-    /**
-     * Creates an instance with context of activity which called this service.
-     *
-     * @param ctx context of activity which called this class.
-     */
-    public FileBrowserService(Context ctx) {
-        this.ctx = ctx;
-    }
-
     /**
      * Scans directory for files.
      *
@@ -71,8 +59,13 @@ public class FileBrowserService
         return result;
     }
 
-
-    //TODO: do something with me
+    /**
+     * Store track found in directory.
+     * //TODO: do something rational with me
+     *
+     * @param file found track.
+     * @return
+     */
     private Track storeTracks(File file)
     {
         Track result = new Track();

@@ -6,12 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.wintermute.soundboard.R;
 import com.wintermute.soundboard.adapters.AudioFileAdapter;
-import com.wintermute.soundboard.model.Playlist;
-import com.wintermute.soundboard.model.PlaylistContent;
 import com.wintermute.soundboard.model.Track;
 import com.wintermute.soundboard.services.MediaPlayerService;
-import com.wintermute.soundboard.database.dao.PlaylistContentDao;
-import com.wintermute.soundboard.database.dao.PlaylistDao;
 import com.wintermute.soundboard.database.dao.TrackDao;
 
 import java.util.List;

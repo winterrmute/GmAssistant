@@ -33,7 +33,7 @@ public class FileBrowser extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_browser);
 
-        fileBrowserService = new FileBrowserService(this);
+        fileBrowserService = new FileBrowserService();
 
         path = this.getExternalFilesDir("");
         renderFiles(Optional.of(path.toString()).orElse(""));

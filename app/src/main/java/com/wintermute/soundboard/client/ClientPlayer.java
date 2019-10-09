@@ -27,15 +27,15 @@ public class ClientPlayer extends AppCompatActivity implements MediaController.M
      * Starts the service and plays requested song.
      */
     void startPlayerService(){
-        Intent playerService = new Intent(ClientPlayer.this, MediaPlayerService.class);
-        playerService.putExtra("path", "/storage/emulated/0/Download/song.mp3");
-        startService(playerService);
+        start();
     }
 
     @Override
     public void start()
     {
-
+        Intent playerService = new Intent(ClientPlayer.this, MediaPlayerService.class);
+        playerService.putExtra("path", "/storage/emulated/0/Download/song.mp3");
+        startService(playerService);
     }
 
     @Override

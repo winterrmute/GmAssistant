@@ -40,14 +40,20 @@ public class TrackDao
      */
     public String insert(Track track)
     {
-        ContentValues values = new ContentValues();
-        values.put(NAME_COLUMN, track.getName());
-        values.put(ARTIST_COLUMN, track.getArtist());
-        values.put(PATH_COLUMN, track.getPath());
-        values.put(SCENE_COLUMN, track.getScene_id());
+        if (getIdByName(track.getName()) != null)
+        {
+            return getIdByName(track.getName());
+        } else
+        {
+            ContentValues values = new ContentValues();
+            values.put(NAME_COLUMN, track.getName());
+            values.put(ARTIST_COLUMN, track.getArtist());
+            values.put(PATH_COLUMN, track.getPath());
+            values.put(SCENE_COLUMN, track.getScene_id());
 
-        dbWrite.insert(TABLE_NAME, null, values);
-        return getIdByName(track.getName());
+            dbWrite.insert(TABLE_NAME, null, values);
+            return getIdByName(track.getName());
+        }
     }
 
     /**
@@ -65,7 +71,11 @@ public class TrackDao
             .append("  =  '")
             .append(title)
             .append("'");
-        return mapObject(dbRead.rawQuery(query.toString(), null)).get(0).getId();
+        try {
+            return mapObject(dbRead.rawQuery(query.toString(), null)).get(0).getId() ;
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
     }
 
     /**
@@ -96,9 +106,7 @@ public class TrackDao
     {
         StringBuilder query = new StringBuilder(
             "SELECT * FROM playlist pl, playlist_content ct, track tk WHERE tk.id = ct.track AND pl.id = ct.playlist "
-                + "AND pl.id")
-            .append(" = '")
-            .append(id).append("'");
+                + "AND pl.id").append(" = '").append(id).append("'");
         dbRead.rawQuery(query.toString(), null);
         return mapObject(dbRead.rawQuery(query.toString(), null));
     }
