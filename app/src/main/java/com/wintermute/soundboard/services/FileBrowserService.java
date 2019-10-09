@@ -38,9 +38,9 @@ public class FileBrowserService
      * @param path to browse for files.
      * @return list of found tracks.
      */
-    public List<Track> collectTracks(String path)
+    public List<File> collectTracks(String path)
     {
-        List<Track> result = new ArrayList<>();
+        List<File> result = new ArrayList<>();
         File[] files = new File(path).listFiles();
 
         if (files != null)
@@ -52,27 +52,10 @@ public class FileBrowserService
                     collectTracks(file.getPath());
                 } else if (file.toString().endsWith(".mp3") || file.toString().endsWith(".wav"))
                 {
-                    result.add(storeTracks(file));
+                    result.add(file);
                 }
             }
         }
-        return result;
-    }
-
-    /**
-     * Store track found in directory.
-     * //TODO: do something rational with me
-     *
-     * @param file found track.
-     * @return
-     */
-    private Track storeTracks(File file)
-    {
-        Track result = new Track();
-        result.setName(file.getName());
-        result.setArtist("");
-        result.setPath(file.getPath());
-        result.setScene_id("0");
         return result;
     }
 }

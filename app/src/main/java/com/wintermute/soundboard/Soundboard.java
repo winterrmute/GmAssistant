@@ -9,7 +9,7 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.soundboard.adapters.PlaylistAdapter;
 import com.wintermute.soundboard.client.NewPlaylist;
-import com.wintermute.soundboard.client.PlaylistContentView;
+import com.wintermute.soundboard.manager.PlayerManager;
 import com.wintermute.soundboard.database.dao.PlaylistDao;
 import com.wintermute.soundboard.model.Playlist;
 
@@ -44,7 +44,7 @@ public class Soundboard extends AppCompatActivity
 
         playlistView.setOnItemClickListener((parent, view, position, id) ->
         {
-            Intent playlistContent = new Intent(Soundboard.this, PlaylistContentView.class);
+            Intent playlistContent = new Intent(Soundboard.this, PlayerManager.class);
             playlistContent.putExtra("id", listOfPlaylists.get(position).getId());
             startActivity(playlistContent);
         });
@@ -68,7 +68,6 @@ public class Soundboard extends AppCompatActivity
             {
             }
             requestPermissions(new String[] {permission}, 0);
-            return;
         }
     }
 

@@ -62,7 +62,7 @@ public class TrackDaoTest
         track.setName("sample");
         track.setPath("/here/be/path");
         track.setArtist("Dj-yo-mama");
-        track.setScene_id("0");
+        track.setSceneId("0");
     }
 
     /**

@@ -5,10 +5,10 @@ import android.widget.MediaController;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.wintermute.soundboard.R;
-import com.wintermute.soundboard.services.MediaPlayerService;
+import com.wintermute.soundboard.services.player.BackgroundMusic;
 
 /**
- * This client interacts with the MediaPlayerService. Allows to start, stop and pause music.
+ * This client interacts with the BackgroundMusic. Allows to start, stop and pause music.
  *
  * @author wintermute
  */
@@ -33,7 +33,7 @@ public class ClientPlayer extends AppCompatActivity implements MediaController.M
     @Override
     public void start()
     {
-        Intent playerService = new Intent(ClientPlayer.this, MediaPlayerService.class);
+        Intent playerService = new Intent(ClientPlayer.this, BackgroundMusic.class);
         playerService.putExtra("path", "/storage/emulated/0/Download/song.mp3");
         startService(playerService);
     }

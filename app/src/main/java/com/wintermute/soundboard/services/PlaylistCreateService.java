@@ -8,6 +8,7 @@ import com.wintermute.soundboard.model.Playlist;
 import com.wintermute.soundboard.model.PlaylistContent;
 import com.wintermute.soundboard.model.Track;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -20,6 +21,7 @@ public class PlaylistCreateService
     private Context ctx;
     private String playlistName;
     private String browsePath;
+    private String soundType;
 
     /**
      * Creates an instance.
@@ -27,12 +29,14 @@ public class PlaylistCreateService
      * @param ctx activity context.
      * @param playlistName for the new playlist.
      * @param path containing audio files.
+     * @param type describes what type of sound it is.
      */
-    public PlaylistCreateService(Context ctx, String playlistName, String path)
+    public PlaylistCreateService(Context ctx, String playlistName, String path, String type)
     {
         this.ctx = ctx;
         this.playlistName = playlistName;
         this.browsePath = path;
+        this.soundType = type;
     }
 
     /**
@@ -81,10 +85,12 @@ public class PlaylistCreateService
     {
         TrackDao dao = new TrackDao(ctx);
         FileBrowserService fs = new FileBrowserService();
-        List<Track> tracksFound = fs.collectTracks(browsePath);
-        for (Track track : tracksFound)
+        List<File> tracksFound = fs.collectTracks(browsePath);
+        for (File file : tracksFound)
         {
-            track.setId(dao.insert(track));
+            Track.Builder builder =
+                new Track.Builder().withName(file.getName()).withPath(file.getPath()).withType(soundType);
+            Track track = builder.withId(dao.insert(builder.build())).build();
             fillPlaylistContent(playlist, track);
         }
     }

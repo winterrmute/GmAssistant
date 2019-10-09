@@ -16,7 +16,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity android:name=".client.NewPlaylist"></activity>
-        <activity android:name=".client.PlaylistContentView" />
+        <activity android:name=".manager.PlayerManager" />
         <activity android:name=".client.FileBrowser" />
         <activity android:name=".client.ClientPlayer" />
         <activity android:name=".Soundboard">
@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".services.MediaPlayerService" />
+        <service android:name=".services.player.BackgroundMusic" />
     </application>
 
 </manifest>

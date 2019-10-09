@@ -1,4 +1,4 @@
-package com.wintermute.soundboard.services;
+package com.wintermute.soundboard.services.player;
 
 import static android.media.MediaPlayer.create;
 
@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
  *
  * @author wintermute
  */
-public class MediaPlayerService extends Service
+public class BackgroundMusic extends Service
     implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener
 {
 

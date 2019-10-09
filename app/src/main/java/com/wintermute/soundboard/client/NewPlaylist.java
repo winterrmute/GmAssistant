@@ -2,8 +2,10 @@ package com.wintermute.soundboard.client;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.soundboard.R;
@@ -24,6 +26,9 @@ public class NewPlaylist extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_playlist);
 
+        Spinner dropdown = findViewById(R.id.audio_type_spinner);
+        prepareSpinner(dropdown);
+
         playlistName = findViewById(R.id.playlist_name);
         Button submit = findViewById(R.id.submit);
         submit.setOnClickListener(v ->
@@ -31,7 +36,7 @@ public class NewPlaylist extends AppCompatActivity
             if (!playlistName.getText().toString().equals(""))
             {
                 PlaylistCreateService playlistCreator =
-                    new PlaylistCreateService(this, playlistName.getText().toString(), path);
+                    new PlaylistCreateService(this, playlistName.getText().toString(), path, dropdown.getSelectedItem().toString());
                 playlistCreator.createPlaylistAndReferences();
                 this.finish();
             } else
@@ -56,5 +61,13 @@ public class NewPlaylist extends AppCompatActivity
         {
             path = data.getStringExtra("path");
         }
+    }
+
+    private void prepareSpinner(Spinner spinner)
+    {
+
+        String[] types = new String[] {"Background music", "Ambiente", "Jumpscare"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, types);
+        spinner.setAdapter(adapter);
     }
 }

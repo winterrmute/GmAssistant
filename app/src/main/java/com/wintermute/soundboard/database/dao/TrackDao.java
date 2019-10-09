@@ -20,6 +20,7 @@ public class TrackDao
     private static final String ID_COLUMN = "id";
     private static final String NAME_COLUMN = "name";
     private static final String ARTIST_COLUMN = "artist";
+    private static final String TYPE_COLUMN = "type";
     private static final String PATH_COLUMN = "path";
     private static final String SCENE_COLUMN = "scene_id";
 
@@ -48,8 +49,9 @@ public class TrackDao
             ContentValues values = new ContentValues();
             values.put(NAME_COLUMN, track.getName());
             values.put(ARTIST_COLUMN, track.getArtist());
+            values.put(TYPE_COLUMN, track.getType());
             values.put(PATH_COLUMN, track.getPath());
-            values.put(SCENE_COLUMN, track.getScene_id());
+            values.put(SCENE_COLUMN, track.getSceneId());
 
             dbWrite.insert(TABLE_NAME, null, values);
             return getIdByName(track.getName());
@@ -138,7 +140,7 @@ public class TrackDao
             track.setName(getColumnValue(cursor, NAME_COLUMN));
             track.setArtist(getColumnValue(cursor, ARTIST_COLUMN));
             track.setPath(getColumnValue(cursor, PATH_COLUMN));
-            track.setScene_id(getColumnValue(cursor, SCENE_COLUMN));
+            track.setSceneId(getColumnValue(cursor, SCENE_COLUMN));
             result.add(track);
         }
         return result;
@@ -182,7 +184,7 @@ public class TrackDao
             .append("', ")
             .append(SCENE_COLUMN)
             .append(" = '")
-            .append(track.getScene_id())
+            .append(track.getSceneId())
             .append("' WHERE id = '")
             .append(track.getId())
             .append("'");

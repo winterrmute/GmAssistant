@@ -1,4 +1,4 @@
-package com.wintermute.soundboard.client;
+package com.wintermute.soundboard.manager;
 
 import android.content.Intent;
 import android.widget.ListView;
@@ -7,7 +7,7 @@ import android.os.Bundle;
 import com.wintermute.soundboard.R;
 import com.wintermute.soundboard.adapters.AudioFileAdapter;
 import com.wintermute.soundboard.model.Track;
-import com.wintermute.soundboard.services.MediaPlayerService;
+import com.wintermute.soundboard.services.player.BackgroundMusic;
 import com.wintermute.soundboard.database.dao.TrackDao;
 
 import java.util.List;
@@ -17,12 +17,11 @@ import java.util.List;
  *
  * @author wintermute
  */
-public class PlaylistContentView extends AppCompatActivity
+public class PlayerManager extends AppCompatActivity
 {
 
     private ListView songView;
     private List<Track> allTracks;
-    private TrackDao trackDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -34,7 +33,7 @@ public class PlaylistContentView extends AppCompatActivity
 
         songView.setOnItemClickListener((parent, view, position, id) ->
         {
-            Intent playerService = new Intent(PlaylistContentView.this, MediaPlayerService.class);
+            Intent playerService = new Intent(PlayerManager.this, BackgroundMusic.class);
             playerService.putExtra("path", allTracks.get(position).getPath());
             startService(playerService);
         });
@@ -45,11 +44,15 @@ public class PlaylistContentView extends AppCompatActivity
      */
     void renderFilesAsList()
     {
-        trackDao = new TrackDao(this);
+        TrackDao trackDao = new TrackDao(this);
         allTracks = trackDao.getReferencedTracks(this.getIntent().getStringExtra("id"));
 
         AudioFileAdapter songAdapter = new AudioFileAdapter(this, allTracks);
         songView = findViewById(R.id.audio_list);
         songView.setAdapter(songAdapter);
+    }
+
+    public void lel(){
+
     }
 }

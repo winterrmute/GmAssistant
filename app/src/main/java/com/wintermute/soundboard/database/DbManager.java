@@ -11,11 +11,11 @@ public class DbManager extends SQLiteOpenHelper
     public static final String DB_NAME = "soundboard";
 
 
-    private static final String CREATE_PLAYLIST =
+    private static final String PLAYLIST =
         "CREATE TABLE IF NOT EXISTS playlist ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL)";
 
-    private static final String CREATE_TRACK =
-        "CREATE TABLE IF NOT EXISTS track ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, artist TEXT, path TEXT, "
+    private static final String TRACK =
+        "CREATE TABLE IF NOT EXISTS track ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, artist TEXT, type TEXT, path TEXT, "
             + "scene_id, FOREIGN KEY (scene_id) REFERENCES scene (id) )";
 
     private static final String PLAYLIST_CONTENT =
@@ -32,8 +32,8 @@ public class DbManager extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase db)
     {
-        db.execSQL(CREATE_PLAYLIST);
-        db.execSQL(CREATE_TRACK);
+        db.execSQL(PLAYLIST);
+        db.execSQL(TRACK);
         db.execSQL(PLAYLIST_CONTENT);
     }
 
