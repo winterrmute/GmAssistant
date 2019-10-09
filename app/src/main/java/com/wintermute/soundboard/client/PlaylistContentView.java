@@ -34,7 +34,6 @@ public class PlaylistContentView extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist);
 
-        this.getIntent().getStringExtra("id");
         renderFilesAsList();
 
         songView.setOnItemClickListener((parent, view, position, id) ->
@@ -51,7 +50,7 @@ public class PlaylistContentView extends AppCompatActivity
     void renderFilesAsList()
     {
         trackDao = new TrackDao(this);
-        allTracks = trackDao.getReferencedTracks();
+        allTracks = trackDao.getReferencedTracks(this.getIntent().getStringExtra("id"));
 
         AudioFileAdapter songAdapter = new AudioFileAdapter(this, allTracks);
         songView = findViewById(R.id.audio_list);

@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class PlaylistContent
 {
-    private String id;
-    private String trackId;
+    private String playlist;
+    private String track;
 }

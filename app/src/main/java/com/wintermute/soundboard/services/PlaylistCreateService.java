@@ -51,7 +51,6 @@ public class PlaylistCreateService
         Playlist result = new Playlist();
         result.setName(playlistName);
         result.setId(dao.insert(result));
-        result.setContentId(result.getId());
         dao.update(result);
         return result;
     }
@@ -62,8 +61,8 @@ public class PlaylistCreateService
     private void fillPlaylistContent(Playlist playlist, Track track){
         PlaylistContentDao dao = new PlaylistContentDao(ctx);
         PlaylistContent result = new PlaylistContent();
-        result.setId(playlist.getId());
-        result.setTrackId(track.getId());
+        result.setPlaylist(playlist.getId());
+        result.setTrack(track.getId());
         dao.insert(result);
     }
 

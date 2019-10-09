@@ -86,12 +86,19 @@ public class TrackDao
         return mapObject(dbRead.rawQuery(query.toString(), null)).get(0);
     }
 
-    public ArrayList<Track> getReferencedTracks()
+    /**
+     * Get tracks referenced by given playlist id.
+     *
+     * @param id of playlist containing tracks.
+     * @return List of Tracks
+     */
+    public ArrayList<Track> getReferencedTracks(String id)
     {
-        StringBuilder query = new StringBuilder("SELECT name, path FROM ")
-            .append(TABLE_NAME)
-            .append(" INNER JOIN ")
-            .append("playlist_content ON playlist_content.track_id = track.id");
+        StringBuilder query = new StringBuilder(
+            "SELECT * FROM playlist pl, playlist_content ct, track tk WHERE tk.id = ct.track AND pl.id = ct.playlist "
+                + "AND pl.id")
+            .append(" = '")
+            .append(id).append("'");
         dbRead.rawQuery(query.toString(), null);
         return mapObject(dbRead.rawQuery(query.toString(), null));
     }

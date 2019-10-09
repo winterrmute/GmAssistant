@@ -21,7 +21,6 @@ public class PlaylistDao
     private static final String TABLE_NAME = "playlist";
     private static final String ID_COLUMN = "id";
     private static final String NAME_COLUMN = "name";
-    private static final String CONTENT_COLUMN = "content_id";
 
     private SQLiteDatabase dbRead;
     private SQLiteDatabase dbWrite;
@@ -41,7 +40,6 @@ public class PlaylistDao
         ContentValues values = new ContentValues();
         values.put(ID_COLUMN, playlist.getId());
         values.put(NAME_COLUMN, playlist.getName());
-        values.put(CONTENT_COLUMN, playlist.getContentId());
 
         dbWrite.insert(TABLE_NAME, null, values);
         return getIdByName(playlist.getName());
@@ -97,7 +95,6 @@ public class PlaylistDao
             Playlist playlist = new Playlist();
             playlist.setId(getColumnValue(cursor, ID_COLUMN));
             playlist.setName(getColumnValue(cursor, NAME_COLUMN));
-            playlist.setContentId(getColumnValue(cursor, CONTENT_COLUMN));
             result.add(playlist);
         }
         return result;
@@ -152,13 +149,10 @@ public class PlaylistDao
             .append(NAME_COLUMN)
             .append(" = '")
             .append(playlist.getName())
-            .append("', ")
-            .append(CONTENT_COLUMN)
-            .append(" = '")
-            .append(playlist.getContentId())
             .append("' WHERE id = '")
             .append(playlist.getId())
             .append("'");
+        String qry = query.toString();
         dbWrite.execSQL(query.toString());
     }
 

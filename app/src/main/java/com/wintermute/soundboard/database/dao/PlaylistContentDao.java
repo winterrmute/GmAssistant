@@ -13,8 +13,8 @@ import java.util.List;
 public class PlaylistContentDao
 {
     private static final String TABLE_NAME = "playlist_content";
-    private static final String ID_COLUMN = "id";
-    private static final String TRACK_COLUMN = "track_id";
+    private static final String PLAYLIST_COLUMN = "playlist";
+    private static final String TRACK_COLUMN = "track";
 
     private SQLiteDatabase dbRead;
     private SQLiteDatabase dbWrite;
@@ -34,8 +34,8 @@ public class PlaylistContentDao
     public void insert(PlaylistContent content)
     {
         ContentValues values = new ContentValues();
-        values.put(ID_COLUMN, content.getId());
-        values.put(TRACK_COLUMN, content.getTrackId());
+        values.put(PLAYLIST_COLUMN, content.getPlaylist());
+        values.put(TRACK_COLUMN, content.getTrack());
         dbWrite.insert(TABLE_NAME, null, values);
     }
 
@@ -50,7 +50,7 @@ public class PlaylistContentDao
         StringBuilder query = new StringBuilder("SELECT * FROM ")
             .append(TABLE_NAME)
             .append("  WHERE ")
-            .append(ID_COLUMN)
+            .append(PLAYLIST_COLUMN)
             .append("  =  '")
             .append(playlistId)
             .append("'");
@@ -80,8 +80,8 @@ public class PlaylistContentDao
         while (cursor.moveToNext())
         {
             PlaylistContent content = new PlaylistContent();
-            content.setId(getColumnValue(cursor, ID_COLUMN));
-            content.setTrackId(getColumnValue(cursor, TRACK_COLUMN));
+            content.setPlaylist(getColumnValue(cursor, PLAYLIST_COLUMN));
+            content.setTrack(getColumnValue(cursor, TRACK_COLUMN));
             result.add(content);
         }
         return result;
@@ -111,11 +111,15 @@ public class PlaylistContentDao
         StringBuilder query = new StringBuilder("UPDATE ")
             .append(TABLE_NAME)
             .append(" SET ")
-            .append(TRACK_COLUMN)
+            .append(PLAYLIST_COLUMN)
             .append(" = '")
-            .append(content.getId())
-            .append("' WHERE id = '")
-            .append(content.getId())
+            .append(content.getPlaylist())
+            .append("', ")
+            .append(TRACK_COLUMN)
+            .append("' = ")
+            .append(content.getTrack())
+            .append("' WHERE playlist = '")
+            .append(content.getPlaylist())
             .append("'");
         dbWrite.execSQL(query.toString());
     }
@@ -131,7 +135,7 @@ public class PlaylistContentDao
         StringBuilder query = new StringBuilder("DELETE FROM ")
             .append(TABLE_NAME)
             .append(" WHERE ")
-            .append(ID_COLUMN)
+            .append(PLAYLIST_COLUMN)
             .append(" = '")
             .append(trackId)
             .append("'");

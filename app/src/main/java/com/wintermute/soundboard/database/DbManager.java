@@ -10,18 +10,17 @@ public class DbManager extends SQLiteOpenHelper
     public static final int DB_VERSION = 1;
     public static final String DB_NAME = "soundboard";
 
-    //TODO: find better way that is less failure tolerant
+
     private static final String CREATE_PLAYLIST =
-        "CREATE TABLE IF NOT EXISTS playlist ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, content_id "
-            + "INTEGER, FOREIGN KEY (content_id)  "
-            + "REFERENCES playlist_content (id))";
+        "CREATE TABLE IF NOT EXISTS playlist ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL)";
 
     private static final String CREATE_TRACK =
         "CREATE TABLE IF NOT EXISTS track ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, artist TEXT, path TEXT, "
             + "scene_id, FOREIGN KEY (scene_id) REFERENCES scene (id) )";
-    private static final String CREATE_PLAYLIST_CONTENT =
-        "CREATE TABLE IF NOT EXISTS playlist_content ( id INTEGER, track_id INTEGER, FOREIGN KEY "
-            + "(track_id) REFERENCES track (id) )";
+
+    private static final String PLAYLIST_CONTENT =
+        "CREATE TABLE IF NOT EXISTS playlist_content ( playlist INTEGER, track INTEGER, FOREIGN KEY (playlist) "
+            + "REFERENCES playlist(id), FOREIGN KEY " + "(track) REFERENCES track (id) )";
 
     private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS user_playlist";
 
@@ -35,7 +34,7 @@ public class DbManager extends SQLiteOpenHelper
     {
         db.execSQL(CREATE_PLAYLIST);
         db.execSQL(CREATE_TRACK);
-        db.execSQL(CREATE_PLAYLIST_CONTENT);
+        db.execSQL(PLAYLIST_CONTENT);
     }
 
     @Override
