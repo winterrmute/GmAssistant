@@ -1,7 +1,5 @@
 package com.wintermute.soundboard.services;
 
-import com.wintermute.soundboard.model.Track;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +11,10 @@ public class FileBrowserService
      *
      * @return list of BrowsedFiles
      */
-    public ArrayList<File> scanDir(String path)
+    public ArrayList<File> scanDir(File path)
     {
         ArrayList<File> browsedFiles = new ArrayList<>();
-        File[] filesList = new File(path).listFiles();
+        File[] filesList = new File(path.toString()).listFiles();
 
         if (filesList != null)
         {

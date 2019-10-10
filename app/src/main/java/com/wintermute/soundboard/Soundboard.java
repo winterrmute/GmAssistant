@@ -35,8 +35,8 @@ public class Soundboard extends AppCompatActivity
 
         init();
 
-        Button playlist = findViewById(R.id.playlist);
-        playlist.setOnClickListener(v ->
+        Button addPlaylist = findViewById(R.id.playlist);
+        addPlaylist.setOnClickListener(v ->
         {
             Intent createPlaylist = new Intent(Soundboard.this, NewPlaylist.class);
             startActivity(createPlaylist);

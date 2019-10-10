@@ -11,9 +11,7 @@ import com.wintermute.soundboard.adapters.FileAdapter;
 import com.wintermute.soundboard.services.FileBrowserService;
 
 import java.io.File;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Optional;
 
 /**
  * FileBrowser client selecting whole directories or single files to create playlists.
@@ -34,10 +32,22 @@ public class FileBrowser extends AppCompatActivity
         setContentView(R.layout.activity_file_browser);
 
         fileBrowserService = new FileBrowserService();
-
         path = this.getExternalFilesDir("");
-        renderFiles(Optional.of(path.toString()).orElse(""));
-        browseParent();
+        ArrayList<File> files = fileBrowserService.scanDir(path);
+        renderFiles(files);
+
+        Button browseParent = findViewById(R.id.parent_directory);
+        browseParent.setOnClickListener(v ->
+        {
+            if (path.getParent() != null && new File(path.getParent()).canRead())
+            {
+                path = new File(path.getParent());
+                renderFiles(fileBrowserService.scanDir(path));
+            } else
+            {
+                Toast.makeText(FileBrowser.this, "Permission denied!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         Button selectDirectory = findViewById(R.id.select_directory);
         selectDirectory.setOnClickListener((v) ->
@@ -48,49 +58,21 @@ public class FileBrowser extends AppCompatActivity
     }
 
     /**
-     * Checks whether the parent directory is accessible. Requests the FileBrowserService for content of parent
-     * directory.
-     */
-    void browseParent()
-    {
-        Button explore_parent = findViewById(R.id.parent_directory);
-        explore_parent.setOnClickListener(v ->
-        {
-            if (path.getParent() != null)
-            {
-                if (Paths.get(path.getParent()).toFile().canRead())
-                {
-                    renderFiles(path.getParent());
-                    path = Paths.get(path.getParent()).toFile();
-                } else
-                {
-                    Toast.makeText(FileBrowser.this, "Permission denied!", Toast.LENGTH_SHORT).show();
-                }
-            } else
-            {
-                Toast.makeText(FileBrowser.this, "Operation not possible", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    /**
      * Requests the FileBrowserService for content of currently browsed directory.
      *
-     * @param targetPath to scan for files and directories
+     * @param dirContent to scan for files and directories
      */
-    void renderFiles(String targetPath)
+    private void renderFiles(ArrayList<File> dirContent)
     {
-        ArrayList<File> browsedFiles = fileBrowserService.scanDir(targetPath);
-        setListView(browsedFiles);
-
-        fileView.setOnItemClickListener(((parent, view, position, id) ->
+        setListView(dirContent);
+        fileView.setOnItemClickListener((parent, view, position, id) ->
         {
-            if (Paths.get(browsedFiles.get(position).getPath()).toFile().isDirectory())
+            path = new File(dirContent.get(position).getPath());
+            if (new File(dirContent.get(position).getPath()).isDirectory())
             {
-                renderFiles(browsedFiles.get(position).getPath());
-                path = Paths.get(browsedFiles.get(position).getPath()).toFile();
+                renderFiles(fileBrowserService.scanDir(path));
             }
-        }));
+        });
     }
 
     /**
