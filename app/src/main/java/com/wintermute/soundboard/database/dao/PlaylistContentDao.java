@@ -4,8 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import com.wintermute.soundboard.model.PlaylistContent;
 import com.wintermute.soundboard.database.DbManager;
+import com.wintermute.soundboard.model.PlaylistContent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,13 +129,53 @@ public class PlaylistContentDao
      *
      * @param trackId to remove from database.
      */
-    public void delete(String trackId)
+    public void deleteByTrackId(String trackId)
+    {
+
+        StringBuilder query = new StringBuilder("DELETE FROM ")
+            .append(TABLE_NAME)
+            .append(" WHERE ")
+            .append(TRACK_COLUMN)
+            .append(" = '")
+            .append(trackId)
+            .append("'");
+        dbWrite.execSQL(query.toString());
+    }
+
+    /**
+     * Deletes row from database by id.
+     *
+     * @param trackId to remove from database.
+     */
+    public void deleteByPlaylistId(String trackId)
     {
 
         StringBuilder query = new StringBuilder("DELETE FROM ")
             .append(TABLE_NAME)
             .append(" WHERE ")
             .append(PLAYLIST_COLUMN)
+            .append(" = '")
+            .append(trackId)
+            .append("'");
+        dbWrite.execSQL(query.toString());
+    }
+
+    /**
+     * Deletes row from database by id.
+     *
+     * @param trackId to remove from database.
+     */
+    public void deleteTrackFromPlaylist(String playlistId, String trackId)
+    {
+
+        StringBuilder query = new StringBuilder("DELETE FROM ")
+            .append(TABLE_NAME)
+            .append(" WHERE ")
+            .append(PLAYLIST_COLUMN)
+            .append(" = '")
+            .append(playlistId)
+            .append(" ' AND ")
+            .append(TRACK_COLUMN)
             .append(" = '")
             .append(trackId)
             .append("'");

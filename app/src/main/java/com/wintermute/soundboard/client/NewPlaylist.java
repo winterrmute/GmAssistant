@@ -26,9 +26,6 @@ public class NewPlaylist extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_playlist);
 
-        Spinner dropdown = findViewById(R.id.audio_type_spinner);
-        prepareSpinner(dropdown);
-
         playlistName = findViewById(R.id.playlist_name);
         Button submit = findViewById(R.id.submit);
         submit.setOnClickListener(v ->
@@ -36,7 +33,7 @@ public class NewPlaylist extends AppCompatActivity
             if (!playlistName.getText().toString().equals(""))
             {
                 PlaylistCreateService playlistCreator =
-                    new PlaylistCreateService(this, playlistName.getText().toString(), path, dropdown.getSelectedItem().toString());
+                    new PlaylistCreateService(this, playlistName.getText().toString(), path);
                 playlistCreator.createPlaylistAndReferences();
                 this.finish();
             } else
@@ -61,13 +58,5 @@ public class NewPlaylist extends AppCompatActivity
         {
             path = data.getStringExtra("path");
         }
-    }
-
-    private void prepareSpinner(Spinner spinner)
-    {
-
-        String[] types = new String[] {"Background music", "Ambiente", "Jumpscare"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, types);
-        spinner.setAdapter(adapter);
     }
 }

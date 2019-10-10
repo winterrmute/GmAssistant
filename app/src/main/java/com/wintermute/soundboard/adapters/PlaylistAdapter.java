@@ -7,11 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import androidx.lifecycle.LiveData;
 import com.wintermute.soundboard.R;
 import com.wintermute.soundboard.model.Playlist;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**

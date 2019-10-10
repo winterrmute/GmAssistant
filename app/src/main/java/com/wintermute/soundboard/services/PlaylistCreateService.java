@@ -29,14 +29,12 @@ public class PlaylistCreateService
      * @param ctx activity context.
      * @param playlistName for the new playlist.
      * @param path containing audio files.
-     * @param type describes what type of sound it is.
      */
-    public PlaylistCreateService(Context ctx, String playlistName, String path, String type)
+    public PlaylistCreateService(Context ctx, String playlistName, String path)
     {
         this.ctx = ctx;
         this.playlistName = playlistName;
         this.browsePath = path;
-        this.soundType = type;
     }
 
     /**
@@ -89,7 +87,7 @@ public class PlaylistCreateService
         for (File file : tracksFound)
         {
             Track.Builder builder =
-                new Track.Builder().withName(file.getName()).withPath(file.getPath()).withType(soundType);
+                new Track.Builder().withName(file.getName()).withPath(file.getPath()).withType("");
             Track track = builder.withId(dao.insert(builder.build())).build();
             fillPlaylistContent(playlist, track);
         }

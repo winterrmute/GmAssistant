@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.wintermute.soundboard.R;
 import com.wintermute.soundboard.model.Track;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

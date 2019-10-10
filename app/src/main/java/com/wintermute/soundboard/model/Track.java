@@ -13,7 +13,7 @@ public class Track
     private String id;
     private String name;
     private String artist;
-    private String type;
+    private String tag;
     private String path;
     private String sceneId;
 
@@ -22,7 +22,7 @@ public class Track
         private String id;
         private String name;
         private String artist;
-        private String type;
+        private String tag;
         private String path;
         private String sceneId;
 
@@ -45,7 +45,7 @@ public class Track
         }
 
         public Builder withType(String type){
-            this.type = type;
+            this.tag = type;
             return this;
         }
 
@@ -64,7 +64,7 @@ public class Track
             result.id = this.id;
             result.name = this.name;
             result.artist = this.artist;
-            result.type = this.type;
+            result.tag = this.tag;
             result.path = this.path;
             result.sceneId = this.sceneId;
             return result;

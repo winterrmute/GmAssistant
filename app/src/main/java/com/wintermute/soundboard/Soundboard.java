@@ -1,6 +1,7 @@
 package com.wintermute.soundboard;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -9,8 +10,9 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.soundboard.adapters.PlaylistAdapter;
 import com.wintermute.soundboard.client.NewPlaylist;
-import com.wintermute.soundboard.manager.PlayerManager;
+import com.wintermute.soundboard.database.dao.PlaylistContentDao;
 import com.wintermute.soundboard.database.dao.PlaylistDao;
+import com.wintermute.soundboard.manager.PlayerManager;
 import com.wintermute.soundboard.model.Playlist;
 
 import java.util.ArrayList;
@@ -47,6 +49,35 @@ public class Soundboard extends AppCompatActivity
             Intent playlistContent = new Intent(Soundboard.this, PlayerManager.class);
             playlistContent.putExtra("id", listOfPlaylists.get(position).getId());
             startActivity(playlistContent);
+        });
+
+        playlistView.setOnItemLongClickListener((parent, view, position, id) ->
+        {
+            AlertDialog.Builder b = new AlertDialog.Builder(Soundboard.this);
+            b.setTitle(listOfPlaylists.get(position).getName());
+            String[] types = {"RENAME", "DELETE"};
+            b.setItems(types, (dialog, which) ->
+            {
+                dialog.dismiss();
+                switch (which)
+                {
+                    case 0:
+                        Playlist playlist = listOfPlaylists.get(position);
+                        listOfPlaylists.get(position).setName("implement me!");
+                        playlistDao.update(playlist);
+                        renderPlaylist();
+                        break;
+                    case 1:
+                        playlistDao.delete(listOfPlaylists.get(0));
+                        PlaylistContentDao pcd = new PlaylistContentDao(Soundboard.this);
+                        pcd.deleteByPlaylistId(listOfPlaylists.get(position).getId());
+                        playlistDao.delete(listOfPlaylists.get(position));
+                        renderPlaylist();
+                        break;
+                }
+            });
+            b.show();
+            return true;
         });
     }
 

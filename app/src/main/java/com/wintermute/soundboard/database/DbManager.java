@@ -32,6 +32,7 @@ public class DbManager extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase db)
     {
+
         db.execSQL(PLAYLIST);
         db.execSQL(TRACK);
         db.execSQL(PLAYLIST_CONTENT);

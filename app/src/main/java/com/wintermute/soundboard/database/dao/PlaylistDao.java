@@ -159,7 +159,7 @@ public class PlaylistDao
     /**
      * Deletes row by id.
      *
-     * @param playlist to delete by id.
+     * @param playlist to deleteByTrackId by id.
      */
     public void delete(Playlist playlist)
     {

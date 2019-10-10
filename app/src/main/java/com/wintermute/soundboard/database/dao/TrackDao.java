@@ -20,7 +20,7 @@ public class TrackDao
     private static final String ID_COLUMN = "id";
     private static final String NAME_COLUMN = "name";
     private static final String ARTIST_COLUMN = "artist";
-    private static final String TYPE_COLUMN = "type";
+    private static final String TYPE_COLUMN = "tag";
     private static final String PATH_COLUMN = "path";
     private static final String SCENE_COLUMN = "scene_id";
 
@@ -49,7 +49,7 @@ public class TrackDao
             ContentValues values = new ContentValues();
             values.put(NAME_COLUMN, track.getName());
             values.put(ARTIST_COLUMN, track.getArtist());
-            values.put(TYPE_COLUMN, track.getType());
+            values.put(TYPE_COLUMN, track.getTag());
             values.put(PATH_COLUMN, track.getPath());
             values.put(SCENE_COLUMN, track.getSceneId());
 
