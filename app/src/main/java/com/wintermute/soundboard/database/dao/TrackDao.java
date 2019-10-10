@@ -20,7 +20,7 @@ public class TrackDao
     private static final String ID_COLUMN = "id";
     private static final String NAME_COLUMN = "name";
     private static final String ARTIST_COLUMN = "artist";
-    private static final String TYPE_COLUMN = "tag";
+    private static final String TAG_COLUMN = "tag";
     private static final String PATH_COLUMN = "path";
     private static final String SCENE_COLUMN = "scene_id";
 
@@ -41,20 +41,20 @@ public class TrackDao
      */
     public String insert(Track track)
     {
-        if (getIdByName(track.getName()) != null)
+        if (computeIdIfAbsent(track.getName()) != null)
         {
-            return getIdByName(track.getName());
+            return computeIdIfAbsent(track.getName());
         } else
         {
             ContentValues values = new ContentValues();
             values.put(NAME_COLUMN, track.getName());
             values.put(ARTIST_COLUMN, track.getArtist());
-            values.put(TYPE_COLUMN, track.getTag());
+            values.put(TAG_COLUMN, track.getTag());
             values.put(PATH_COLUMN, track.getPath());
             values.put(SCENE_COLUMN, track.getSceneId());
 
             dbWrite.insert(TABLE_NAME, null, values);
-            return getIdByName(track.getName());
+            return computeIdIfAbsent(track.getName());
         }
     }
 
@@ -64,7 +64,7 @@ public class TrackDao
      * @param title to identify database entry.
      * @return selected track.
      */
-    private String getIdByName(String title)
+    private String computeIdIfAbsent(String title)
     {
         StringBuilder query = new StringBuilder("SELECT id FROM ")
             .append(TABLE_NAME)
@@ -73,11 +73,25 @@ public class TrackDao
             .append("  =  '")
             .append(title)
             .append("'");
-        try {
-            return mapObject(dbRead.rawQuery(query.toString(), null)).get(0).getId() ;
-        } catch (IndexOutOfBoundsException e) {
+        try
+        {
+            return mapObject(dbRead.rawQuery(query.toString(), null)).get(0).getId();
+        } catch (IndexOutOfBoundsException e)
+        {
             return null;
         }
+    }
+
+    public String getTag(String id)
+    {
+        StringBuilder query = new StringBuilder("SELECT tag FROM ")
+            .append(TABLE_NAME)
+            .append(" WHERE ")
+            .append(ID_COLUMN)
+            .append(" = '")
+            .append(id)
+            .append("'");
+        return mapObject(dbRead.rawQuery(query.toString(), null)).get(0).getTag();
     }
 
     /**
@@ -139,6 +153,7 @@ public class TrackDao
             track.setId(getColumnValue(cursor, ID_COLUMN));
             track.setName(getColumnValue(cursor, NAME_COLUMN));
             track.setArtist(getColumnValue(cursor, ARTIST_COLUMN));
+            track.setTag(getColumnValue(cursor, TAG_COLUMN));
             track.setPath(getColumnValue(cursor, PATH_COLUMN));
             track.setSceneId(getColumnValue(cursor, SCENE_COLUMN));
             result.add(track);
@@ -178,6 +193,10 @@ public class TrackDao
             .append(" = '")
             .append(track.getArtist())
             .append("', ")
+            .append(TAG_COLUMN)
+            .append(" = '")
+            .append(track.getTag())
+            .append("', ")
             .append(PATH_COLUMN)
             .append(" = '")
             .append(track.getPath())
@@ -196,7 +215,7 @@ public class TrackDao
      *
      * @param track to remove from database.
      */
-    public void delete(Track track)
+    void delete(Track track)
     {
         StringBuilder query = new StringBuilder("DELETE FROM ")
             .append(TABLE_NAME)

@@ -44,11 +44,11 @@ public class TrackDaoTest
         track.setId(dao.insert(track));
         assertTrue(dao.getAll().size() > 0);
         assertNotNull(track.getId());
-        assertEquals("/here/be/path", dao.getTrack(track).getPath());
+        assertEquals("/here/be/path", dao.getTrack(track.getId()).getPath());
 
         track.setName("changed");
         dao.update(track);
-        assertEquals("changed", dao.getTrack(track).getName());
+        assertEquals("changed", dao.getTrack(track.getId()).getName());
 
         dao.delete(track);
         assertEquals(0, dao.getAll().size());

@@ -10,7 +10,9 @@ import com.wintermute.soundboard.adapters.AudioFileAdapter;
 import com.wintermute.soundboard.database.dao.PlaylistContentDao;
 import com.wintermute.soundboard.database.dao.TrackDao;
 import com.wintermute.soundboard.model.Track;
+import com.wintermute.soundboard.services.player.AmbientSound;
 import com.wintermute.soundboard.services.player.BackgroundMusic;
+import com.wintermute.soundboard.services.player.JumpScareSound;
 
 import java.util.List;
 
@@ -24,7 +26,8 @@ public class PlayerManager extends AppCompatActivity
 
     private ListView songView;
     private List<Track> allTracks;
-    TrackDao trackDao;
+    private TrackDao trackDao;
+    private String trackPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -37,9 +40,18 @@ public class PlayerManager extends AppCompatActivity
 
         songView.setOnItemClickListener((parent, view, position, id) ->
         {
-            Intent playerService = new Intent(PlayerManager.this, BackgroundMusic.class);
-            playerService.putExtra("path", allTracks.get(position).getPath());
-            startService(playerService);
+            trackPath = allTracks.get(position).getPath();
+            String tag = allTracks.get(position).getTag();
+            if (tag.equals("song"))
+            {
+                startPlayer(BackgroundMusic.class);
+            } else if (tag.equals("ambiente"))
+            {
+                startPlayer(AmbientSound.class);
+            } else if (tag.equals("jumpscare"))
+            {
+                startPlayer(JumpScareSound.class);
+            }
         });
 
         songView.setOnItemLongClickListener((parent, view, position, id) ->
@@ -53,13 +65,13 @@ public class PlayerManager extends AppCompatActivity
                 switch (which)
                 {
                     case 0:
-                        setTagOrDelete(position, "song");
+                        setTag(position, "song");
                         break;
                     case 1:
-                        setTagOrDelete(position, "ambiente");
+                        setTag(position, "ambiente");
                         break;
                     case 2:
-                        setTagOrDelete(position, "jumpscare");
+                        setTag(position, "jumpscare");
                         break;
                     case 3:
                         PlaylistContentDao dao = new PlaylistContentDao(PlayerManager.this);
@@ -74,7 +86,13 @@ public class PlayerManager extends AppCompatActivity
         });
     }
 
-    private void setTagOrDelete(int position, String tag)
+    /**
+     * Updates tag for selected track.
+     *
+     * @param position position in list.
+     * @param tag to be set.
+     */
+    private void setTag(int position, String tag)
     {
         allTracks.get(position).setTag(tag);
         trackDao.update(allTracks.get(position));
@@ -89,5 +107,17 @@ public class PlayerManager extends AppCompatActivity
         AudioFileAdapter songAdapter = new AudioFileAdapter(this, allTracks);
         songView = findViewById(R.id.audio_list);
         songView.setAdapter(songAdapter);
+    }
+
+    /**
+     * Start proper music player by tag.
+     *
+     * @param type
+     */
+    private void startPlayer(Class type)
+    {
+        Intent player = new Intent(PlayerManager.this, type);
+        player.putExtra("path", trackPath);
+        startService(player);
     }
 }

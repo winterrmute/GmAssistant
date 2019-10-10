@@ -18,7 +18,7 @@ public class BackgroundMusic extends Service
     implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener
 {
 
-    MediaPlayer mediaPlayer = new MediaPlayer();
+    private MediaPlayer mediaPlayer = new MediaPlayer();
 
     @Nullable
     @Override
@@ -57,14 +57,15 @@ public class BackgroundMusic extends Service
      */
     private void startPlayback(String path)
     {
+        mediaPlayer.stop();
         mediaPlayer = create(this, Uri.parse(path));
+        mediaPlayer.setVolume(0.25f, 0.25f);
         mediaPlayer.start();
     }
 
     @Override
     public void onCreate()
     {
-        mediaPlayer.stop();
         mediaPlayer = new MediaPlayer();
     }
 }

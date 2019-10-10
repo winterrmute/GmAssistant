@@ -21,7 +21,6 @@ public class PlaylistCreateService
     private Context ctx;
     private String playlistName;
     private String browsePath;
-    private String soundType;
 
     /**
      * Creates an instance.
@@ -86,9 +85,14 @@ public class PlaylistCreateService
         List<File> tracksFound = fs.collectTracks(browsePath);
         for (File file : tracksFound)
         {
-            Track.Builder builder =
-                new Track.Builder().withName(file.getName()).withPath(file.getPath()).withType("");
-            Track track = builder.withId(dao.insert(builder.build())).build();
+//            Track.Builder builder =
+//                new Track.Builder().withName(file.getName()).withPath(file.getPath()).withType("");
+//            Track track = builder.withId(dao.insert(builder.build())).build();
+            Track track = new Track();
+            track.setName(file.getName());
+            track.setPath(file.getPath());
+            track.setId(dao.insert(track));
+
             fillPlaylistContent(playlist, track);
         }
     }

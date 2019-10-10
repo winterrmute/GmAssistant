@@ -41,14 +41,13 @@ public class PlaylistDaoTest
 
         Playlist playlist = new Playlist();
         playlist.setName("customPlaylist");
-        playlist.setContentId("-1");
 
         playlist.setId(dao.insert(playlist));
         assertTrue(dao.getAll().size() > 0);
 
         playlist.setName("Lolz");
         dao.update(playlist);
-        assertEquals("Lolz", dao.getPlaylist(playlist).getName());
+        assertEquals("Lolz", dao.getPlaylist(playlist.getId()).getName());
 
         dao.delete(playlist);
         assertEquals(0, dao.getPlaylistNames().size());
