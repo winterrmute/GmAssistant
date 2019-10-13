@@ -9,7 +9,7 @@ import com.wintermute.soundboard.R;
 import com.wintermute.soundboard.adapters.AudioFileAdapter;
 import com.wintermute.soundboard.database.dao.PlaylistContentDao;
 import com.wintermute.soundboard.database.dao.TrackDao;
-import com.wintermute.soundboard.model.Track;
+import com.wintermute.soundboard.database.dto.TrackDto;
 import com.wintermute.soundboard.services.player.AmbientSound;
 import com.wintermute.soundboard.services.player.BackgroundMusic;
 import com.wintermute.soundboard.services.player.JumpScareSound;
@@ -25,7 +25,7 @@ public class PlayerManager extends AppCompatActivity
 {
 
     private ListView songView;
-    private List<Track> allTracks;
+    private List<TrackDto> allTracks;
     private TrackDao trackDao;
     private String trackId;
 
@@ -64,7 +64,7 @@ public class PlayerManager extends AppCompatActivity
         {
             AlertDialog.Builder b = new AlertDialog.Builder(PlayerManager.this);
             b.setTitle(allTracks.get(position).getName());
-            String[] types = {"Set TAG: \"music\"", "Set TAG: \"ambiente\"", "Set TAG: \"jumpscare\"", "DELETE"};
+            String[] types = {"Set TAG: \"music\"", "Set TAG: \"ambiente\"", "Set TAG: \"jumpscare\"", "Add scene","DELETE"};
             b.setItems(types, (dialog, which) ->
             {
                 dialog.dismiss();
@@ -80,6 +80,8 @@ public class PlayerManager extends AppCompatActivity
                         setTag(position, "jumpscare");
                         break;
                     case 3:
+                        break;
+                    case 4:
                         PlaylistContentDao dao = new PlaylistContentDao(PlayerManager.this);
                         dao.deleteTrackFromPlaylist(PlayerManager.this.getIntent().getStringExtra("id"),
                             allTracks.get(position).getId());
@@ -102,6 +104,7 @@ public class PlayerManager extends AppCompatActivity
     {
         allTracks.get(position).setTag(tag);
         trackDao.update(allTracks.get(position));
+        renderFilesAsList();
     }
 
     /**

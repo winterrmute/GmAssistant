@@ -4,9 +4,9 @@ import android.content.Context;
 import com.wintermute.soundboard.database.dao.PlaylistContentDao;
 import com.wintermute.soundboard.database.dao.PlaylistDao;
 import com.wintermute.soundboard.database.dao.TrackDao;
-import com.wintermute.soundboard.model.Playlist;
-import com.wintermute.soundboard.model.PlaylistContent;
-import com.wintermute.soundboard.model.Track;
+import com.wintermute.soundboard.database.dto.PlaylistDto;
+import com.wintermute.soundboard.database.dto.PlaylistContentDto;
+import com.wintermute.soundboard.database.dto.TrackDto;
 
 import java.io.File;
 import java.util.List;
@@ -49,10 +49,10 @@ public class PlaylistCreateService
      *
      * @return new created playlist.
      */
-    private Playlist createPlaylist()
+    private PlaylistDto createPlaylist()
     {
         PlaylistDao dao = new PlaylistDao(ctx);
-        Playlist result = new Playlist();
+        PlaylistDto result = new PlaylistDto();
         result.setName(playlistName);
         result.setId(dao.insert(result));
         dao.update(result);
@@ -62,10 +62,10 @@ public class PlaylistCreateService
     /**
      * Map all selected tracks to created playlist
      */
-    private void fillPlaylistContent(Playlist playlist, Track track)
+    private void fillPlaylistContent(PlaylistDto playlist, TrackDto track)
     {
         PlaylistContentDao dao = new PlaylistContentDao(ctx);
-        PlaylistContent result = new PlaylistContent();
+        PlaylistContentDto result = new PlaylistContentDto();
         result.setPlaylist(playlist.getId());
         result.setTrack(track.getId());
         dao.insert(result);
@@ -78,17 +78,17 @@ public class PlaylistCreateService
      * @param playlist which should be referenced.
      */
     //TODO: Add with transaction
-    private void addTracks(Playlist playlist)
+    private void addTracks(PlaylistDto playlist)
     {
         TrackDao dao = new TrackDao(ctx);
         FileBrowserService fs = new FileBrowserService();
         List<File> tracksFound = fs.collectTracks(browsePath);
         for (File file : tracksFound)
         {
-//            Track.Builder builder =
-//                new Track.Builder().withName(file.getName()).withPath(file.getPath()).withType("");
-//            Track track = builder.withId(dao.insert(builder.build())).build();
-            Track track = new Track();
+//            TrackDto.Builder builder =
+//                new TrackDto.Builder().withName(file.getName()).withPath(file.getPath()).withType("");
+//            TrackDto track = builder.withId(dao.insert(builder.build())).build();
+            TrackDto track = new TrackDto();
             track.setName(file.getName());
             track.setPath(file.getPath());
             track.setId(dao.insert(track));

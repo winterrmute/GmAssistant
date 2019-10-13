@@ -1,9 +1,9 @@
-package com.wintermute.soundboard.model;
+package com.wintermute.soundboard.database.dto;
 
 import lombok.Data;
 
 @Data
-public class PlaylistContent
+public class PlaylistContentDto
 {
     private String playlist;
     private String track;

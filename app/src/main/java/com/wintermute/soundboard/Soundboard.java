@@ -13,7 +13,7 @@ import com.wintermute.soundboard.client.NewPlaylist;
 import com.wintermute.soundboard.database.dao.PlaylistContentDao;
 import com.wintermute.soundboard.database.dao.PlaylistDao;
 import com.wintermute.soundboard.manager.PlayerManager;
-import com.wintermute.soundboard.model.Playlist;
+import com.wintermute.soundboard.database.dto.PlaylistDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public class Soundboard extends AppCompatActivity
 {
     private ListView playlistView;
     private PlaylistDao playlistDao;
-    private List<Playlist> listOfPlaylists;
+    private List<PlaylistDto> listOfPlaylists;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -62,7 +62,7 @@ public class Soundboard extends AppCompatActivity
                 switch (which)
                 {
                     case 0:
-                        Playlist playlist = listOfPlaylists.get(position);
+                        PlaylistDto playlist = listOfPlaylists.get(position);
                         listOfPlaylists.get(position).setName("implement me!");
                         playlistDao.update(playlist);
                         renderPlaylist();

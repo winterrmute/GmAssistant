@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.soundboard.database.DbManager;
-import com.wintermute.soundboard.model.Track;
+import com.wintermute.soundboard.database.dto.TrackDto;
 
 import java.util.ArrayList;
 
@@ -39,7 +39,7 @@ public class TrackDao
      *
      * @return id of inserted element.
      */
-    public String insert(Track track)
+    public String insert(TrackDto track)
     {
         if (computeIdIfAbsent(track.getName()) != null)
         {
@@ -100,7 +100,7 @@ public class TrackDao
      * @param id to identify database entry.
      * @return selected track.
      */
-    public Track getTrack(String id)
+    public TrackDto getTrack(String id)
     {
         StringBuilder query = new StringBuilder("SELECT * FROM ")
             .append(TABLE_NAME)
@@ -118,7 +118,7 @@ public class TrackDao
      * @param id of playlist containing tracks.
      * @return List of Tracks
      */
-    public ArrayList<Track> getReferencedTracks(String id)
+    public ArrayList<TrackDto> getReferencedTracks(String id)
     {
         StringBuilder query = new StringBuilder(
             "SELECT * FROM playlist pl, playlist_content ct, track tk WHERE tk.id = ct.track AND pl.id = ct.playlist "
@@ -132,7 +132,7 @@ public class TrackDao
      *
      * @return list of track names.
      */
-    public ArrayList<Track> getAll()
+    public ArrayList<TrackDto> getAll()
     {
         StringBuilder query = new StringBuilder("SELECT * FROM " + TABLE_NAME);
         return mapObject(dbRead.rawQuery(query.toString(), null));
@@ -144,12 +144,12 @@ public class TrackDao
      * @param cursor to iterate over database rows.
      * @return list of track objects.
      */
-    private ArrayList<Track> mapObject(Cursor cursor)
+    private ArrayList<TrackDto> mapObject(Cursor cursor)
     {
-        ArrayList<Track> result = new ArrayList<>();
+        ArrayList<TrackDto> result = new ArrayList<>();
         while (cursor.moveToNext())
         {
-            Track track = new Track();
+            TrackDto track = new TrackDto();
             track.setId(getColumnValue(cursor, ID_COLUMN));
             track.setName(getColumnValue(cursor, NAME_COLUMN));
             track.setArtist(getColumnValue(cursor, ARTIST_COLUMN));
@@ -180,7 +180,7 @@ public class TrackDao
     /**
      * Uptdate row in track table.
      */
-    public void update(Track track)
+    public void update(TrackDto track)
     {
         StringBuilder query = new StringBuilder("UPDATE ")
             .append(TABLE_NAME)
@@ -215,7 +215,7 @@ public class TrackDao
      *
      * @param track to remove from database.
      */
-    void delete(Track track)
+    void delete(TrackDto track)
     {
         StringBuilder query = new StringBuilder("DELETE FROM ")
             .append(TABLE_NAME)

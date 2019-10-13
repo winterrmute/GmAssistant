@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.wintermute.soundboard.R;
-import com.wintermute.soundboard.model.Playlist;
+import com.wintermute.soundboard.database.dto.PlaylistDto;
 import java.util.List;
 
 /**
@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class PlaylistAdapter extends BaseAdapter
 {
-    private List<Playlist> userPlaylists;
+    private List<PlaylistDto> userPlaylists;
     private LayoutInflater inflater;
 
     /**
@@ -27,7 +27,7 @@ public class PlaylistAdapter extends BaseAdapter
      * @param ctx application context
      * @param playlists to display within the list view.
      */
-    public PlaylistAdapter(Context ctx, List<Playlist> playlists)
+    public PlaylistAdapter(Context ctx, List<PlaylistDto> playlists)
     {
         this.userPlaylists = playlists;
         inflater = LayoutInflater.from(ctx);
@@ -56,7 +56,7 @@ public class PlaylistAdapter extends BaseAdapter
     {
         LinearLayout result = (LinearLayout) inflater.inflate(R.layout.file, parent, false);
         TextView fileName = result.findViewById(R.id.file_name);
-        Playlist userPlaylist = userPlaylists.get(position);
+        PlaylistDto userPlaylist = userPlaylists.get(position);
         fileName.setText(userPlaylist.getName());
         result.setTag(position);
         return result;

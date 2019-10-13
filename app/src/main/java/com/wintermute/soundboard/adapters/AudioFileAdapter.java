@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.wintermute.soundboard.R;
-import com.wintermute.soundboard.model.Track;
+import com.wintermute.soundboard.database.dto.TrackDto;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import java.util.List;
 public class AudioFileAdapter extends BaseAdapter
 {
 
-    private List<Track> tracks;
+    private List<TrackDto> tracks;
     private LayoutInflater inflater;
 
     /**
@@ -29,7 +29,7 @@ public class AudioFileAdapter extends BaseAdapter
      * @param ctx application context.
      * @param tracks displayed by a playlist.
      */
-    public AudioFileAdapter(Context ctx, List<Track> tracks)
+    public AudioFileAdapter(Context ctx, List<TrackDto> tracks)
     {
         this.tracks = tracks;
         inflater = LayoutInflater.from(ctx);
@@ -59,7 +59,7 @@ public class AudioFileAdapter extends BaseAdapter
         LinearLayout result = (LinearLayout) inflater.inflate(R.layout.song, parent, false);
         TextView trackView = result.findViewById(R.id.title);
         TextView artistView = result.findViewById(R.id.tag);
-        Track target = tracks.get(position);
+        TrackDto target = tracks.get(position);
         trackView.setText(target.getName());
         artistView.setText(target.getTag());
         result.setTag(position);

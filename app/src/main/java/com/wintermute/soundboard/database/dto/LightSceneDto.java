@@ -1,9 +1,9 @@
-package com.wintermute.soundboard.model;
+package com.wintermute.soundboard.database.dto;
 
 import lombok.Data;
 
 @Data
-public class LightScene
+public class LightSceneDto
 {
     private long id;
     private String color;
