@@ -28,6 +28,8 @@
         </activity>
 
         <service android:name=".services.player.BackgroundMusic" />
+        <service android:name=".services.player.AmbientSound" />
+        <service android:name=".services.player.JumpScareSound" />
     </application>
 
 </manifest>

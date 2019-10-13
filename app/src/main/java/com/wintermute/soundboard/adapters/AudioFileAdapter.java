@@ -58,10 +58,10 @@ public class AudioFileAdapter extends BaseAdapter
     {
         LinearLayout result = (LinearLayout) inflater.inflate(R.layout.song, parent, false);
         TextView trackView = result.findViewById(R.id.title);
-        TextView artistView = result.findViewById(R.id.artist);
+        TextView artistView = result.findViewById(R.id.tag);
         Track target = tracks.get(position);
         trackView.setText(target.getName());
-        artistView.setText(target.getArtist());
+        artistView.setText(target.getTag());
         result.setTag(position);
         return result;
     }

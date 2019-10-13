@@ -32,7 +32,7 @@ public class FileBrowser extends AppCompatActivity
         setContentView(R.layout.activity_file_browser);
 
         fileBrowserService = new FileBrowserService();
-        path = this.getExternalFilesDir("");
+        getRootDir();
         ArrayList<File> files = fileBrowserService.scanDir(path);
         renderFiles(files);
 
@@ -86,4 +86,18 @@ public class FileBrowser extends AppCompatActivity
         FileAdapter fileAdapter = new FileAdapter(this, browsedFiles);
         fileView.setAdapter(fileAdapter);
     }
+
+    /**
+     * Starts browsing in root directory instead of app directory.
+     *
+     * @return root directory
+     */
+    private File getRootDir(){
+        path = this.getExternalFilesDir("");
+        while (path.getParent() != null && new File(path.getParent()).canRead()){
+            path = new File(path.getParent());
+        }
+        return path;
+    }
+
 }

@@ -59,7 +59,8 @@ public class BackgroundMusic extends Service
     {
         mediaPlayer.stop();
         mediaPlayer = create(this, Uri.parse(path));
-        mediaPlayer.setVolume(0.25f, 0.25f);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.setVolume(0.10f, 0.10f);
         mediaPlayer.start();
     }
 

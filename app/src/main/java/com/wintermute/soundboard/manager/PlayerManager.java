@@ -42,15 +42,21 @@ public class PlayerManager extends AppCompatActivity
         {
             trackPath = allTracks.get(position).getPath();
             String tag = allTracks.get(position).getTag();
-            if (tag.equals("song"))
+            if (tag != null)
+            {
+                if (tag.equals("music"))
+                {
+                    startPlayer(BackgroundMusic.class);
+                } else if (tag.equals("ambiente"))
+                {
+                    startPlayer(AmbientSound.class);
+                } else if (tag.equals("jumpscare"))
+                {
+                    startPlayer(JumpScareSound.class);
+                }
+            } else
             {
                 startPlayer(BackgroundMusic.class);
-            } else if (tag.equals("ambiente"))
-            {
-                startPlayer(AmbientSound.class);
-            } else if (tag.equals("jumpscare"))
-            {
-                startPlayer(JumpScareSound.class);
             }
         });
 
@@ -58,14 +64,14 @@ public class PlayerManager extends AppCompatActivity
         {
             AlertDialog.Builder b = new AlertDialog.Builder(PlayerManager.this);
             b.setTitle(allTracks.get(position).getName());
-            String[] types = {"Set TAG: \"song\"", "Set TAG: \"ambiente\"", "Set TAG: \"jumpscare\"", "DELETE"};
+            String[] types = {"Set TAG: \"music\"", "Set TAG: \"ambiente\"", "Set TAG: \"jumpscare\"", "DELETE"};
             b.setItems(types, (dialog, which) ->
             {
                 dialog.dismiss();
                 switch (which)
                 {
                     case 0:
-                        setTag(position, "song");
+                        setTag(position, "music");
                         break;
                     case 1:
                         setTag(position, "ambiente");
