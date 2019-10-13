@@ -27,7 +27,7 @@ public class PlayerManager extends AppCompatActivity
     private ListView songView;
     private List<Track> allTracks;
     private TrackDao trackDao;
-    private String trackPath;
+    private String trackId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -40,7 +40,7 @@ public class PlayerManager extends AppCompatActivity
 
         songView.setOnItemClickListener((parent, view, position, id) ->
         {
-            trackPath = allTracks.get(position).getPath();
+            trackId = allTracks.get(position).getId();
             String tag = allTracks.get(position).getTag();
             if (tag != null)
             {
@@ -93,7 +93,7 @@ public class PlayerManager extends AppCompatActivity
     }
 
     /**
-     * Updates tag for selected track.
+     * Updates tag for selected trackId.
      *
      * @param position position in list.
      * @param tag to be set.
@@ -123,7 +123,7 @@ public class PlayerManager extends AppCompatActivity
     private void startPlayer(Class type)
     {
         Intent player = new Intent(PlayerManager.this, type);
-        player.putExtra("path", trackPath);
+        player.putExtra("id", trackId);
         startService(player);
     }
 }

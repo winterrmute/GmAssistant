@@ -68,7 +68,7 @@ public class Soundboard extends AppCompatActivity
                         renderPlaylist();
                         break;
                     case 1:
-                        playlistDao.delete(listOfPlaylists.get(0));
+                        playlistDao.delete(listOfPlaylists.get(position));
                         PlaylistContentDao pcd = new PlaylistContentDao(Soundboard.this);
                         pcd.deleteByPlaylistId(listOfPlaylists.get(position).getId());
                         playlistDao.delete(listOfPlaylists.get(position));

@@ -8,6 +8,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
+import com.wintermute.soundboard.database.dao.TrackDao;
 
 /**
  * Handles the media player and client requests.
@@ -48,7 +49,7 @@ public class BackgroundMusic extends Service
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-        startPlayback(intent.getStringExtra("path"));
+        startPlayback(getTrackPath(intent.getStringExtra("id")));
         return Service.START_NOT_STICKY;
     }
 
@@ -68,5 +69,10 @@ public class BackgroundMusic extends Service
     public void onCreate()
     {
         mediaPlayer = new MediaPlayer();
+    }
+
+    private String getTrackPath(String trackId) {
+        TrackDao dao = new TrackDao(getBaseContext());
+        return dao.getTrack(trackId).getPath();
     }
 }

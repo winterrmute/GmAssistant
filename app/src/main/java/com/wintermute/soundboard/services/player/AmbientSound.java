@@ -8,9 +8,9 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
+import com.wintermute.soundboard.database.dao.TrackDao;
 
-public class AmbientSound extends Service
-    implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener
+public class AmbientSound extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener
 {
 
     private MediaPlayer mediaPlayer = new MediaPlayer();
@@ -20,12 +20,6 @@ public class AmbientSound extends Service
     public IBinder onBind(Intent intent)
     {
         return null;
-    }
-
-    @Override
-    public void onCompletion(MediaPlayer mp)
-    {
-
     }
 
     @Override
@@ -43,7 +37,7 @@ public class AmbientSound extends Service
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-        startPlayback(intent.getStringExtra("path"));
+        startPlayback(getTrackPath(intent.getStringExtra("id")));
         return Service.START_NOT_STICKY;
     }
 
@@ -62,5 +56,10 @@ public class AmbientSound extends Service
     public void onCreate()
     {
         mediaPlayer = new MediaPlayer();
+    }
+
+    private String getTrackPath(String trackId) {
+        TrackDao dao = new TrackDao(getBaseContext());
+        return dao.getTrack(trackId).getPath();
     }
 }
