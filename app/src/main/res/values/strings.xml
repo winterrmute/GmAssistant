@@ -1,13 +1,13 @@
 <resources>
-    <!--  Soundboard App  -->
+    <!--  Soundboard  -->
     <string name="app_name">Soundboard</string>
     <string name="playlist">add new playlist</string>
     <string name="file_browser">Browse files</string>
 
-    <!--  Create playlist  -->
+    <!--  NewPlaylist  -->
     <string name="label">Playlist name: </string>
     <string name="name_placeholder">Insert playlist name</string>
-    <string name="submit">Submit</string>
+    <string name="playlist_submit">Submit</string>
     <string name="cancel">Cancel</string>
     <string name="browse_device">Browse device for playlist</string>
 
@@ -16,10 +16,13 @@
     <string name="shuffle">Shuffle</string>
     <string name="end">End</string>
 
-    <!--  File browser  -->
+    <!--  FileBrowser  -->
     <string name="browse_back">../</string>
     <string name="select_directory">Select current directory</string>
 
-
+    <!--  SceneHandler  -->
+    <string name="set_light">Set light effects</string>
+    <string name="next_track">Set next track</string>
+    <string name="submit_scene">Submit</string>
 
 </resources>

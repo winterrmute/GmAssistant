@@ -3,10 +3,9 @@ package com.wintermute.soundboard.database.dto;
 import lombok.Data;
 
 @Data
-public class LightSceneDto
+public class LightDto
 {
-    private long id;
+    private String id;
     private String color;
     private int brightness;
-    private int duration;
 }

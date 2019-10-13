@@ -35,14 +35,13 @@ public class PlaylistDao
     /**
      * Insert row into playlist table.
      */
-    public String insert(PlaylistDto playlist)
+    public long insert(PlaylistDto playlist)
     {
         ContentValues values = new ContentValues();
         values.put(ID_COLUMN, playlist.getId());
         values.put(NAME_COLUMN, playlist.getName());
 
-        dbWrite.insert(TABLE_NAME, null, values);
-        return getIdByName(playlist.getName());
+        return dbWrite.insert(TABLE_NAME, null, values);
     }
 
     /**
@@ -61,24 +60,6 @@ public class PlaylistDao
             .append(id)
             .append("'");
         return mapObject(dbRead.rawQuery(query.toString(), null)).get(0);
-    }
-
-    /**
-     * Select item by name.
-     *
-     * @param title to identify database entry.
-     * @return selected track.
-     */
-    private String getIdByName(String title)
-    {
-        StringBuilder query = new StringBuilder("SELECT id FROM ")
-            .append(TABLE_NAME)
-            .append("  WHERE ")
-            .append(NAME_COLUMN)
-            .append("  =  '")
-            .append(title)
-            .append("'");
-        return mapObject(dbRead.rawQuery(query.toString(), null)).get(0).getId();
     }
 
     /**

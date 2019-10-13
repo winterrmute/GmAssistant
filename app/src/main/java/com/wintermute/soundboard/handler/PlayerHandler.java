@@ -1,4 +1,4 @@
-package com.wintermute.soundboard.manager;
+package com.wintermute.soundboard.handler;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -21,13 +21,14 @@ import java.util.List;
  *
  * @author wintermute
  */
-public class PlayerManager extends AppCompatActivity
+public class PlayerHandler extends AppCompatActivity
 {
 
     private ListView songView;
     private List<TrackDto> allTracks;
     private TrackDao trackDao;
     private String trackId;
+    private String playlistId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -37,6 +38,8 @@ public class PlayerManager extends AppCompatActivity
 
         trackDao = new TrackDao(this);
         renderFilesAsList();
+
+        playlistId = PlayerHandler.this.getIntent().getStringExtra("playlistId");
 
         songView.setOnItemClickListener((parent, view, position, id) ->
         {
@@ -62,12 +65,14 @@ public class PlayerManager extends AppCompatActivity
 
         songView.setOnItemLongClickListener((parent, view, position, id) ->
         {
-            AlertDialog.Builder b = new AlertDialog.Builder(PlayerManager.this);
+            AlertDialog.Builder b = new AlertDialog.Builder(PlayerHandler.this);
             b.setTitle(allTracks.get(position).getName());
-            String[] types = {"Set TAG: \"music\"", "Set TAG: \"ambiente\"", "Set TAG: \"jumpscare\"", "Add scene","DELETE"};
+            String[] types =
+                {"Set TAG: \"music\"", "Set TAG: \"ambiente\"", "Set TAG: \"jumpscare\"", "Add scene", "DELETE"};
             b.setItems(types, (dialog, which) ->
             {
                 dialog.dismiss();
+
                 switch (which)
                 {
                     case 0:
@@ -80,11 +85,15 @@ public class PlayerManager extends AppCompatActivity
                         setTag(position, "jumpscare");
                         break;
                     case 3:
+                        Intent sceneManager = new Intent(PlayerHandler.this, SceneHandler.class);
+                        sceneManager.putExtra("trackId", allTracks.get(position).getId());
+                        sceneManager.putExtra("playlistId", playlistId);
+                        startActivity(sceneManager);
                         break;
                     case 4:
-                        PlaylistContentDao dao = new PlaylistContentDao(PlayerManager.this);
-                        dao.deleteTrackFromPlaylist(PlayerManager.this.getIntent().getStringExtra("id"),
-                            allTracks.get(position).getId());
+                        PlaylistContentDao dao = new PlaylistContentDao(PlayerHandler.this);
+                        playlistId = PlayerHandler.this.getIntent().getStringExtra("playlistId");
+                        dao.deleteTrackFromPlaylist(playlistId, allTracks.get(position).getId());
                         renderFilesAsList();
                         break;
                 }
@@ -112,7 +121,7 @@ public class PlayerManager extends AppCompatActivity
      */
     void renderFilesAsList()
     {
-        allTracks = trackDao.getReferencedTracks(this.getIntent().getStringExtra("id"));
+        allTracks = trackDao.getReferencedTracks(this.getIntent().getStringExtra("playlistId"));
         AudioFileAdapter songAdapter = new AudioFileAdapter(this, allTracks);
         songView = findViewById(R.id.audio_list);
         songView.setAdapter(songAdapter);
@@ -125,8 +134,11 @@ public class PlayerManager extends AppCompatActivity
      */
     private void startPlayer(Class type)
     {
-        Intent player = new Intent(PlayerManager.this, type);
-        player.putExtra("id", trackId);
+        Intent player = new Intent(PlayerHandler.this, type);
+        player.putExtra("trackId", trackId);
+        if (type == JumpScareSound.class) {
+            player.putExtra("playlistId", playlistId);
+        }
         startService(player);
     }
 }

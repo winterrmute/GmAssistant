@@ -13,8 +13,9 @@ import java.util.List;
 public class PlaylistContentDao
 {
     private static final String TABLE_NAME = "playlist_content";
-    private static final String PLAYLIST_COLUMN = "playlist";
-    private static final String TRACK_COLUMN = "track";
+    private static final String PLAYLIST_KEY = "playlist";
+    private static final String TRACK_KEY = "track";
+    private static final String SCENE_KEY = "scene";
 
     private SQLiteDatabase dbRead;
     private SQLiteDatabase dbWrite;
@@ -27,15 +28,16 @@ public class PlaylistContentDao
     }
 
     /**
-     * Insert row into playlist table.
+     * Insert row into playlist_content table.
      *
      * @return id of inserted element.
      */
     public void insert(PlaylistContentDto content)
     {
         ContentValues values = new ContentValues();
-        values.put(PLAYLIST_COLUMN, content.getPlaylist());
-        values.put(TRACK_COLUMN, content.getTrack());
+        values.put(PLAYLIST_KEY, content.getPlaylist());
+        values.put(TRACK_KEY, content.getTrack());
+        values.put(SCENE_KEY, content.getScene());
         dbWrite.insert(TABLE_NAME, null, values);
     }
 
@@ -50,11 +52,26 @@ public class PlaylistContentDao
         StringBuilder query = new StringBuilder("SELECT * FROM ")
             .append(TABLE_NAME)
             .append("  WHERE ")
-            .append(PLAYLIST_COLUMN)
+            .append(PLAYLIST_KEY)
             .append("  =  '")
             .append(playlistId)
             .append("'");
         return mapObject(dbRead.rawQuery(query.toString(), null));
+    }
+
+    /**
+     * TODO: REFACTOR ME
+     * @return
+     */
+    public String getSceneId(String playlistId, String trackId)
+    {
+//        String query = "SELECT next_track FROM playlist_content ct, scene sc WHERE ct.playlist = " + playlistId
+//            + " AND ct.track = " + trackId;
+        String query = "SELECT * FROM playlist_content WHERE playlist = '" + playlistId
+            + "' AND track = '" + trackId + "'";
+
+        Cursor cursor = dbRead.rawQuery(query, null);
+        return mapObject(cursor).get(0).getScene();
     }
 
     /**
@@ -80,8 +97,9 @@ public class PlaylistContentDao
         while (cursor.moveToNext())
         {
             PlaylistContentDto content = new PlaylistContentDto();
-            content.setPlaylist(getColumnValue(cursor, PLAYLIST_COLUMN));
-            content.setTrack(getColumnValue(cursor, TRACK_COLUMN));
+            content.setPlaylist(getValue(cursor, PLAYLIST_KEY));
+            content.setTrack(getValue(cursor, TRACK_KEY));
+            content.setScene(getValue(cursor, SCENE_KEY));
             result.add(content);
         }
         return result;
@@ -91,16 +109,36 @@ public class PlaylistContentDao
      * Safely gets data from database.
      *
      * @param cursor to pick data from database
-     * @param column containing value
+     * @param key containing value
      * @return value stored in db if possible, otherwise "-1"
      */
-    private String getColumnValue(Cursor cursor, String column)
+    private String getValue(Cursor cursor, String key)
     {
-        if (cursor.getColumnIndex(column) != -1)
+        if (cursor.getColumnIndex(key) != -1)
         {
-            return cursor.getString(cursor.getColumnIndex(column));
+            return cursor.getString(cursor.getColumnIndex(key));
         }
         return "-1";
+    }
+
+    public void addScene(String sceneId, String playlistId, String trackId)
+    {
+        StringBuilder query = new StringBuilder("UPDATE ")
+            .append(TABLE_NAME)
+            .append(" SET ")
+            .append(SCENE_KEY)
+            .append(" = '")
+            .append(sceneId)
+            .append("' WHERE ")
+            .append(PLAYLIST_KEY)
+            .append(" = '")
+            .append(playlistId)
+            .append("' AND ")
+            .append(TRACK_KEY)
+            .append(" = '")
+            .append(trackId)
+            .append("'");
+        dbWrite.execSQL(query.toString());
     }
 
     /**
@@ -111,11 +149,11 @@ public class PlaylistContentDao
         StringBuilder query = new StringBuilder("UPDATE ")
             .append(TABLE_NAME)
             .append(" SET ")
-            .append(PLAYLIST_COLUMN)
+            .append(PLAYLIST_KEY)
             .append(" = '")
             .append(content.getPlaylist())
             .append("', ")
-            .append(TRACK_COLUMN)
+            .append(TRACK_KEY)
             .append("' = ")
             .append(content.getTrack())
             .append("' WHERE playlist = '")
@@ -135,7 +173,7 @@ public class PlaylistContentDao
         StringBuilder query = new StringBuilder("DELETE FROM ")
             .append(TABLE_NAME)
             .append(" WHERE ")
-            .append(TRACK_COLUMN)
+            .append(TRACK_KEY)
             .append(" = '")
             .append(trackId)
             .append("'");
@@ -153,7 +191,7 @@ public class PlaylistContentDao
         StringBuilder query = new StringBuilder("DELETE FROM ")
             .append(TABLE_NAME)
             .append(" WHERE ")
-            .append(PLAYLIST_COLUMN)
+            .append(PLAYLIST_KEY)
             .append(" = '")
             .append(trackId)
             .append("'");
@@ -171,11 +209,11 @@ public class PlaylistContentDao
         StringBuilder query = new StringBuilder("DELETE FROM ")
             .append(TABLE_NAME)
             .append(" WHERE ")
-            .append(PLAYLIST_COLUMN)
+            .append(PLAYLIST_KEY)
             .append(" = '")
             .append(playlistId)
             .append(" ' AND ")
-            .append(TRACK_COLUMN)
+            .append(TRACK_KEY)
             .append(" = '")
             .append(trackId)
             .append("'");

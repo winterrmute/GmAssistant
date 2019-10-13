@@ -12,7 +12,8 @@ import com.wintermute.soundboard.adapters.PlaylistAdapter;
 import com.wintermute.soundboard.client.NewPlaylist;
 import com.wintermute.soundboard.database.dao.PlaylistContentDao;
 import com.wintermute.soundboard.database.dao.PlaylistDao;
-import com.wintermute.soundboard.manager.PlayerManager;
+import com.wintermute.soundboard.database.dto.PlaylistContentDto;
+import com.wintermute.soundboard.handler.PlayerHandler;
 import com.wintermute.soundboard.database.dto.PlaylistDto;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class Soundboard extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_soundboard);
 
+
         init();
 
         Button addPlaylist = findViewById(R.id.playlist);
@@ -46,8 +48,8 @@ public class Soundboard extends AppCompatActivity
 
         playlistView.setOnItemClickListener((parent, view, position, id) ->
         {
-            Intent playlistContent = new Intent(Soundboard.this, PlayerManager.class);
-            playlistContent.putExtra("id", listOfPlaylists.get(position).getId());
+            Intent playlistContent = new Intent(Soundboard.this, PlayerHandler.class);
+            playlistContent.putExtra("playlistId", listOfPlaylists.get(position).getId());
             startActivity(playlistContent);
         });
 

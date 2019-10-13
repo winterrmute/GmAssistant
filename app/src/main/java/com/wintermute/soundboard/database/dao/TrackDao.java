@@ -17,12 +17,12 @@ import java.util.ArrayList;
 public class TrackDao
 {
     private static final String TABLE_NAME = "track";
-    private static final String ID_COLUMN = "id";
-    private static final String NAME_COLUMN = "name";
-    private static final String ARTIST_COLUMN = "artist";
-    private static final String TAG_COLUMN = "tag";
-    private static final String PATH_COLUMN = "path";
-    private static final String SCENE_COLUMN = "scene_id";
+    private static final String ID_KEY = "id";
+    private static final String NAME_KEY = "name";
+    private static final String ARTIST_KEY = "artist";
+    private static final String TAG_KEY = "tag";
+    private static final String PATH_KEY = "path";
+    private static final String SCENE_KEY = "scene_id";
 
     private SQLiteDatabase dbRead;
     private SQLiteDatabase dbWrite;
@@ -47,11 +47,11 @@ public class TrackDao
         } else
         {
             ContentValues values = new ContentValues();
-            values.put(NAME_COLUMN, track.getName());
-            values.put(ARTIST_COLUMN, track.getArtist());
-            values.put(TAG_COLUMN, track.getTag());
-            values.put(PATH_COLUMN, track.getPath());
-            values.put(SCENE_COLUMN, track.getSceneId());
+            values.put(NAME_KEY, track.getName());
+            values.put(ARTIST_KEY, track.getArtist());
+            values.put(TAG_KEY, track.getTag());
+            values.put(PATH_KEY, track.getPath());
+            values.put(SCENE_KEY, track.getSceneId());
 
             dbWrite.insert(TABLE_NAME, null, values);
             return computeIdIfAbsent(track.getName());
@@ -69,7 +69,7 @@ public class TrackDao
         StringBuilder query = new StringBuilder("SELECT id FROM ")
             .append(TABLE_NAME)
             .append("  WHERE ")
-            .append(NAME_COLUMN)
+            .append(NAME_KEY)
             .append("  =  '")
             .append(title)
             .append("'");
@@ -87,7 +87,7 @@ public class TrackDao
         StringBuilder query = new StringBuilder("SELECT tag FROM ")
             .append(TABLE_NAME)
             .append(" WHERE ")
-            .append(ID_COLUMN)
+            .append(ID_KEY)
             .append(" = '")
             .append(id)
             .append("'");
@@ -95,21 +95,44 @@ public class TrackDao
     }
 
     /**
-     * Select item by id.
+     * Convinience method for getting track.
      *
-     * @param id to identify database entry.
+     * @param key to identify database entry.
+     * @param value column.
      * @return selected track.
      */
-    public TrackDto getTrack(String id)
+    private TrackDto getTrack(String key, String value)
     {
         StringBuilder query = new StringBuilder("SELECT * FROM ")
             .append(TABLE_NAME)
             .append("  WHERE ")
-            .append(ID_COLUMN)
+            .append(key)
             .append("  =  '")
-            .append(id)
+            .append(value)
             .append("'");
         return mapObject(dbRead.rawQuery(query.toString(), null)).get(0);
+    }
+
+    /**
+     * Get track by path.
+     *
+     * @param path of track to find.
+     * @return selected track.
+     */
+    public TrackDto getTrackByPath(String path)
+    {
+        return getTrack(PATH_KEY, path);
+    }
+
+    /**
+     * Get track by id.
+     *
+     * @param id of track to find.
+     * @return selected track.
+     */
+    public TrackDto getTrackById(String id)
+    {
+        return getTrack(ID_KEY, id);
     }
 
     /**
@@ -123,7 +146,7 @@ public class TrackDao
         StringBuilder query = new StringBuilder(
             "SELECT * FROM playlist pl, playlist_content ct, track tk WHERE tk.id = ct.track AND pl.id = ct.playlist "
                 + "AND pl.id").append(" = '").append(id).append("'");
-        dbRead.rawQuery(query.toString(), null);
+//        dbRead.rawQuery(query.toString(), null);
         return mapObject(dbRead.rawQuery(query.toString(), null));
     }
 
@@ -150,12 +173,12 @@ public class TrackDao
         while (cursor.moveToNext())
         {
             TrackDto track = new TrackDto();
-            track.setId(getColumnValue(cursor, ID_COLUMN));
-            track.setName(getColumnValue(cursor, NAME_COLUMN));
-            track.setArtist(getColumnValue(cursor, ARTIST_COLUMN));
-            track.setTag(getColumnValue(cursor, TAG_COLUMN));
-            track.setPath(getColumnValue(cursor, PATH_COLUMN));
-            track.setSceneId(getColumnValue(cursor, SCENE_COLUMN));
+            track.setId(getKeyValue(cursor, ID_KEY));
+            track.setName(getKeyValue(cursor, NAME_KEY));
+            track.setArtist(getKeyValue(cursor, ARTIST_KEY));
+            track.setTag(getKeyValue(cursor, TAG_KEY));
+            track.setPath(getKeyValue(cursor, PATH_KEY));
+            track.setSceneId(getKeyValue(cursor, SCENE_KEY));
             result.add(track);
         }
         return result;
@@ -168,7 +191,7 @@ public class TrackDao
      * @param column containing value
      * @return value stored in db if possible, otherwise "-1"
      */
-    private String getColumnValue(Cursor cursor, String column)
+    private String getKeyValue(Cursor cursor, String column)
     {
         if (cursor.getColumnIndex(column) != -1)
         {
@@ -185,23 +208,23 @@ public class TrackDao
         StringBuilder query = new StringBuilder("UPDATE ")
             .append(TABLE_NAME)
             .append(" SET ")
-            .append(NAME_COLUMN)
+            .append(NAME_KEY)
             .append(" = '")
             .append(track.getName())
             .append("', ")
-            .append(ARTIST_COLUMN)
+            .append(ARTIST_KEY)
             .append(" = '")
             .append(track.getArtist())
             .append("', ")
-            .append(TAG_COLUMN)
+            .append(TAG_KEY)
             .append(" = '")
             .append(track.getTag())
             .append("', ")
-            .append(PATH_COLUMN)
+            .append(PATH_KEY)
             .append(" = '")
             .append(track.getPath())
             .append("', ")
-            .append(SCENE_COLUMN)
+            .append(SCENE_KEY)
             .append(" = '")
             .append(track.getSceneId())
             .append("' WHERE id = '")
@@ -220,7 +243,7 @@ public class TrackDao
         StringBuilder query = new StringBuilder("DELETE FROM ")
             .append(TABLE_NAME)
             .append(" WHERE ")
-            .append(ID_COLUMN)
+            .append(ID_KEY)
             .append(" = '")
             .append(track.getId())
             .append("'");

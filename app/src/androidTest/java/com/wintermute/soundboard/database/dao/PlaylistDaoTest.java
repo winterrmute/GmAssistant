@@ -1,7 +1,6 @@
 package com.wintermute.soundboard.database.dao;
 
 import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 
 import android.content.Context;
@@ -42,7 +41,7 @@ public class PlaylistDaoTest
         PlaylistDto playlist = new PlaylistDto();
         playlist.setName("customPlaylist");
 
-        playlist.setId(dao.insert(playlist));
+        playlist.setId(String.valueOf(dao.insert(playlist)));
         assertTrue(dao.getAll().size() > 0);
 
         playlist.setName("Lolz");

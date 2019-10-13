@@ -54,7 +54,7 @@ public class PlaylistCreateService
         PlaylistDao dao = new PlaylistDao(ctx);
         PlaylistDto result = new PlaylistDto();
         result.setName(playlistName);
-        result.setId(dao.insert(result));
+        result.setId(String.valueOf(dao.insert(result)));
         dao.update(result);
         return result;
     }
@@ -85,9 +85,6 @@ public class PlaylistCreateService
         List<File> tracksFound = fs.collectTracks(browsePath);
         for (File file : tracksFound)
         {
-//            TrackDto.Builder builder =
-//                new TrackDto.Builder().withName(file.getName()).withPath(file.getPath()).withType("");
-//            TrackDto track = builder.withId(dao.insert(builder.build())).build();
             TrackDto track = new TrackDto();
             track.setName(file.getName());
             track.setPath(file.getPath());

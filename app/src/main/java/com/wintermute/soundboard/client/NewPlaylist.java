@@ -2,10 +2,8 @@ package com.wintermute.soundboard.client;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.soundboard.R;
@@ -17,7 +15,6 @@ import com.wintermute.soundboard.services.PlaylistCreateService;
 public class NewPlaylist extends AppCompatActivity
 {
 
-    private EditText playlistName;
     private String path;
 
     @Override
@@ -26,10 +23,10 @@ public class NewPlaylist extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_playlist);
 
-        playlistName = findViewById(R.id.playlist_name);
         Button submit = findViewById(R.id.submit);
         submit.setOnClickListener(v ->
         {
+            EditText playlistName= findViewById(R.id.playlist_name);
             if (!playlistName.getText().toString().equals(""))
             {
                 PlaylistCreateService playlistCreator =

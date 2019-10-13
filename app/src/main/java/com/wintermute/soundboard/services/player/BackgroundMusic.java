@@ -49,7 +49,7 @@ public class BackgroundMusic extends Service
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-        startPlayback(getTrackPath(intent.getStringExtra("id")));
+        startPlayback(getTrackPath(intent.getStringExtra("trackId")));
         return Service.START_NOT_STICKY;
     }
 
@@ -73,6 +73,6 @@ public class BackgroundMusic extends Service
 
     private String getTrackPath(String trackId) {
         TrackDao dao = new TrackDao(getBaseContext());
-        return dao.getTrack(trackId).getPath();
+        return dao.getTrackById(trackId).getPath();
     }
 }

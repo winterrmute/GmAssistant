@@ -7,4 +7,5 @@ public class PlaylistContentDto
 {
     private String playlist;
     private String track;
+    private String scene;
 }

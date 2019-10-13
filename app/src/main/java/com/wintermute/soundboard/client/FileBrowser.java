@@ -2,6 +2,7 @@ package com.wintermute.soundboard.client;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -21,9 +22,11 @@ import java.util.ArrayList;
 public class FileBrowser extends AppCompatActivity
 {
 
+    private final static int RESULT_CODE = 1;
     private File path;
     private ListView fileView;
-    FileBrowserService fileBrowserService;
+    private FileBrowserService fileBrowserService;
+    private boolean addingNextTrack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -52,9 +55,14 @@ public class FileBrowser extends AppCompatActivity
         Button selectDirectory = findViewById(R.id.select_directory);
         selectDirectory.setOnClickListener((v) ->
         {
-            setResult(1, new Intent().putExtra("path", path.toString()));
+            setResult(RESULT_CODE, new Intent().putExtra("path", path.toString()));
             finish();
         });
+
+        if (addingNextTrack)
+        {
+            selectDirectory.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -64,13 +72,23 @@ public class FileBrowser extends AppCompatActivity
      */
     private void renderFiles(ArrayList<File> dirContent)
     {
+        addingNextTrack = getIntent().getBooleanExtra("hasNextTrack", false);
+
         setListView(dirContent);
         fileView.setOnItemClickListener((parent, view, position, id) ->
         {
-            path = new File(dirContent.get(position).getPath());
-            if (new File(dirContent.get(position).getPath()).isDirectory())
+            if (addingNextTrack && !dirContent.get(position).isDirectory())
             {
-                renderFiles(fileBrowserService.scanDir(path));
+                setResult(RESULT_CODE, new Intent().putExtra("path", dirContent.get(position).getPath()));
+                finish();
+            } else
+            {
+                path = new File(dirContent.get(position).getPath());
+                boolean isDirectory = new File(dirContent.get(position).getPath()).isDirectory();
+                if (isDirectory)
+                {
+                    renderFiles(fileBrowserService.scanDir(path));
+                }
             }
         });
     }
@@ -89,15 +107,13 @@ public class FileBrowser extends AppCompatActivity
 
     /**
      * Starts browsing in root directory instead of app directory.
-     *
-     * @return root directory
      */
-    private File getRootDir(){
+    private void getRootDir()
+    {
         path = this.getExternalFilesDir("");
-        while (path.getParent() != null && new File(path.getParent()).canRead()){
+        while (path.getParent() != null && new File(path.getParent()).canRead())
+        {
             path = new File(path.getParent());
         }
-        return path;
     }
-
 }

@@ -8,6 +8,8 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
+import com.wintermute.soundboard.database.dao.PlaylistContentDao;
+import com.wintermute.soundboard.database.dao.SceneDao;
 import com.wintermute.soundboard.database.dao.TrackDao;
 
 public class JumpScareSound extends Service
@@ -15,6 +17,8 @@ public class JumpScareSound extends Service
 {
 
     private MediaPlayer mediaPlayer;
+    private String playlistId;
+    private String trackId;
 
     @Nullable
     @Override
@@ -38,7 +42,10 @@ public class JumpScareSound extends Service
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-        startPlayback(getTrackPath(intent.getStringExtra("id")));
+
+        trackId = intent.getStringExtra("trackId");
+        playlistId = intent.getStringExtra("playlistId");
+        startPlayback(getTrackPath(trackId));
         return Service.START_NOT_STICKY;
     }
 
@@ -54,9 +61,17 @@ public class JumpScareSound extends Service
         mediaPlayer.setOnCompletionListener(mp ->
         {
             Intent intent = new Intent(getBaseContext(), BackgroundMusic.class);
-            intent.putExtra("id", "17");
+            String nextTrackId = getNextTrack(playlistId, trackId);
+            intent.putExtra("trackId", nextTrackId);
             startService(intent);
         });
+    }
+
+    private String getNextTrack(String playlistId, String trackid){
+        PlaylistContentDao pcd = new PlaylistContentDao(getBaseContext());
+        String sceneId = pcd.getSceneId(playlistId, trackid);
+        SceneDao dao = new SceneDao(getBaseContext());
+        return dao.getNextTrack(sceneId);
     }
 
     @Override
@@ -67,7 +82,7 @@ public class JumpScareSound extends Service
 
     private String getTrackPath(String trackId) {
         TrackDao dao = new TrackDao(getBaseContext());
-        return dao.getTrack(trackId).getPath();
+        return dao.getTrackById(trackId).getPath();
     }
 
     @Override
