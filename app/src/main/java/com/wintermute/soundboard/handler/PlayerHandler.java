@@ -7,9 +7,10 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.soundboard.R;
 import com.wintermute.soundboard.adapters.AudioFileAdapter;
+import com.wintermute.soundboard.configurator.SceneConfiguration;
 import com.wintermute.soundboard.database.dao.PlaylistContentDao;
 import com.wintermute.soundboard.database.dao.TrackDao;
-import com.wintermute.soundboard.database.dto.TrackDto;
+import com.wintermute.soundboard.database.dto.Track;
 import com.wintermute.soundboard.services.player.AmbientSound;
 import com.wintermute.soundboard.services.player.BackgroundMusic;
 import com.wintermute.soundboard.services.player.JumpScareSound;
@@ -25,7 +26,7 @@ public class PlayerHandler extends AppCompatActivity
 {
 
     private ListView songView;
-    private List<TrackDto> allTracks;
+    private List<Track> allTracks;
     private TrackDao trackDao;
     private String trackId;
     private String playlistId;
@@ -72,9 +73,9 @@ public class PlayerHandler extends AppCompatActivity
             b.setItems(types, (dialog, which) ->
             {
                 dialog.dismiss();
-
                 switch (which)
                 {
+
                     case 0:
                         setTag(position, "music");
                         break;
@@ -85,7 +86,7 @@ public class PlayerHandler extends AppCompatActivity
                         setTag(position, "jumpscare");
                         break;
                     case 3:
-                        Intent sceneManager = new Intent(PlayerHandler.this, SceneHandler.class);
+                        Intent sceneManager = new Intent(PlayerHandler.this, SceneConfiguration.class);
                         sceneManager.putExtra("trackId", allTracks.get(position).getId());
                         sceneManager.putExtra("playlistId", playlistId);
                         startActivity(sceneManager);
@@ -134,11 +135,11 @@ public class PlayerHandler extends AppCompatActivity
      */
     private void startPlayer(Class type)
     {
+        PlaylistContentDao dao = new PlaylistContentDao(this);
+        String sceneId = dao.getSceneId(playlistId, trackId);
         Intent player = new Intent(PlayerHandler.this, type);
         player.putExtra("trackId", trackId);
-        if (type == JumpScareSound.class) {
-            player.putExtra("playlistId", playlistId);
-        }
+        player.putExtra("sceneId", sceneId);
         startService(player);
     }
 }

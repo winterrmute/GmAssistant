@@ -7,7 +7,7 @@ import static junit.framework.TestCase.assertTrue;
 
 import android.content.Context;
 import androidx.test.platform.app.InstrumentationRegistry;
-import com.wintermute.soundboard.database.dto.TrackDto;
+import com.wintermute.soundboard.database.dto.Track;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -23,7 +23,7 @@ public class TrackDaoTest
 {
 
     private static Context ctx;
-    private static TrackDto track;
+    private static Track track;
     private static TrackDao dao;
 
     /**
@@ -58,7 +58,7 @@ public class TrackDaoTest
     public static void setUp(){
         ctx = InstrumentationRegistry.getInstrumentation().getTargetContext();
         dao = new TrackDao(ctx);
-        track = new TrackDto();
+        track = new Track();
         track.setName("sample");
         track.setPath("/here/be/path");
         track.setArtist("Dj-yo-mama");

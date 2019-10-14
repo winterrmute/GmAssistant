@@ -8,7 +8,7 @@ import lombok.Data;
  * @author wintermute
  */
 @Data
-public class TrackDto
+public class Track
 {
     private String id;
     private String name;

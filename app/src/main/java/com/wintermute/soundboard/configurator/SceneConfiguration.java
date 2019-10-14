@@ -1,4 +1,4 @@
-package com.wintermute.soundboard.handler;
+package com.wintermute.soundboard.configurator;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,32 +6,31 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.soundboard.R;
 import com.wintermute.soundboard.client.FileBrowser;
+import com.wintermute.soundboard.database.dao.LightDao;
 import com.wintermute.soundboard.database.dao.PlaylistContentDao;
 import com.wintermute.soundboard.database.dao.SceneDao;
 import com.wintermute.soundboard.database.dao.TrackDao;
-import com.wintermute.soundboard.database.dto.SceneDto;
-import com.wintermute.soundboard.database.dto.TrackDto;
+import com.wintermute.soundboard.database.dto.Light;
+import com.wintermute.soundboard.database.dto.Scene;
+import com.wintermute.soundboard.database.dto.Track;
+import java.util.Objects;
 
 /**
  * Creates new scene and updates dependency in related playlist content.
  *
  * @author wintermute
  */
-public class SceneHandler extends AppCompatActivity
+public class SceneConfiguration extends AppCompatActivity
 {
 
-    private String trackId;
-    private String playlistId;
-    private TrackDto nextTrack;
+    private Track nextTrack;
+    private Light light;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scene_manager);
-
-        trackId = getIntent().getStringExtra("trackId");
-        playlistId = getIntent().getStringExtra("playlistId");
 
         Button lightEffects = findViewById(R.id.set_light);
         lightEffects.setOnClickListener(v -> setLights());
@@ -51,7 +50,8 @@ public class SceneHandler extends AppCompatActivity
      */
     private void setLights()
     {
-        //TODO: Implement me.
+        Intent fileBrowser = new Intent(SceneConfiguration.this, LightConfiguration.class);
+        startActivityForResult(fileBrowser, 2);
     }
 
     /**
@@ -59,7 +59,7 @@ public class SceneHandler extends AppCompatActivity
      */
     private void setNextTrack()
     {
-        Intent fileBrowser = new Intent(SceneHandler.this, FileBrowser.class);
+        Intent fileBrowser = new Intent(SceneConfiguration.this, FileBrowser.class);
         fileBrowser.putExtra("hasNextTrack", true);
         startActivityForResult(fileBrowser, 1);
     }
@@ -67,13 +67,11 @@ public class SceneHandler extends AppCompatActivity
     /**
      * Configures and creates new scene.
      */
-    private SceneDto createScene()
+    private Scene createScene()
     {
-        SceneDto result = new SceneDto();
-        //TODO: implement me.
-        result.setLight("");
-        result.setTrack(trackId);
-        result.setNextTrack(nextTrack.getId());
+        Scene result = new Scene();
+        result.setLight(light.getId());
+        result.setNextTrack(Objects.requireNonNull(nextTrack.getId()));
         SceneDao sceneDao = new SceneDao(this);
         result.setId(String.valueOf(sceneDao.insert(result)));
         return result;
@@ -82,6 +80,8 @@ public class SceneHandler extends AppCompatActivity
     private void updatePlaylistContent()
     {
         PlaylistContentDao pcd = new PlaylistContentDao(this);
+        String trackId = getIntent().getStringExtra("trackId");
+        String playlistId = getIntent().getStringExtra("playlistId");
         pcd.addScene(createScene().getId(), playlistId, trackId);
     }
 
@@ -94,6 +94,16 @@ public class SceneHandler extends AppCompatActivity
             TrackDao dao = new TrackDao(this);
             String path = data.getStringExtra("path");
             nextTrack = dao.getTrackByPath(path);
+        }
+        if (requestCode == 2)
+        {
+            LightDao dao = new LightDao(this);
+            Light dto = new Light();
+            int color = data.getIntExtra("color", 0);
+            dto.setColor(String.valueOf(color));
+            dto.setBrightness(String.valueOf(100));
+            dto.setId(String.valueOf(dao.insert(dto)));
+            light = dao.getById(dto.getId());
         }
     }
 }

@@ -8,7 +8,9 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
+import com.wintermute.soundboard.database.dao.SceneDao;
 import com.wintermute.soundboard.database.dao.TrackDao;
+import com.wintermute.soundboard.database.dto.Scene;
 
 /**
  * Handles the media player and client requests.
@@ -20,6 +22,8 @@ public class BackgroundMusic extends Service
 {
 
     private MediaPlayer mediaPlayer = new MediaPlayer();
+    private String sceneId;
+    private String trackId;
 
     @Nullable
     @Override
@@ -49,7 +53,9 @@ public class BackgroundMusic extends Service
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-        startPlayback(getTrackPath(intent.getStringExtra("trackId")));
+        sceneId = intent.getStringExtra("sceneId");
+        trackId = intent.getStringExtra("trackId");
+        startPlayback(getTrackPath(trackId));
         return Service.START_NOT_STICKY;
     }
 
@@ -59,10 +65,19 @@ public class BackgroundMusic extends Service
     private void startPlayback(String path)
     {
         mediaPlayer.stop();
+        checkForScene();
         mediaPlayer = create(this, Uri.parse(path));
         mediaPlayer.setLooping(true);
         mediaPlayer.setVolume(0.10f, 0.10f);
         mediaPlayer.start();
+    }
+
+    private void checkForScene()
+    {
+        if (sceneId != null && !sceneId.equals("")){
+            SceneDao dao = new SceneDao(getBaseContext());
+            Scene byId = dao.getById(sceneId);
+        }
     }
 
     @Override
@@ -70,6 +85,7 @@ public class BackgroundMusic extends Service
     {
         mediaPlayer = new MediaPlayer();
     }
+
 
     private String getTrackPath(String trackId) {
         TrackDao dao = new TrackDao(getBaseContext());

@@ -8,9 +8,12 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
-import com.wintermute.soundboard.database.dao.PlaylistContentDao;
+import com.wintermute.soundboard.database.dao.LightDao;
 import com.wintermute.soundboard.database.dao.SceneDao;
 import com.wintermute.soundboard.database.dao.TrackDao;
+import com.wintermute.soundboard.database.dto.Light;
+import com.wintermute.soundboard.database.dto.Scene;
+import com.wintermute.soundboard.handler.LightHandler;
 
 public class JumpScareSound extends Service
     implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener
@@ -19,6 +22,7 @@ public class JumpScareSound extends Service
     private MediaPlayer mediaPlayer;
     private String playlistId;
     private String trackId;
+    private String sceneId;
 
     @Nullable
     @Override
@@ -43,6 +47,7 @@ public class JumpScareSound extends Service
     public int onStartCommand(Intent intent, int flags, int startId)
     {
 
+        sceneId = intent.getStringExtra("sceneId");
         trackId = intent.getStringExtra("trackId");
         playlistId = intent.getStringExtra("playlistId");
         startPlayback(getTrackPath(trackId));
@@ -58,20 +63,29 @@ public class JumpScareSound extends Service
         mediaPlayer = create(this, Uri.parse(path));
         mediaPlayer.setVolume(1f, 1f);
         mediaPlayer.start();
+        changeLight();
         mediaPlayer.setOnCompletionListener(mp ->
         {
             Intent intent = new Intent(getBaseContext(), BackgroundMusic.class);
-            String nextTrackId = getNextTrack(playlistId, trackId);
+            String nextTrackId = getNextTrack();
             intent.putExtra("trackId", nextTrackId);
             startService(intent);
         });
     }
 
-    private String getNextTrack(String playlistId, String trackid){
-        PlaylistContentDao pcd = new PlaylistContentDao(getBaseContext());
-        String sceneId = pcd.getSceneId(playlistId, trackid);
+    private void changeLight()
+    {
+        LightDao dao = new LightDao(getBaseContext());
+        SceneDao sdao = new SceneDao(this);
+        Scene scene = sdao.getById(sceneId);
+        Light light = dao.getById(scene.getLight());
+        LightHandler handler = new LightHandler(getBaseContext(), light);
+        handler.req();
+    }
+
+    private String getNextTrack(){
         SceneDao dao = new SceneDao(getBaseContext());
-        return dao.getNextTrack(sceneId);
+        return dao.getById(sceneId).getNextTrack();
     }
 
     @Override

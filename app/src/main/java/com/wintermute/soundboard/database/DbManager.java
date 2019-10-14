@@ -14,8 +14,7 @@ public class DbManager extends SQLiteOpenHelper
         "CREATE TABLE playlist ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL)";
 
     private static final String TRACK =
-        "CREATE TABLE track ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, artist TEXT, tag TEXT, " + "path TEXT, "
-            + "scene_id, FOREIGN KEY (scene_id) REFERENCES scene (id) )";
+        "CREATE TABLE track ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, artist TEXT, tag TEXT, " + "path TEXT )";
 
     private static final String PLAYLIST_CONTENT =
         "CREATE TABLE playlist_content ( playlist INTEGER, track INTEGER, scene INTEGER, FOREIGN KEY (playlist) "
@@ -23,8 +22,12 @@ public class DbManager extends SQLiteOpenHelper
             + "(scene) REFERENCES scene (id) )";
 
     private static final String SCENE =
-        "CREATE TABLE scene ( id INTEGER PRIMARY KEY AUTOINCREMENT, track INTEGER, light INTEGER, "
+        "CREATE TABLE scene ( id INTEGER PRIMARY KEY AUTOINCREMENT, light INTEGER, "
             + "next_track INTEGER)";
+
+    private static final String LIGHT =
+        "CREATE TABLE light ( id INTEGER PRIMARY KEY AUTOINCREMENT, color REAL, "
+            + "brightness REAL)";
 
     private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS user_playlist";
 
@@ -40,6 +43,7 @@ public class DbManager extends SQLiteOpenHelper
         db.execSQL(TRACK);
         db.execSQL(PLAYLIST_CONTENT);
         db.execSQL(SCENE);
+        db.execSQL(LIGHT);
     }
 
     @Override

@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import com.wintermute.soundboard.database.dto.PlaylistDto;
+import com.wintermute.soundboard.database.dto.Playlist;
 import com.wintermute.soundboard.database.DbManager;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class PlaylistDao
     /**
      * Insert row into playlist table.
      */
-    public long insert(PlaylistDto playlist)
+    public long insert(Playlist playlist)
     {
         ContentValues values = new ContentValues();
         values.put(ID_COLUMN, playlist.getId());
@@ -50,7 +50,7 @@ public class PlaylistDao
      * @param id to get from database.
      * @return specified playlist.
      */
-    public PlaylistDto getPlaylist(String id)
+    public Playlist getPlaylist(String id)
     {
         StringBuilder query = new StringBuilder("SELECT * FROM ")
             .append(TABLE_NAME)
@@ -68,12 +68,12 @@ public class PlaylistDao
      * @param cursor to iterate over database rows.
      * @return list of track objects.
      */
-    private ArrayList<PlaylistDto> mapObject(Cursor cursor)
+    private ArrayList<Playlist> mapObject(Cursor cursor)
     {
-        ArrayList<PlaylistDto> result = new ArrayList<>();
+        ArrayList<Playlist> result = new ArrayList<>();
         while (cursor.moveToNext())
         {
-            PlaylistDto playlist = new PlaylistDto();
+            Playlist playlist = new Playlist();
             playlist.setId(getColumnValue(cursor, ID_COLUMN));
             playlist.setName(getColumnValue(cursor, NAME_COLUMN));
             result.add(playlist);
@@ -103,7 +103,7 @@ public class PlaylistDao
      *
      * @return query result as Cursor.
      */
-    public ArrayList<PlaylistDto> getAll()
+    public ArrayList<Playlist> getAll()
     {
         StringBuilder query = new StringBuilder("SELECT * FROM " + TABLE_NAME);
         return mapObject(dbRead.rawQuery(query.toString(), null));
@@ -116,13 +116,13 @@ public class PlaylistDao
      */
     public List<String> getPlaylistNames()
     {
-        return getAll().stream().map(PlaylistDto::getName).collect(Collectors.toList());
+        return getAll().stream().map(Playlist::getName).collect(Collectors.toList());
     }
 
     /**
      * Insert row into playlist table.
      */
-    public void update(PlaylistDto playlist)
+    public void update(Playlist playlist)
     {
         StringBuilder query = new StringBuilder("UPDATE ")
             .append(TABLE_NAME)
@@ -142,7 +142,7 @@ public class PlaylistDao
      *
      * @param playlist to deleteByTrackId by id.
      */
-    public void delete(PlaylistDto playlist)
+    public void delete(Playlist playlist)
     {
         StringBuilder query = new StringBuilder("DELETE FROM ")
             .append(TABLE_NAME)

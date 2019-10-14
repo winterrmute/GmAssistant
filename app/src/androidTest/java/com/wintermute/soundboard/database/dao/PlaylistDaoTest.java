@@ -5,7 +5,7 @@ import static junit.framework.TestCase.assertTrue;
 
 import android.content.Context;
 import androidx.test.platform.app.InstrumentationRegistry;
-import com.wintermute.soundboard.database.dto.PlaylistDto;
+import com.wintermute.soundboard.database.dto.Playlist;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +38,7 @@ public class PlaylistDaoTest
     {
         PlaylistDao dao = new PlaylistDao(ctx);
 
-        PlaylistDto playlist = new PlaylistDto();
+        Playlist playlist = new Playlist();
         playlist.setName("customPlaylist");
 
         playlist.setId(String.valueOf(dao.insert(playlist)));

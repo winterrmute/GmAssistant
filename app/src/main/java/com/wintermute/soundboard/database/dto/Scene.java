@@ -9,10 +9,9 @@ import lombok.Data;
  * @author wintermute
  */
 @Data
-public class SceneDto
+public class Scene
 {
     private String id;
-    private String track;
     private String light;
     private String nextTrack;
 }

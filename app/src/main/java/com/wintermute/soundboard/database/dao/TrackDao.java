@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.soundboard.database.DbManager;
-import com.wintermute.soundboard.database.dto.TrackDto;
+import com.wintermute.soundboard.database.dto.Track;
 
 import java.util.ArrayList;
 
@@ -22,7 +22,6 @@ public class TrackDao
     private static final String ARTIST_KEY = "artist";
     private static final String TAG_KEY = "tag";
     private static final String PATH_KEY = "path";
-    private static final String SCENE_KEY = "scene_id";
 
     private SQLiteDatabase dbRead;
     private SQLiteDatabase dbWrite;
@@ -39,7 +38,7 @@ public class TrackDao
      *
      * @return id of inserted element.
      */
-    public String insert(TrackDto track)
+    public String insert(Track track)
     {
         if (computeIdIfAbsent(track.getName()) != null)
         {
@@ -51,7 +50,6 @@ public class TrackDao
             values.put(ARTIST_KEY, track.getArtist());
             values.put(TAG_KEY, track.getTag());
             values.put(PATH_KEY, track.getPath());
-            values.put(SCENE_KEY, track.getSceneId());
 
             dbWrite.insert(TABLE_NAME, null, values);
             return computeIdIfAbsent(track.getName());
@@ -101,7 +99,7 @@ public class TrackDao
      * @param value column.
      * @return selected track.
      */
-    private TrackDto getTrack(String key, String value)
+    private Track getTrack(String key, String value)
     {
         StringBuilder query = new StringBuilder("SELECT * FROM ")
             .append(TABLE_NAME)
@@ -119,7 +117,7 @@ public class TrackDao
      * @param path of track to find.
      * @return selected track.
      */
-    public TrackDto getTrackByPath(String path)
+    public Track getTrackByPath(String path)
     {
         return getTrack(PATH_KEY, path);
     }
@@ -130,7 +128,7 @@ public class TrackDao
      * @param id of track to find.
      * @return selected track.
      */
-    public TrackDto getTrackById(String id)
+    public Track getTrackById(String id)
     {
         return getTrack(ID_KEY, id);
     }
@@ -141,7 +139,7 @@ public class TrackDao
      * @param id of playlist containing tracks.
      * @return List of Tracks
      */
-    public ArrayList<TrackDto> getReferencedTracks(String id)
+    public ArrayList<Track> getReferencedTracks(String id)
     {
         StringBuilder query = new StringBuilder(
             "SELECT * FROM playlist pl, playlist_content ct, track tk WHERE tk.id = ct.track AND pl.id = ct.playlist "
@@ -155,7 +153,7 @@ public class TrackDao
      *
      * @return list of track names.
      */
-    public ArrayList<TrackDto> getAll()
+    public ArrayList<Track> getAll()
     {
         StringBuilder query = new StringBuilder("SELECT * FROM " + TABLE_NAME);
         return mapObject(dbRead.rawQuery(query.toString(), null));
@@ -167,18 +165,17 @@ public class TrackDao
      * @param cursor to iterate over database rows.
      * @return list of track objects.
      */
-    private ArrayList<TrackDto> mapObject(Cursor cursor)
+    private ArrayList<Track> mapObject(Cursor cursor)
     {
-        ArrayList<TrackDto> result = new ArrayList<>();
+        ArrayList<Track> result = new ArrayList<>();
         while (cursor.moveToNext())
         {
-            TrackDto track = new TrackDto();
+            Track track = new Track();
             track.setId(getKeyValue(cursor, ID_KEY));
             track.setName(getKeyValue(cursor, NAME_KEY));
             track.setArtist(getKeyValue(cursor, ARTIST_KEY));
             track.setTag(getKeyValue(cursor, TAG_KEY));
             track.setPath(getKeyValue(cursor, PATH_KEY));
-            track.setSceneId(getKeyValue(cursor, SCENE_KEY));
             result.add(track);
         }
         return result;
@@ -203,7 +200,7 @@ public class TrackDao
     /**
      * Uptdate row in track table.
      */
-    public void update(TrackDto track)
+    public void update(Track track)
     {
         StringBuilder query = new StringBuilder("UPDATE ")
             .append(TABLE_NAME)
@@ -223,10 +220,6 @@ public class TrackDao
             .append(PATH_KEY)
             .append(" = '")
             .append(track.getPath())
-            .append("', ")
-            .append(SCENE_KEY)
-            .append(" = '")
-            .append(track.getSceneId())
             .append("' WHERE id = '")
             .append(track.getId())
             .append("'");
@@ -238,7 +231,7 @@ public class TrackDao
      *
      * @param track to remove from database.
      */
-    void delete(TrackDto track)
+    void delete(Track track)
     {
         StringBuilder query = new StringBuilder("DELETE FROM ")
             .append(TABLE_NAME)

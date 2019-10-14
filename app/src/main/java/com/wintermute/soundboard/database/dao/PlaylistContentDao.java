@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.soundboard.database.DbManager;
-import com.wintermute.soundboard.database.dto.PlaylistContentDto;
+import com.wintermute.soundboard.database.dto.PlaylistContent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public class PlaylistContentDao
      *
      * @return id of inserted element.
      */
-    public void insert(PlaylistContentDto content)
+    public void insert(PlaylistContent content)
     {
         ContentValues values = new ContentValues();
         values.put(PLAYLIST_KEY, content.getPlaylist());
@@ -47,7 +47,7 @@ public class PlaylistContentDao
      * @param playlistId to identify database entry by id.
      * @return selected track.
      */
-    public List<PlaylistContentDto> getPlaylistContent(String playlistId)
+    public List<PlaylistContent> getPlaylistContent(String playlistId)
     {
         StringBuilder query = new StringBuilder("SELECT * FROM ")
             .append(TABLE_NAME)
@@ -79,7 +79,7 @@ public class PlaylistContentDao
      *
      * @return list of track names.
      */
-    public ArrayList<PlaylistContentDto> getAll()
+    public ArrayList<PlaylistContent> getAll()
     {
         StringBuilder query = new StringBuilder("SELECT * FROM " + TABLE_NAME);
         return mapObject(dbRead.rawQuery(query.toString(), null));
@@ -91,12 +91,12 @@ public class PlaylistContentDao
      * @param cursor to iterate over database rows.
      * @return list of track objects.
      */
-    private ArrayList<PlaylistContentDto> mapObject(Cursor cursor)
+    private ArrayList<PlaylistContent> mapObject(Cursor cursor)
     {
-        ArrayList<PlaylistContentDto> result = new ArrayList<>();
+        ArrayList<PlaylistContent> result = new ArrayList<>();
         while (cursor.moveToNext())
         {
-            PlaylistContentDto content = new PlaylistContentDto();
+            PlaylistContent content = new PlaylistContent();
             content.setPlaylist(getValue(cursor, PLAYLIST_KEY));
             content.setTrack(getValue(cursor, TRACK_KEY));
             content.setScene(getValue(cursor, SCENE_KEY));
@@ -144,7 +144,7 @@ public class PlaylistContentDao
     /**
      * Uptdate row in track table.
      */
-    public void update(PlaylistContentDto content)
+    public void update(PlaylistContent content)
     {
         StringBuilder query = new StringBuilder("UPDATE ")
             .append(TABLE_NAME)

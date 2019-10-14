@@ -20,9 +20,11 @@
     <string name="browse_back">../</string>
     <string name="select_directory">Select current directory</string>
 
-    <!--  SceneHandler  -->
+    <!--  SceneConfiguration  -->
     <string name="set_light">Set light effects</string>
     <string name="next_track">Set next track</string>
     <string name="submit_scene">Submit</string>
 
+    <!--  LightConfiguration  -->
+    <string name="light_submit">Submit</string>
 </resources>

@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.soundboard.database.DbManager;
-import com.wintermute.soundboard.database.dto.SceneDto;
+import com.wintermute.soundboard.database.dto.Scene;
 
 import java.util.ArrayList;
 
@@ -37,10 +37,9 @@ public class SceneDao
      *
      * @return id of inserted element.
      */
-    public long insert(SceneDto scene)
+    public long insert(Scene scene)
     {
         ContentValues values = new ContentValues();
-        values.put(TRACK_KEY, scene.getTrack());
         values.put(LIGHT_KEY, scene.getLight());
         values.put(NEXT_TRACK_KEY, scene.getNextTrack());
         return dbWrite.insert(TABLE_NAME, null, values);
@@ -52,10 +51,10 @@ public class SceneDao
      * @param sceneId to get next track.
      * @return
      */
-    public String getNextTrack(String sceneId)
+    public Scene getById(String sceneId)
     {
         String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + ID_KEY + " = '" + sceneId + "'";
-        return mapObject(dbRead.rawQuery(query, null)).get(0).getNextTrack();
+        return mapObject(dbRead.rawQuery(query, null)).get(0);
     }
 
     /**
@@ -64,12 +63,13 @@ public class SceneDao
      * @param cursor to iterate over database rows.
      * @return list of track objects.
      */
-    private ArrayList<SceneDto> mapObject(Cursor cursor)
+    private ArrayList<Scene> mapObject(Cursor cursor)
     {
-        ArrayList<SceneDto> result = new ArrayList<>();
+        ArrayList<Scene> result = new ArrayList<>();
         while (cursor.moveToNext())
         {
-            SceneDto scene = new SceneDto();
+            Scene scene = new Scene();
+            scene.setLight(getKeyValue(cursor, LIGHT_KEY));
             scene.setNextTrack(getKeyValue(cursor, NEXT_TRACK_KEY));
             result.add(scene);
         }
