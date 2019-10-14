@@ -22,12 +22,10 @@ public class DbManager extends SQLiteOpenHelper
             + "(scene) REFERENCES scene (id) )";
 
     private static final String SCENE =
-        "CREATE TABLE scene ( id INTEGER PRIMARY KEY AUTOINCREMENT, light INTEGER, "
-            + "next_track INTEGER)";
+        "CREATE TABLE scene ( id INTEGER PRIMARY KEY AUTOINCREMENT, light INTEGER, " + "next_track INTEGER)";
 
     private static final String LIGHT =
-        "CREATE TABLE light ( id INTEGER PRIMARY KEY AUTOINCREMENT, color REAL, "
-            + "brightness REAL)";
+        "CREATE TABLE light ( id INTEGER PRIMARY KEY AUTOINCREMENT, color REAL, " + "brightness REAL)";
 
     private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS user_playlist";
 

@@ -33,12 +33,12 @@ public class LightHandler
     {
         String color = light.getColor();
 
-
         Color pickedColor = Color.valueOf(Integer.parseInt(color));
         double[] xy = getRGBtoXY(pickedColor);
         try
         {
-            return new JSONObject("{ \"on\":true, \"bri\": 10, \"xy\": [ " + xy[0] + ", " +  xy[1] + " ],  \"hue\": "
+            return new JSONObject(
+                "{ \"on\":true, \"bri\": 10, \"xy\": [ " + xy[0] + ", " + xy[1] + " ], \"transitiontime\": 0, \"hue\": "
                     + "46920 }");
         } catch (JSONException e)
         {
@@ -49,14 +49,13 @@ public class LightHandler
 
     public void req()
     {
-        JsonObjectRequest jsonObjectRequest = null;
-        jsonObjectRequest = new JsonObjectRequest(
-            Request.Method.PUT, HUE_LIGHTS_CONTROL + "/5/state", modifyLight(),
-            response -> Log.e("Response: ", response.toString()), error ->
-        {
-            // TODO: Handle error
-            Log.e("MESSAGE:", error.getMessage());
-        });
+        JsonObjectRequest jsonObjectRequest =
+            new JsonObjectRequest(Request.Method.PUT, HUE_LIGHTS_CONTROL + "/5/state", modifyLight(),
+                response -> Log.e("Response: ", response.toString()), error ->
+            {
+                // TODO: Handle error
+                Log.e("MESSAGE:", error.getMessage());
+            });
 
         // Access the RequestQueue through your singleton class.
         RequestQueue que = Volley.newRequestQueue(ctx);
@@ -82,7 +81,7 @@ public class LightHandler
         double yRaw = (float) (colors[0] * 0.234327 + colors[1] * 0.743075 + colors[2] * 0.022598);
         double zRaw = (float) (colors[0] * 0.0000000 + colors[1] * 0.053077 + colors[2] * 1.035763);
 
-        return new double[] { (xRaw / (xRaw + yRaw + zRaw)), (yRaw / (xRaw + yRaw + zRaw)) };
+        return new double[] {(xRaw / (xRaw + yRaw + zRaw)), (yRaw / (xRaw + yRaw + zRaw))};
     }
 
     /**

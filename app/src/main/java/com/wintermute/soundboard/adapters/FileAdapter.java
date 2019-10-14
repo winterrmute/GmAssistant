@@ -22,7 +22,8 @@ public class FileAdapter extends BaseAdapter
     private ArrayList<File> browsedFiles;
     private LayoutInflater inflater;
 
-    public FileAdapter(Context ctx, ArrayList<File> files){
+    public FileAdapter(Context ctx, ArrayList<File> files)
+    {
         browsedFiles = files;
         inflater = LayoutInflater.from(ctx);
     }

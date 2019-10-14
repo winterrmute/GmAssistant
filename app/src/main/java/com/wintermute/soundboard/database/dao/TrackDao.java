@@ -99,7 +99,7 @@ public class TrackDao
      * @param value column.
      * @return selected track.
      */
-    private Track getTrack(String key, String value)
+    Track getTrack(String key, String value)
     {
         StringBuilder query = new StringBuilder("SELECT * FROM ")
             .append(TABLE_NAME)
@@ -144,7 +144,6 @@ public class TrackDao
         StringBuilder query = new StringBuilder(
             "SELECT * FROM playlist pl, playlist_content ct, track tk WHERE tk.id = ct.track AND pl.id = ct.playlist "
                 + "AND pl.id").append(" = '").append(id).append("'");
-//        dbRead.rawQuery(query.toString(), null);
         return mapObject(dbRead.rawQuery(query.toString(), null));
     }
 

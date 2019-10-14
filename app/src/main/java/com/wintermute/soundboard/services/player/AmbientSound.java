@@ -8,12 +8,17 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
-import com.wintermute.soundboard.database.dao.TrackDao;
 
-public class AmbientSound extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener
+/**
+ * Handles the ambient sound player.
+ *
+ * @author wintermute
+ */
+public class AmbientSound extends BasePlayerService
+    implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener
 {
 
-    private MediaPlayer mediaPlayer = new MediaPlayer();
+    MediaPlayer mediaPlayer;
 
     @Nullable
     @Override
@@ -35,31 +40,21 @@ public class AmbientSound extends Service implements MediaPlayer.OnPreparedListe
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId)
-    {
-        startPlayback(getTrackPath(intent.getStringExtra("trackId")));
-        return Service.START_NOT_STICKY;
-    }
-
-    /**
-     * Creates the media player containing an audio file to play.
-     */
-    private void startPlayback(String path)
-    {
-        mediaPlayer.stop();
-        mediaPlayer = create(this, Uri.parse(path));
-        mediaPlayer.setVolume(0.5f, 0.5f);
-        mediaPlayer.start();
-    }
-
-    @Override
     public void onCreate()
     {
         mediaPlayer = new MediaPlayer();
     }
 
-    private String getTrackPath(String trackId) {
-        TrackDao dao = new TrackDao(getBaseContext());
-        return dao.getTrackById(trackId).getPath();
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId)
+    {
+        getExtras(intent);
+        mediaPlayer.stop();
+        mediaPlayer = create(this, Uri.parse(getTrackPath(trackId)));
+        mediaPlayer.setVolume(0.1f, 0.1f);
+        mediaPlayer.start();
+        mediaPlayer.setLooping(true);
+
+        return Service.START_NOT_STICKY;
     }
 }

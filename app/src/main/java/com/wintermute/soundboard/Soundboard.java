@@ -12,8 +12,8 @@ import com.wintermute.soundboard.adapters.PlaylistAdapter;
 import com.wintermute.soundboard.client.NewPlaylist;
 import com.wintermute.soundboard.database.dao.PlaylistContentDao;
 import com.wintermute.soundboard.database.dao.PlaylistDao;
-import com.wintermute.soundboard.handler.PlayerHandler;
 import com.wintermute.soundboard.database.dto.Playlist;
+import com.wintermute.soundboard.handler.PlayerHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,8 +105,7 @@ public class Soundboard extends AppCompatActivity
     private void renderPlaylist()
     {
         playlists = playlistDao.getAll();
-        playlists =
-            (playlists != null || playlists.size() != 0) ? playlists : new ArrayList<>();
+        playlists = (playlists != null || playlists.size() != 0) ? playlists : new ArrayList<>();
         PlaylistAdapter playlistAdapter = new PlaylistAdapter(this, playlists);
         playlistView.setAdapter(playlistAdapter);
     }

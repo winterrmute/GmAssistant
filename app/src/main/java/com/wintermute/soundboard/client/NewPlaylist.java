@@ -26,7 +26,7 @@ public class NewPlaylist extends AppCompatActivity
         Button submit = findViewById(R.id.submit);
         submit.setOnClickListener(v ->
         {
-            EditText playlistName= findViewById(R.id.playlist_name);
+            EditText playlistName = findViewById(R.id.playlist_name);
             if (!playlistName.getText().toString().equals(""))
             {
                 PlaylistCreateService playlistCreator =

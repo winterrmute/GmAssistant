@@ -4,8 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import com.wintermute.soundboard.database.dto.Playlist;
 import com.wintermute.soundboard.database.DbManager;
+import com.wintermute.soundboard.database.dto.Playlist;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,8 +98,7 @@ public class PlaylistDao
     }
 
     /**
-     * Select all from playlist.
-     * TODO: Return list instead of cursor
+     * Select all from playlist. TODO: Return list instead of cursor
      *
      * @return query result as Cursor.
      */

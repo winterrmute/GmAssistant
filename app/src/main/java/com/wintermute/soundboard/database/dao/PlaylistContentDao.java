@@ -61,14 +61,13 @@ public class PlaylistContentDao
 
     /**
      * TODO: REFACTOR ME
+     *
      * @return
      */
     public String getSceneId(String playlistId, String trackId)
     {
-//        String query = "SELECT next_track FROM playlist_content ct, scene sc WHERE ct.playlist = " + playlistId
-//            + " AND ct.track = " + trackId;
-        String query = "SELECT * FROM playlist_content WHERE playlist = '" + playlistId
-            + "' AND track = '" + trackId + "'";
+        String query =
+            "SELECT * FROM playlist_content WHERE playlist = '" + playlistId + "' AND track = '" + trackId + "'";
 
         Cursor cursor = dbRead.rawQuery(query, null);
         return mapObject(cursor).get(0).getScene();

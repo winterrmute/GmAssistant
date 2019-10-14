@@ -11,12 +11,12 @@ import com.wintermute.soundboard.R;
 public class LightConfiguration extends AppCompatActivity
 {
 
+    private int picked;
+
     public void setPicked(int picked)
     {
         this.picked = picked;
     }
-
-    private int picked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -33,8 +33,6 @@ public class LightConfiguration extends AppCompatActivity
 
         ColorPickerView colorPickerView = findViewById(R.id.color_picker);
 
-        colorPickerView.setColorListener((ColorListener) (color, fromUser) -> {
-            setPicked(color);
-        });
+        colorPickerView.setColorListener((ColorListener) (color, fromUser) -> setPicked(color));
     }
 }

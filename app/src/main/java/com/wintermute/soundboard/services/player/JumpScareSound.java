@@ -8,21 +8,12 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
-import com.wintermute.soundboard.database.dao.LightDao;
-import com.wintermute.soundboard.database.dao.SceneDao;
-import com.wintermute.soundboard.database.dao.TrackDao;
-import com.wintermute.soundboard.database.dto.Light;
-import com.wintermute.soundboard.database.dto.Scene;
-import com.wintermute.soundboard.handler.LightHandler;
 
-public class JumpScareSound extends Service
+public class JumpScareSound extends BasePlayerService
     implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener
 {
 
-    private MediaPlayer mediaPlayer;
-    private String playlistId;
-    private String trackId;
-    private String sceneId;
+    MediaPlayer mediaPlayer;
 
     @Nullable
     @Override
@@ -44,59 +35,38 @@ public class JumpScareSound extends Service
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId)
-    {
-
-        sceneId = intent.getStringExtra("sceneId");
-        trackId = intent.getStringExtra("trackId");
-        playlistId = intent.getStringExtra("playlistId");
-        startPlayback(getTrackPath(trackId));
-        return Service.START_NOT_STICKY;
-    }
-
-    /**
-     * Creates the media player containing an audio file to play.
-     */
-    private void startPlayback(String path)
-    {
-        mediaPlayer.stop();
-        mediaPlayer = create(this, Uri.parse(path));
-        mediaPlayer.setVolume(1f, 1f);
-        mediaPlayer.start();
-        changeLight();
-        mediaPlayer.setOnCompletionListener(mp ->
-        {
-            Intent intent = new Intent(getBaseContext(), BackgroundMusic.class);
-            String nextTrackId = getNextTrack();
-            intent.putExtra("trackId", nextTrackId);
-            startService(intent);
-        });
-    }
-
-    private void changeLight()
-    {
-        LightDao dao = new LightDao(getBaseContext());
-        SceneDao sdao = new SceneDao(this);
-        Scene scene = sdao.getById(sceneId);
-        Light light = dao.getById(scene.getLight());
-        LightHandler handler = new LightHandler(getBaseContext(), light);
-        handler.req();
-    }
-
-    private String getNextTrack(){
-        SceneDao dao = new SceneDao(getBaseContext());
-        return dao.getById(sceneId).getNextTrack();
-    }
-
-    @Override
     public void onCreate()
     {
         mediaPlayer = new MediaPlayer();
     }
 
-    private String getTrackPath(String trackId) {
-        TrackDao dao = new TrackDao(getBaseContext());
-        return dao.getTrackById(trackId).getPath();
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId)
+    {
+        getExtras(intent);
+        mediaPlayer.stop();
+        mediaPlayer = create(this, Uri.parse(getTrackPath(trackId)));
+        mediaPlayer.setVolume(1f, 1f);
+        mediaPlayer.start();
+        if (sceneId != null)
+        {
+            Intent next = new Intent(getBaseContext(), BackgroundMusic.class);
+            String nextTrackId = getNextTrack(sceneId);
+            next.putExtra("trackId", nextTrackId);
+            try
+            {
+                Thread.sleep(300);
+            } catch (InterruptedException e)
+            {
+                e.printStackTrace();
+            }
+            startService(next);
+        } else
+        {
+            playNextOnComplete(mediaPlayer);
+        }
+
+        return Service.START_NOT_STICKY;
     }
 
     @Override

@@ -13,6 +13,7 @@ import com.wintermute.soundboard.database.dao.TrackDao;
 import com.wintermute.soundboard.database.dto.Light;
 import com.wintermute.soundboard.database.dto.Scene;
 import com.wintermute.soundboard.database.dto.Track;
+
 import java.util.Objects;
 
 /**
@@ -39,7 +40,8 @@ public class SceneConfiguration extends AppCompatActivity
         nextTrack.setOnClickListener(v -> setNextTrack());
 
         Button sceneSubmit = findViewById(R.id.scene_submit);
-        sceneSubmit.setOnClickListener(v -> {
+        sceneSubmit.setOnClickListener(v ->
+        {
             updatePlaylistContent();
             finish();
         });
@@ -70,8 +72,14 @@ public class SceneConfiguration extends AppCompatActivity
     private Scene createScene()
     {
         Scene result = new Scene();
-        result.setLight(light.getId());
-        result.setNextTrack(Objects.requireNonNull(nextTrack.getId()));
+        if (light != null)
+        {
+            result.setLight(light.getId());
+        }
+        if (nextTrack != null)
+        {
+            result.setNextTrack(Objects.requireNonNull(nextTrack.getId()));
+        }
         SceneDao sceneDao = new SceneDao(this);
         result.setId(String.valueOf(sceneDao.insert(result)));
         return result;

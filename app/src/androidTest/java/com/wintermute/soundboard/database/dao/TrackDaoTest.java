@@ -1,6 +1,5 @@
 package com.wintermute.soundboard.database.dao;
 
-
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
@@ -26,6 +25,18 @@ public class TrackDaoTest
     private static Track track;
     private static TrackDao dao;
 
+    @BeforeClass
+    public static void setUp()
+    {
+        ctx = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        dao = new TrackDao(ctx);
+        track = new Track();
+        track.setName("sample");
+        track.setPath("/here/be/path");
+        track.setArtist("Dj-yo-mama");
+        track.setSceneId("0");
+    }
+
     /**
      * Prepare the test environment.
      */
@@ -44,25 +55,14 @@ public class TrackDaoTest
         track.setId(dao.insert(track));
         assertTrue(dao.getAll().size() > 0);
         assertNotNull(track.getId());
-        assertEquals("/here/be/path", dao.getTrack(track.getId()).getPath());
+        assertEquals("/here/be/path", dao.getTrack("path", track.getId()).getPath());
 
         track.setName("changed");
         dao.update(track);
-        assertEquals("changed", dao.getTrack(track.getId()).getName());
+        assertEquals("changed", dao.getTrack("name", track.getId()).getName());
 
         dao.delete(track);
         assertEquals(0, dao.getAll().size());
-    }
-
-    @BeforeClass
-    public static void setUp(){
-        ctx = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        dao = new TrackDao(ctx);
-        track = new Track();
-        track.setName("sample");
-        track.setPath("/here/be/path");
-        track.setArtist("Dj-yo-mama");
-        track.setSceneId("0");
     }
 
     /**
