@@ -59,6 +59,9 @@ public class BackgroundMusic extends BasePlayerService
         mediaPlayer = create(this, Uri.parse(getTrackPath(trackId)));
         mediaPlayer.setVolume(0.2f, 0.2f);
         mediaPlayer.start();
+        if (sceneId != null) {
+            changeLight(sceneId);
+        }
         mediaPlayer.setLooping(true);
 
         return Service.START_NOT_STICKY;

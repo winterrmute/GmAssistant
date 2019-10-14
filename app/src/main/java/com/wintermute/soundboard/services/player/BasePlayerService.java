@@ -31,7 +31,7 @@ public class BasePlayerService extends Service
             Scene scene = sdao.getById(sceneId);
             Light light = dao.getById(scene.getLight());
             LightHandler handler = new LightHandler(getBaseContext(), light);
-            handler.req();
+            handler.manageLight();
         }
     }
 

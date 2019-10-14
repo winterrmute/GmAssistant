@@ -50,17 +50,22 @@ public class JumpScareSound extends BasePlayerService
         mediaPlayer.start();
         if (sceneId != null)
         {
-            Intent next = new Intent(getBaseContext(), BackgroundMusic.class);
-            String nextTrackId = getNextTrack(sceneId);
-            next.putExtra("trackId", nextTrackId);
-            try
+            changeLight(sceneId);
+            if (getNextTrack(sceneId) != null)
             {
-                Thread.sleep(300);
-            } catch (InterruptedException e)
-            {
-                e.printStackTrace();
+
+                Intent next = new Intent(getBaseContext(), BackgroundMusic.class);
+                String nextTrackId = getNextTrack(sceneId);
+                next.putExtra("trackId", nextTrackId);
+                try
+                {
+                    Thread.sleep(300);
+                } catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+                startService(next);
             }
-            startService(next);
         } else
         {
             playNextOnComplete(mediaPlayer);

@@ -11,6 +11,8 @@ import com.wintermute.soundboard.database.dto.Light;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
+
 public class LightHandler
 {
 
@@ -29,16 +31,13 @@ public class LightHandler
         this.light = light;
     }
 
-    private JSONObject modifyLight()
+    private JSONObject buildHueReq()
     {
-        String color = light.getColor();
-
-        Color pickedColor = Color.valueOf(Integer.parseInt(color));
-        double[] xy = getRGBtoXY(pickedColor);
+        double[] xy = getRGBtoXY(Color.valueOf(new BigDecimal(light.getColor()).intValue()));
         try
         {
             return new JSONObject(
-                "{ \"on\":true, \"bri\": 10, \"xy\": [ " + xy[0] + ", " + xy[1] + " ], \"transitiontime\": 0, \"hue\": "
+                "{ \"on\":true, \"bri\": 10, \"xy\": [ " + xy[0] + ", " + xy[1] + " ], \"bri\": "+ light.getBrightness() + ", \"transitiontime\": 1, \"hue\": "
                     + "46920 }");
         } catch (JSONException e)
         {
@@ -47,10 +46,18 @@ public class LightHandler
         return null;
     }
 
-    public void req()
+    public void manageLight() {
+        String[] lights = new String[] {"4", "5", "12"};
+        for (int i = 0; i < lights.length; i++)
+        {
+            req(lights[i]);
+        }
+    }
+
+    public void req(String id)
     {
         JsonObjectRequest jsonObjectRequest =
-            new JsonObjectRequest(Request.Method.PUT, HUE_LIGHTS_CONTROL + "/5/state", modifyLight(),
+            new JsonObjectRequest(Request.Method.PUT, HUE_LIGHTS_CONTROL + "/"+ id + "/state", buildHueReq(),
                 response -> Log.e("Response: ", response.toString()), error ->
             {
                 // TODO: Handle error

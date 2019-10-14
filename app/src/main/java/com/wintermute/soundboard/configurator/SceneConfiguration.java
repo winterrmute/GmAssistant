@@ -108,8 +108,9 @@ public class SceneConfiguration extends AppCompatActivity
             LightDao dao = new LightDao(this);
             Light dto = new Light();
             int color = data.getIntExtra("color", 0);
+            int brightness = data.getIntExtra("brightness", 0);
             dto.setColor(String.valueOf(color));
-            dto.setBrightness(String.valueOf(100));
+            dto.setBrightness(String.valueOf(brightness));
             dto.setId(String.valueOf(dao.insert(dto)));
             light = dao.getById(dto.getId());
         }
