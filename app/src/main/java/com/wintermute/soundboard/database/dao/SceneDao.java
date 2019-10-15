@@ -18,7 +18,6 @@ public class SceneDao
 {
     private static final String TABLE_NAME = "scene";
     private static final String ID_KEY = "id";
-    private static final String TRACK_KEY = "track";
     private static final String LIGHT_KEY = "light";
     private static final String NEXT_TRACK_KEY = "next_track";
 

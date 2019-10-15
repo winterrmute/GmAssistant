@@ -8,14 +8,13 @@ import androidx.annotation.Nullable;
 import com.wintermute.soundboard.database.dao.LightDao;
 import com.wintermute.soundboard.database.dao.SceneDao;
 import com.wintermute.soundboard.database.dao.TrackDao;
-import com.wintermute.soundboard.database.dto.Light;
-import com.wintermute.soundboard.database.dto.Scene;
 import com.wintermute.soundboard.handler.LightHandler;
 
 public class BasePlayerService extends Service
 {
     String sceneId;
     String trackId;
+    String playlistId;
 
     /**
      * Changes the light.
@@ -24,13 +23,12 @@ public class BasePlayerService extends Service
      */
     void changeLight(String sceneId)
     {
-        if (sceneId != null)
+        SceneDao sceneDao = new SceneDao(this);
+        if (sceneDao.getById(sceneId).getLight() != null)
         {
+            String sceneLight = sceneDao.getById(sceneId).getLight();
             LightDao dao = new LightDao(getBaseContext());
-            SceneDao sdao = new SceneDao(this);
-            Scene scene = sdao.getById(sceneId);
-            Light light = dao.getById(scene.getLight());
-            LightHandler handler = new LightHandler(getBaseContext(), light);
+            LightHandler handler = new LightHandler(getBaseContext(), dao.getById(sceneLight));
             handler.manageLight();
         }
     }
@@ -44,6 +42,7 @@ public class BasePlayerService extends Service
     {
         sceneId = intent.getStringExtra("sceneId");
         trackId = intent.getStringExtra("trackId");
+        playlistId = intent.getStringExtra("playlistId");
     }
 
     /**
@@ -58,15 +57,14 @@ public class BasePlayerService extends Service
             player.setOnCompletionListener(mp ->
             {
                 Intent intent = new Intent(getBaseContext(), BackgroundMusic.class);
-                String nextTrackId = getNextTrack(sceneId);
-                intent.putExtra("trackId", nextTrackId);
+                SceneDao dao = new SceneDao(getBaseContext());
+                intent.putExtra("trackId", dao.getById(sceneId).getNextTrack());
                 startService(intent);
             });
         }
     }
 
     /**
-     * @param sceneId to get next track.
      * @return next track to play.
      */
     String getNextTrack(String sceneId)
