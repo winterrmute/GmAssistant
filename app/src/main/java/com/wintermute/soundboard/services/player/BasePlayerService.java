@@ -2,13 +2,17 @@ package com.wintermute.soundboard.services.player;
 
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
 import com.wintermute.soundboard.database.dao.LightDao;
 import com.wintermute.soundboard.database.dao.SceneDao;
 import com.wintermute.soundboard.database.dao.TrackDao;
+import com.wintermute.soundboard.database.dto.Light;
 import com.wintermute.soundboard.handler.LightHandler;
+
+import java.math.BigDecimal;
 
 public class BasePlayerService extends Service
 {
@@ -28,8 +32,10 @@ public class BasePlayerService extends Service
         {
             String sceneLight = sceneDao.getById(sceneId).getLight();
             LightDao dao = new LightDao(getBaseContext());
-            LightHandler handler = new LightHandler(getBaseContext(), dao.getById(sceneLight));
-            handler.manageLight();
+            Light light = dao.getById(sceneLight);
+            Color color = Color.valueOf(new BigDecimal(String.valueOf(light.getColor())).intValue());
+            LightHandler handler = new LightHandler(getBaseContext(), color, Integer.parseInt(light.getBrightness()));
+            handler.setLight(false);
         }
     }
 

@@ -7,11 +7,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.wintermute.soundboard.database.dto.Light;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.math.BigDecimal;
 
 public class LightHandler
 {
@@ -19,26 +16,25 @@ public class LightHandler
     private static final String HUE_USERNAME = "BwQwczBxyonBkXGuXAm93QMN7JJfX2HOUwyvmnps";
     private static final String HUE_URL = "http://192.168.40.4";
     private static final String HUE_LIGHTS_CONTROL = HUE_URL + "/api/" + HUE_USERNAME + "/lights";
-    private static final String light1 = "4";
-    private static final String light2 = "5";
-    private static final String light3 = "12";
     private Context ctx;
-    private Light light;
+    private Color color;
+    private int brightness;
 
-    public LightHandler(Context ctx, Light light)
+    public LightHandler(Context ctx, Color color, int brightness)
     {
         this.ctx = ctx;
-        this.light = light;
+        this.color = color;
+        this.brightness = brightness;
     }
 
-    private JSONObject buildHueReq()
+    private JSONObject changeColorAndBrightness()
     {
-        double[] xy = getRGBtoXY(Color.valueOf(new BigDecimal(light.getColor()).intValue()));
+        double[] xy = getRGBtoXY(color);
         try
         {
             return new JSONObject(
-                "{ \"on\":true, \"bri\": 10, \"xy\": [ " + xy[0] + ", " + xy[1] + " ], \"bri\": "+ light.getBrightness() + ", \"transitiontime\": 1, \"hue\": "
-                    + "46920 }");
+                "{ \"on\":true, \"bri\": 10, \"xy\": [ " + xy[0] + ", " + xy[1] + " ], \"bri\": " + brightness
+                    + ", \"transitiontime\": 1, \"hue\": " + "46920 }");
         } catch (JSONException e)
         {
             e.printStackTrace();
@@ -46,25 +42,53 @@ public class LightHandler
         return null;
     }
 
-    public void manageLight() {
+    private JSONObject resetToDefault()
+    {
+        try
+        {
+            return new JSONObject(
+                "{ \"on\":true, \"bri\": 10, \"xy\": [ 0.31822298615917416, 0.32930599409450195 ], \"bri\": 255, "
+                    + "\"transitiontime\": 1, \"hue\": " + "46920 }");
+        } catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void setLight(boolean reset)
+    {
         String[] lights = new String[] {"4", "5", "12"};
         for (int i = 0; i < lights.length; i++)
         {
-            req(lights[i]);
+            req(lights[i], reset);
         }
     }
 
-    public void req(String id)
+    public void req(String id, boolean reset)
     {
-        JsonObjectRequest jsonObjectRequest =
-            new JsonObjectRequest(Request.Method.PUT, HUE_LIGHTS_CONTROL + "/"+ id + "/state", buildHueReq(),
-                response -> Log.e("Response: ", response.toString()), error ->
-            {
-                // TODO: Handle error
-                Log.e("MESSAGE:", error.getMessage());
-            });
+        JSONObject requestBody;
+        if (reset)
+        {
+            requestBody = resetToDefault();
+        } else
+        {
+            requestBody = changeColorAndBrightness();
+        }
 
-        // Access the RequestQueue through your singleton class.
+        JsonObjectRequest jsonObjectRequest = null;
+        try
+        {
+            jsonObjectRequest =
+                new JsonObjectRequest(Request.Method.PUT, HUE_LIGHTS_CONTROL + "/" + id + "/state", requestBody,
+                    response -> Log.e("Response: ", response.toString()), error ->
+                {
+                    //nothing to do
+                });
+        } catch (NullPointerException e)
+        {
+            //nothing to do
+        }
         RequestQueue que = Volley.newRequestQueue(ctx);
         que.add(jsonObjectRequest);
     }
