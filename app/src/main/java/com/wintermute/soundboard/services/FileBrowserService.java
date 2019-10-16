@@ -30,6 +30,8 @@ public class FileBrowserService
         return browsedFiles;
     }
 
+    private List<File> result = new ArrayList<>();
+
     /**
      * Scans directory for audio tracks.
      *
@@ -38,19 +40,17 @@ public class FileBrowserService
      */
     public List<File> collectTracks(String path)
     {
-        List<File> result = new ArrayList<>();
-        File[] files = new File(path).listFiles();
-
-        if (files != null)
+        File[] fList = new File(path).listFiles();
+        if (fList != null)
         {
-            for (File file : files)
+            for (File file : fList)
             {
-                if (file.isDirectory())
-                {
-                    collectTracks(file.getPath());
-                } else if (file.toString().endsWith(".mp3") || file.toString().endsWith(".wav"))
+                if (file.isFile())
                 {
                     result.add(file);
+                } else if (file.isDirectory())
+                {
+                    collectTracks(file.getAbsolutePath());
                 }
             }
         }
