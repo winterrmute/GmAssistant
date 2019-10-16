@@ -11,9 +11,6 @@ import com.wintermute.gmassistant.configurator.SceneConfiguration;
 import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
 import com.wintermute.gmassistant.database.dao.TrackDao;
 import com.wintermute.gmassistant.database.dto.Track;
-import com.wintermute.gmassistant.services.player.AmbientSound;
-import com.wintermute.gmassistant.services.player.BackgroundMusic;
-import com.wintermute.gmassistant.services.player.JumpScareSound;
 
 import java.util.List;
 
@@ -28,7 +25,6 @@ public class PlaylistHandler extends AppCompatActivity
     private ListView songView;
     private List<Track> allTracks;
     private TrackDao trackDao;
-    private String trackId;
     private String playlistId;
 
     @Override
@@ -44,24 +40,8 @@ public class PlaylistHandler extends AppCompatActivity
 
         songView.setOnItemClickListener((parent, view, position, id) ->
         {
-            trackId = allTracks.get(position).getId();
-            String tag = allTracks.get(position).getTag();
-            if (tag != null)
-            {
-                if (tag.equals("music"))
-                {
-                    startPlayer(BackgroundMusic.class);
-                } else if (tag.equals("ambiente"))
-                {
-                    startPlayer(AmbientSound.class);
-                } else if (tag.equals("jumpscare"))
-                {
-                    startPlayer(JumpScareSound.class);
-                }
-            } else
-            {
-                startPlayer(BackgroundMusic.class);
-            }
+            PlayerHandler handler = new PlayerHandler(PlaylistHandler.this);
+            handler.startPlayerByTrack(playlistId, allTracks.get(position).getId());
         });
 
         songView.setOnItemLongClickListener((parent, view, position, id) ->
@@ -123,23 +103,8 @@ public class PlaylistHandler extends AppCompatActivity
     void renderFilesAsList()
     {
         allTracks = trackDao.getReferencedTracks(this.getIntent().getStringExtra("playlistId"));
-        TrackAdapter trackAdapter = new TrackAdapter(this, allTracks);
+        TrackAdapter songAdapter = new TrackAdapter(this, allTracks);
         songView = findViewById(R.id.track_list);
-        songView.setAdapter(trackAdapter);
-    }
-
-    /**
-     * Start proper music player by tag.
-     *
-     * @param type
-     */
-    private void startPlayer(Class type)
-    {
-        PlaylistContentDao dao = new PlaylistContentDao(this);
-        String sceneId = dao.getSceneId(playlistId, trackId);
-        Intent player = new Intent(PlaylistHandler.this, type);
-        player.putExtra("trackId", trackId);
-        player.putExtra("sceneId", sceneId);
-        startService(player);
+        songView.setAdapter(songAdapter);
     }
 }

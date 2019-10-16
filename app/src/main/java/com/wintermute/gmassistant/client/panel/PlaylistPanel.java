@@ -12,7 +12,7 @@ import com.wintermute.gmassistant.client.NewPlaylist;
 import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
 import com.wintermute.gmassistant.database.dao.PlaylistDao;
 import com.wintermute.gmassistant.database.dto.Playlist;
-import com.wintermute.gmassistant.handler.PlayerHandler;
+import com.wintermute.gmassistant.handler.PlaylistHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +45,7 @@ public class PlaylistPanel extends AppCompatActivity
 
         playlistView.setOnItemClickListener((parent, view, position, id) ->
         {
-            Intent playlistContent = new Intent(PlaylistPanel.this, PlayerHandler.class);
+            Intent playlistContent = new Intent(PlaylistPanel.this, PlaylistHandler.class);
             playlistContent.putExtra("playlistId", playlists.get(position).getId());
             startActivity(playlistContent);
         });

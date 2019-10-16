@@ -24,7 +24,7 @@
         <activity android:name=".configurator.LightConfiguration" />
         <activity android:name=".configurator.SceneConfiguration" />
         <activity android:name=".client.NewPlaylist" />
-        <activity android:name=".handler.PlayerHandler" />
+        <activity android:name=".handler.PlaylistHandler" />
         <activity android:name=".client.FileBrowser" />
         <activity android:name=".client.panel.PlaylistPanel" />
         <activity android:name=".GmAssistant">

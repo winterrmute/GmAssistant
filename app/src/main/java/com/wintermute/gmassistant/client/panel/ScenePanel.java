@@ -2,13 +2,13 @@ package com.wintermute.gmassistant.client.panel;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.SceneAdapter;
 import com.wintermute.gmassistant.database.dao.SceneDao;
 import com.wintermute.gmassistant.database.dto.Scene;
+import com.wintermute.gmassistant.handler.PlayerHandler;
 
 import java.util.ArrayList;
 
@@ -29,11 +29,10 @@ public class ScenePanel extends AppCompatActivity
 
         showScenes();
 
-        sceneView.setOnItemClickListener((parent, view, position, id) -> {
-            Log.e("Id :", allScenes.get(position).getId());
-            Log.e("", allScenes.get(position).getName());
-            Log.e("Next track: ", allScenes.get(position).getNextTrack());
-            Log.e("Light", allScenes.get(position).getLight());
+        sceneView.setOnItemClickListener((parent, view, position, id) ->
+        {
+            PlayerHandler handler = new PlayerHandler(getBaseContext());
+            handler.startPlayerByScene(allScenes.get(position).getId());
         });
 
         sceneView.setOnItemLongClickListener((parent, view, position, id) ->
