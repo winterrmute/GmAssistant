@@ -33,7 +33,7 @@ public class GmPanel extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_soundboard);
+        setContentView(R.layout.activity_gm_panel);
 
         init();
 

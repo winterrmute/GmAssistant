@@ -48,15 +48,6 @@ public class SceneConfiguration extends AppCompatActivity
     }
 
     /**
-     * Creates light effect for given nextTrack.
-     */
-    private void setLights()
-    {
-        Intent fileBrowser = new Intent(SceneConfiguration.this, LightConfiguration.class);
-        startActivityForResult(fileBrowser, 2);
-    }
-
-    /**
      * Sets following nextTrack to current playing nextTrack.
      */
     private void setNextTrack()
@@ -64,6 +55,15 @@ public class SceneConfiguration extends AppCompatActivity
         Intent fileBrowser = new Intent(SceneConfiguration.this, FileBrowser.class);
         fileBrowser.putExtra("hasNextTrack", true);
         startActivityForResult(fileBrowser, 1);
+    }
+
+    /**
+     * Creates light effect for given nextTrack.
+     */
+    private void setLights()
+    {
+        Intent fileBrowser = new Intent(SceneConfiguration.this, LightConfiguration.class);
+        startActivityForResult(fileBrowser, 2);
     }
 
     /**

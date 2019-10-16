@@ -37,7 +37,7 @@ public class FileBrowser extends AppCompatActivity
         fileBrowserService = new FileBrowserService();
         getRootDir();
         ArrayList<File> files = fileBrowserService.scanDir(path);
-        renderFiles(files);
+        browseOrSelectFiles(files);
 
         Button browseParent = findViewById(R.id.parent_directory);
         browseParent.setOnClickListener(v ->
@@ -45,7 +45,7 @@ public class FileBrowser extends AppCompatActivity
             if (path.getParent() != null && new File(path.getParent()).canRead())
             {
                 path = new File(path.getParent());
-                renderFiles(fileBrowserService.scanDir(path));
+                browseOrSelectFiles(fileBrowserService.scanDir(path));
             } else
             {
                 Toast.makeText(FileBrowser.this, "Permission denied!", Toast.LENGTH_SHORT).show();
@@ -70,24 +70,24 @@ public class FileBrowser extends AppCompatActivity
      *
      * @param dirContent to scan for files and directories
      */
-    private void renderFiles(ArrayList<File> dirContent)
+    private void browseOrSelectFiles(ArrayList<File> dirContent)
     {
         addingNextTrack = getIntent().getBooleanExtra("hasNextTrack", false);
 
         setListView(dirContent);
         fileView.setOnItemClickListener((parent, view, position, id) ->
         {
-            if (addingNextTrack && !dirContent.get(position).isDirectory())
-            {
-                setResult(RESULT_CODE, new Intent().putExtra("path", dirContent.get(position).getPath()));
-                finish();
-            } else
+            if (dirContent.get(position).isDirectory())
             {
                 path = new File(dirContent.get(position).getPath());
-                boolean isDirectory = new File(dirContent.get(position).getPath()).isDirectory();
-                if (isDirectory)
+                browseOrSelectFiles(fileBrowserService.scanDir(path));
+            } else
+            {
+                if (addingNextTrack)
                 {
-                    renderFiles(fileBrowserService.scanDir(path));
+                    path = new File(dirContent.get(position).getPath());
+                    setResult(RESULT_CODE, new Intent().putExtra("path", path.toString()));
+                    finish();
                 }
             }
         });

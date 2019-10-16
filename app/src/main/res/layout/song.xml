@@ -20,5 +20,3 @@
             android:textSize="18sp" />
 
 </LinearLayout>
-
-<!--        android:onClick="songPicked"-->
