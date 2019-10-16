@@ -1,5 +1,5 @@
 <resources>
-    <!--  Soundboard  -->
+    <!--  GmPanel  -->
     <string name="app_name">Soundboard</string>
     <string name="playlist">add new playlist</string>
     <string name="file_browser">Browse files</string>

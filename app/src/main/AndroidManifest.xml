@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        package="com.wintermute.soundboard">
+        package="com.wintermute.gmassistant">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -19,12 +19,12 @@
             android:usesCleartextTraffic="true"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".configurator.LightConfiguration"></activity>
-        <activity android:name=".configurator.SceneConfiguration" />
-        <activity android:name=".client.NewPlaylist" />
-        <activity android:name=".handler.PlayerHandler" />
-        <activity android:name=".client.FileBrowser" />
-        <activity android:name=".Soundboard">
+        <activity android:name="com.wintermute.gmassistant.configurator.LightConfiguration"></activity>
+        <activity android:name="com.wintermute.gmassistant.configurator.SceneConfiguration" />
+        <activity android:name="com.wintermute.gmassistant.client.NewPlaylist" />
+        <activity android:name="com.wintermute.gmassistant.handler.PlayerHandler" />
+        <activity android:name="com.wintermute.gmassistant.client.FileBrowser" />
+        <activity android:name="com.wintermute.gmassistant.GmPanel">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,10 +32,10 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".services.player.BasePlayerService" />
-        <service android:name=".services.player.BackgroundMusic" />
-        <service android:name=".services.player.AmbientSound" />
-        <service android:name=".services.player.JumpScareSound" />
+        <service android:name="com.wintermute.gmassistant.services.player.BasePlayerService" />
+        <service android:name="com.wintermute.gmassistant.services.player.BackgroundMusic" />
+        <service android:name="com.wintermute.gmassistant.services.player.AmbientSound" />
+        <service android:name="com.wintermute.gmassistant.services.player.JumpScareSound" />
     </application>
 
 </manifest>
