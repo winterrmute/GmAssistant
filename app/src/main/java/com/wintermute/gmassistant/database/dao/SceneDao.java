@@ -18,6 +18,8 @@ public class SceneDao
 {
     private static final String TABLE_NAME = "scene";
     private static final String ID_KEY = "id";
+    private static final String STARTING_TRACK_KEY = "start_track";
+    private static final String NAME_KEY = "name";
     private static final String LIGHT_KEY = "light";
     private static final String NEXT_TRACK_KEY = "next_track";
 
@@ -40,8 +42,20 @@ public class SceneDao
     {
         ContentValues values = new ContentValues();
         values.put(LIGHT_KEY, scene.getLight());
+        values.put(NAME_KEY, scene.getName());
+        values.put(STARTING_TRACK_KEY, scene.getStartingTrack());
         values.put(NEXT_TRACK_KEY, scene.getNextTrack());
         return dbWrite.insert(TABLE_NAME, null, values);
+    }
+
+    /**
+     * Get all available sceens.
+     * @return
+     */
+    public ArrayList<Scene> getAll()
+    {
+        String query = "SELECT * FROM " + TABLE_NAME;
+        return mapObject(dbRead.rawQuery(query, null));
     }
 
     /**
@@ -68,7 +82,10 @@ public class SceneDao
         while (cursor.moveToNext())
         {
             Scene scene = new Scene();
+            scene.setId(getKeyValue(cursor, ID_KEY));
+            scene.setName(getKeyValue(cursor, NAME_KEY));
             scene.setLight(getKeyValue(cursor, LIGHT_KEY));
+            scene.setStartingTrack(getKeyValue(cursor, STARTING_TRACK_KEY));
             scene.setNextTrack(getKeyValue(cursor, NEXT_TRACK_KEY));
             result.add(scene);
         }
@@ -89,5 +106,22 @@ public class SceneDao
             return cursor.getString(cursor.getColumnIndex(key));
         }
         return "-1";
+    }
+
+    /**
+     * Deletes row from database by id.
+     *
+     * @param id of track to remove.
+     */
+    public void deleteById(String id)
+    {
+        StringBuilder query = new StringBuilder("DELETE FROM ")
+            .append(TABLE_NAME)
+            .append(" WHERE ")
+            .append(ID_KEY)
+            .append(" = '")
+            .append(id)
+            .append("'");
+        dbWrite.execSQL(query.toString());
     }
 }

@@ -12,6 +12,8 @@ import lombok.Data;
 public class Scene
 {
     private String id;
+    private String name;
+    private String startingTrack;
     private String light;
     private String nextTrack;
 }

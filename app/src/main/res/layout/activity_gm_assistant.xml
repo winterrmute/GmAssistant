@@ -23,10 +23,18 @@
             app:layout_constraintTop_toBottomOf="@+id/manage_playlists" />
 
     <Button
+            android:id="@+id/manage_scenes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/manage_scenes"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/manage_tracks" />
+
+    <Button
             android:id="@+id/manage_lights"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/manage_lights"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/manage_tracks" />
+            app:layout_constraintTop_toBottomOf="@+id/manage_scenes" />
 </androidx.constraintlayout.widget.ConstraintLayout>

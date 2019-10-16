@@ -123,9 +123,9 @@ public class PlaylistHandler extends AppCompatActivity
     void renderFilesAsList()
     {
         allTracks = trackDao.getReferencedTracks(this.getIntent().getStringExtra("playlistId"));
-        TrackAdapter songAdapter = new TrackAdapter(this, allTracks);
+        TrackAdapter trackAdapter = new TrackAdapter(this, allTracks);
         songView = findViewById(R.id.track_list);
-        songView.setAdapter(songAdapter);
+        songView.setAdapter(trackAdapter);
     }
 
     /**

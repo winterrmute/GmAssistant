@@ -3,6 +3,8 @@ package com.wintermute.gmassistant.configurator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.client.FileBrowser;
@@ -14,8 +16,6 @@ import com.wintermute.gmassistant.database.dto.Light;
 import com.wintermute.gmassistant.database.dto.Scene;
 import com.wintermute.gmassistant.database.dto.Track;
 
-import java.util.Objects;
-
 /**
  * Creates new scene and updates dependency in related playlist content.
  *
@@ -26,12 +26,16 @@ public class SceneConfiguration extends AppCompatActivity
 
     private Track nextTrack;
     private Light light;
+    private String sceneName;
+    private String trackId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scene_manager);
+        setContentView(R.layout.activity_scene_configuration);
+
+        EditText nameField = findViewById(R.id.scene_name);
 
         Button lightEffects = findViewById(R.id.set_light);
         lightEffects.setOnClickListener(v -> setLights());
@@ -42,8 +46,15 @@ public class SceneConfiguration extends AppCompatActivity
         Button sceneSubmit = findViewById(R.id.scene_submit);
         sceneSubmit.setOnClickListener(v ->
         {
-            updatePlaylistContent();
-            finish();
+            String currentSceneName = nameField.getText().toString();
+            if (currentSceneName.equals("")){
+                Toast.makeText(this, "Scene name must not be empty!", Toast.LENGTH_SHORT).show();
+            } else {
+
+                this.sceneName = currentSceneName;
+                updatePlaylistContent();
+                finish();
+            }
         });
     }
 
@@ -72,13 +83,26 @@ public class SceneConfiguration extends AppCompatActivity
     private Scene createScene()
     {
         Scene result = new Scene();
-        if (light != null)
-        {
+        result.setName(sceneName);
+        if (light!= null) {
             result.setLight(light.getId());
         }
-        if (nextTrack != null)
+        else {
+            result.setLight("-1");
+        }
+        if (nextTrack!= null)
         {
-            result.setNextTrack(Objects.requireNonNull(nextTrack.getId()));
+            result.setNextTrack(nextTrack.getId());
+        }
+        else {
+            result.setNextTrack("-1");
+        }
+        if (trackId!= null)
+        {
+            result.setStartingTrack(trackId);
+        }
+        else {
+            result.setNextTrack("-1");
         }
         SceneDao sceneDao = new SceneDao(this);
         result.setId(String.valueOf(sceneDao.insert(result)));
@@ -88,7 +112,7 @@ public class SceneConfiguration extends AppCompatActivity
     private void updatePlaylistContent()
     {
         PlaylistContentDao pcd = new PlaylistContentDao(this);
-        String trackId = getIntent().getStringExtra("trackId");
+        trackId = getIntent().getStringExtra("trackId");
         String playlistId = getIntent().getStringExtra("playlistId");
         pcd.addScene(createScene().getId(), playlistId, trackId);
     }

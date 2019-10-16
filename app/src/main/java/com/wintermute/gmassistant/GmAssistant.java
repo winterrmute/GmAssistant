@@ -8,8 +8,12 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.client.panel.LightPanel;
 import com.wintermute.gmassistant.client.panel.PlaylistPanel;
+import com.wintermute.gmassistant.client.panel.ScenePanel;
 import com.wintermute.gmassistant.client.panel.TrackPanel;
 
+/**
+ * Startup activity. Provides Game masters panel.
+ */
 public class GmAssistant extends AppCompatActivity
 {
 
@@ -24,8 +28,11 @@ public class GmAssistant extends AppCompatActivity
         Button playlistPanel = findViewById(R.id.manage_playlists);
         playlistPanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, PlaylistPanel.class)));
 
-        Button scenePanel = findViewById(R.id.manage_tracks);
-        scenePanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, TrackPanel.class)));
+        Button trackPanel = findViewById(R.id.manage_tracks);
+        trackPanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, TrackPanel.class)));
+
+        Button scenePanel = findViewById(R.id.manage_scenes);
+        scenePanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, ScenePanel.class)));
 
         Button lightPanel = findViewById(R.id.manage_lights);
         lightPanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, LightPanel.class)));
@@ -43,9 +50,7 @@ public class GmAssistant extends AppCompatActivity
         {
             if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED)
             {
-                if (shouldShowRequestPermissionRationale(permission))
-                {
-                }
+                shouldShowRequestPermissionRationale(permission);
                 requestPermissions(new String[] {permission}, 0);
             }
         }
