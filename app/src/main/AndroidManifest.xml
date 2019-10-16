@@ -8,7 +8,6 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-
     <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
 
     <application
@@ -16,15 +15,18 @@
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
-            android:usesCleartextTraffic="true"
             android:supportsRtl="true"
-            android:theme="@style/AppTheme">
-        <activity android:name="com.wintermute.gmassistant.configurator.LightConfiguration"></activity>
-        <activity android:name="com.wintermute.gmassistant.configurator.SceneConfiguration" />
-        <activity android:name="com.wintermute.gmassistant.client.NewPlaylist" />
-        <activity android:name="com.wintermute.gmassistant.handler.PlayerHandler" />
-        <activity android:name="com.wintermute.gmassistant.client.FileBrowser" />
-        <activity android:name="com.wintermute.gmassistant.GmPanel">
+            android:theme="@style/AppTheme"
+            android:usesCleartextTraffic="true">
+        <activity android:name=".client.panel.LightPanel"></activity>
+        <activity android:name=".client.panel.ScenePanel" />
+        <activity android:name=".configurator.LightConfiguration" />
+        <activity android:name=".configurator.SceneConfiguration" />
+        <activity android:name=".client.NewPlaylist" />
+        <activity android:name=".handler.PlayerHandler" />
+        <activity android:name=".client.FileBrowser" />
+        <activity android:name=".client.panel.PlaylistPanel" />
+        <activity android:name=".GmAssistant">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,10 +34,10 @@
             </intent-filter>
         </activity>
 
-        <service android:name="com.wintermute.gmassistant.services.player.BasePlayerService" />
-        <service android:name="com.wintermute.gmassistant.services.player.BackgroundMusic" />
-        <service android:name="com.wintermute.gmassistant.services.player.AmbientSound" />
-        <service android:name="com.wintermute.gmassistant.services.player.JumpScareSound" />
+        <service android:name=".services.player.BasePlayerService" />
+        <service android:name=".services.player.BackgroundMusic" />
+        <service android:name=".services.player.AmbientSound" />
+        <service android:name=".services.player.JumpScareSound" />
     </application>
 
 </manifest>

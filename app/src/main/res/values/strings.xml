@@ -1,5 +1,10 @@
 <resources>
-    <!--  GmPanel  -->
+    <!--  GmAssistant  -->
+    <string name="manage_playlists">Playlists</string>
+    <string name="manage_scenes">Scenes</string>
+    <string name="manage_lights">Lights</string>
+
+    <!--  PlaylistPanel  -->
     <string name="app_name">Soundboard</string>
     <string name="playlist">add new playlist</string>
     <string name="file_browser">Browse files</string>

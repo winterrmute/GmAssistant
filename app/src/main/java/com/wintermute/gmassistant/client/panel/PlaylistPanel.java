@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant;
+package com.wintermute.gmassistant.client.panel;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
+import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.PlaylistAdapter;
 import com.wintermute.gmassistant.client.NewPlaylist;
 import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
@@ -23,7 +24,7 @@ import java.util.List;
  *
  * @author wintermute
  */
-public class GmPanel extends AppCompatActivity
+public class PlaylistPanel extends AppCompatActivity
 {
     private ListView playlistView;
     private PlaylistDao playlistDao;
@@ -33,27 +34,27 @@ public class GmPanel extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gm_panel);
+        setContentView(R.layout.activity_playlist_panel);
 
         init();
 
         Button addPlaylist = findViewById(R.id.playlist);
         addPlaylist.setOnClickListener(v ->
         {
-            Intent createPlaylist = new Intent(GmPanel.this, NewPlaylist.class);
+            Intent createPlaylist = new Intent(PlaylistPanel.this, NewPlaylist.class);
             startActivity(createPlaylist);
         });
 
         playlistView.setOnItemClickListener((parent, view, position, id) ->
         {
-            Intent playlistContent = new Intent(GmPanel.this, PlayerHandler.class);
+            Intent playlistContent = new Intent(PlaylistPanel.this, PlayerHandler.class);
             playlistContent.putExtra("playlistId", playlists.get(position).getId());
             startActivity(playlistContent);
         });
 
         playlistView.setOnItemLongClickListener((parent, view, position, id) ->
         {
-            AlertDialog.Builder dialog = new AlertDialog.Builder(GmPanel.this);
+            AlertDialog.Builder dialog = new AlertDialog.Builder(PlaylistPanel.this);
             dialog.setTitle(playlists.get(position).getName());
             String[] opts = {"RENAME", "DELETE"};
             dialog.setItems(opts, (opt, which) ->
@@ -69,7 +70,7 @@ public class GmPanel extends AppCompatActivity
                         break;
                     case 1:
                         playlistDao.delete(playlists.get(position));
-                        PlaylistContentDao pcd = new PlaylistContentDao(GmPanel.this);
+                        PlaylistContentDao pcd = new PlaylistContentDao(PlaylistPanel.this);
                         pcd.deleteByPlaylistId(playlists.get(position).getId());
                         playlistDao.delete(playlists.get(position));
                         renderPlaylist();
@@ -88,20 +89,6 @@ public class GmPanel extends AppCompatActivity
         renderPlaylist();
     }
 
-    /**
-     * Grants permissions to the application to access the storage.
-     */
-    void grantUserPermission(String permission)
-    {
-        if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED)
-        {
-            if (shouldShowRequestPermissionRationale(permission))
-            {
-            }
-            requestPermissions(new String[] {permission}, 0);
-        }
-    }
-
     private void renderPlaylist()
     {
         playlists = playlistDao.getAll();
@@ -112,12 +99,7 @@ public class GmPanel extends AppCompatActivity
 
     private void init()
     {
-        String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MEDIA_CONTENT_CONTROL,
-                                Manifest.permission.MODIFY_AUDIO_SETTINGS, Manifest.permission.INTERNET};
-        for (String permission : permissions)
-        {
-            grantUserPermission(permission);
-        }
+
         playlistDao = new PlaylistDao(this);
         playlistView = findViewById(R.id.playlists);
         renderPlaylist();
