@@ -19,7 +19,7 @@
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
         <activity android:name=".client.panel.LightPanel"></activity>
-        <activity android:name=".client.panel.ScenePanel" />
+        <activity android:name=".client.panel.TrackPanel" />
         <activity android:name=".configurator.LightConfiguration" />
         <activity android:name=".configurator.SceneConfiguration" />
         <activity android:name=".client.NewPlaylist" />

@@ -61,7 +61,7 @@ public class TrackDaoTest
         dao.update(track);
         assertEquals("changed", dao.getTrack("name", track.getId()).getName());
 
-        dao.delete(track);
+        dao.deleteById(track);
         assertEquals(0, dao.getAll().size());
     }
 

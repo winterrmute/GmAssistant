@@ -15,10 +15,10 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-            android:id="@+id/manage_scenes"
+            android:id="@+id/manage_tracks"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/manage_scenes"
+            android:text="@string/manage_tracks"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/manage_playlists" />
 
@@ -28,5 +28,5 @@
             android:layout_height="wrap_content"
             android:text="@string/manage_lights"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/manage_scenes" />
+            app:layout_constraintTop_toBottomOf="@+id/manage_tracks" />
 </androidx.constraintlayout.widget.ConstraintLayout>

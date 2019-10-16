@@ -1,7 +1,7 @@
 <resources>
     <!--  GmAssistant  -->
     <string name="manage_playlists">Playlists</string>
-    <string name="manage_scenes">Scenes</string>
+    <string name="manage_tracks">Audio files</string>
     <string name="manage_lights">Lights</string>
 
     <!--  PlaylistPanel  -->

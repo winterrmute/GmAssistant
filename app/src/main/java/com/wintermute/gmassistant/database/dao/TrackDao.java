@@ -228,16 +228,16 @@ public class TrackDao
     /**
      * Deletes row from database by id.
      *
-     * @param track to remove from database.
+     * @param id of track to remove.
      */
-    void delete(Track track)
+    public void deleteById(String id)
     {
         StringBuilder query = new StringBuilder("DELETE FROM ")
             .append(TABLE_NAME)
             .append(" WHERE ")
             .append(ID_KEY)
             .append(" = '")
-            .append(track.getId())
+            .append(id)
             .append("'");
         dbWrite.execSQL(query.toString());
     }

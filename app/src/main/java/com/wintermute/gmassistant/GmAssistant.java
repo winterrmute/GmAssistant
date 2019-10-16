@@ -8,7 +8,7 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.client.panel.LightPanel;
 import com.wintermute.gmassistant.client.panel.PlaylistPanel;
-import com.wintermute.gmassistant.client.panel.ScenePanel;
+import com.wintermute.gmassistant.client.panel.TrackPanel;
 
 public class GmAssistant extends AppCompatActivity
 {
@@ -24,8 +24,8 @@ public class GmAssistant extends AppCompatActivity
         Button playlistPanel = findViewById(R.id.manage_playlists);
         playlistPanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, PlaylistPanel.class)));
 
-        Button scenePanel = findViewById(R.id.manage_scenes);
-        scenePanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, ScenePanel.class)));
+        Button scenePanel = findViewById(R.id.manage_tracks);
+        scenePanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, TrackPanel.class)));
 
         Button lightPanel = findViewById(R.id.manage_lights);
         lightPanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, LightPanel.class)));

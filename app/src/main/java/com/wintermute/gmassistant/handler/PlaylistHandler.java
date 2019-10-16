@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
-import com.wintermute.gmassistant.adapters.AudioFileAdapter;
+import com.wintermute.gmassistant.adapters.TrackAdapter;
 import com.wintermute.gmassistant.configurator.SceneConfiguration;
 import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
 import com.wintermute.gmassistant.database.dao.TrackDao;
@@ -123,8 +123,8 @@ public class PlaylistHandler extends AppCompatActivity
     void renderFilesAsList()
     {
         allTracks = trackDao.getReferencedTracks(this.getIntent().getStringExtra("playlistId"));
-        AudioFileAdapter songAdapter = new AudioFileAdapter(this, allTracks);
-        songView = findViewById(R.id.audio_list);
+        TrackAdapter songAdapter = new TrackAdapter(this, allTracks);
+        songView = findViewById(R.id.track_list);
         songView.setAdapter(songAdapter);
     }
 

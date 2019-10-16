@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @author wintermute
  */
-public class AudioFileAdapter extends BaseAdapter
+public class TrackAdapter extends BaseAdapter
 {
 
     private List<Track> tracks;
@@ -29,7 +29,7 @@ public class AudioFileAdapter extends BaseAdapter
      * @param ctx application context.
      * @param tracks displayed by a playlist.
      */
-    public AudioFileAdapter(Context ctx, List<Track> tracks)
+    public TrackAdapter(Context ctx, List<Track> tracks)
     {
         this.tracks = tracks;
         inflater = LayoutInflater.from(ctx);
