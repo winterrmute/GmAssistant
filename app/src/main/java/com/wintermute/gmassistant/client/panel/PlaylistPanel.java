@@ -8,7 +8,7 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.PlaylistAdapter;
-import com.wintermute.gmassistant.client.NewPlaylist;
+import com.wintermute.gmassistant.client.AddNewPlaylist;
 import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
 import com.wintermute.gmassistant.database.dao.PlaylistDao;
 import com.wintermute.gmassistant.database.dto.Playlist;
@@ -39,7 +39,7 @@ public class PlaylistPanel extends AppCompatActivity
         Button addPlaylist = findViewById(R.id.playlist);
         addPlaylist.setOnClickListener(v ->
         {
-            Intent createPlaylist = new Intent(PlaylistPanel.this, NewPlaylist.class);
+            Intent createPlaylist = new Intent(PlaylistPanel.this, AddNewPlaylist.class);
             startActivity(createPlaylist);
         });
 
@@ -67,10 +67,10 @@ public class PlaylistPanel extends AppCompatActivity
                         renderPlaylist();
                         break;
                     case 1:
-                        playlistDao.delete(playlists.get(position));
+                        playlistDao.delete(playlists.get(position).getId());
                         PlaylistContentDao pcd = new PlaylistContentDao(PlaylistPanel.this);
                         pcd.deleteByPlaylistId(playlists.get(position).getId());
-                        playlistDao.delete(playlists.get(position));
+                        playlistDao.delete(playlists.get(position).getId());
                         renderPlaylist();
                         break;
                 }
@@ -90,7 +90,7 @@ public class PlaylistPanel extends AppCompatActivity
     private void renderPlaylist()
     {
         playlists = playlistDao.getAll();
-        playlists = (playlists != null || playlists.size() != 0) ? playlists : new ArrayList<>();
+        playlists = (playlists != null) ? playlists : new ArrayList<>();
         PlaylistAdapter playlistAdapter = new PlaylistAdapter(this, playlists);
         playlistView.setAdapter(playlistAdapter);
     }

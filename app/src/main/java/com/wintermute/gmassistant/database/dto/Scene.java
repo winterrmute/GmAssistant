@@ -16,4 +16,12 @@ public class Scene
     private String startingTrack;
     private String light;
     private String nextTrack;
+
+    public String computeStartingTrackIfAbsent() {
+        return startingTrack != null ? startingTrack : "NONE";
+    }
+
+    public String computeNextTrackIfAbsent() {
+        return nextTrack != null ? nextTrack : "NONE";
+    }
 }

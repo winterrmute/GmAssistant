@@ -72,7 +72,7 @@ public class FileBrowser extends AppCompatActivity
      */
     private void browseOrSelectFiles(ArrayList<File> dirContent)
     {
-        addingNextTrack = getIntent().getBooleanExtra("hasNextTrack", false);
+        addingNextTrack = getIntent().getBooleanExtra("selectTrack", false);
 
         setListView(dirContent);
         fileView.setOnItemClickListener((parent, view, position, id) ->

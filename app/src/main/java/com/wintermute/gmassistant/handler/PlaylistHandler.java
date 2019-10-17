@@ -7,7 +7,7 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.TrackAdapter;
-import com.wintermute.gmassistant.configurator.SceneConfiguration;
+import com.wintermute.gmassistant.config.SceneConfig;
 import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
 import com.wintermute.gmassistant.database.dao.TrackDao;
 import com.wintermute.gmassistant.database.dto.Track;
@@ -66,7 +66,7 @@ public class PlaylistHandler extends AppCompatActivity
                         setTag(position, "jumpscare");
                         break;
                     case 3:
-                        Intent sceneManager = new Intent(PlaylistHandler.this, SceneConfiguration.class);
+                        Intent sceneManager = new Intent(PlaylistHandler.this, SceneConfig.class);
                         sceneManager.putExtra("trackId", allTracks.get(position).getId());
                         sceneManager.putExtra("playlistId", playlistId);
                         startActivity(sceneManager);

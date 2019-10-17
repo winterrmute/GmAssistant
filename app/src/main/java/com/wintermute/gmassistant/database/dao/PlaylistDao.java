@@ -139,16 +139,16 @@ public class PlaylistDao
     /**
      * Deletes row by id.
      *
-     * @param playlist to deleteByTrackId by id.
+     * @param id of playlist to delete.
      */
-    public void delete(Playlist playlist)
+    public void delete(String id)
     {
         StringBuilder query = new StringBuilder("DELETE FROM ")
             .append(TABLE_NAME)
             .append(" WHERE ")
             .append(ID_COLUMN)
             .append(" = '")
-            .append(playlist.getId())
+            .append(id)
             .append("'");
         dbWrite.execSQL(query.toString());
     }

@@ -15,5 +15,4 @@ public class Track
     private String artist;
     private String tag;
     private String path;
-    private String sceneId;
 }

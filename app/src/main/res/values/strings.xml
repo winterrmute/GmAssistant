@@ -6,12 +6,12 @@
 
     <!--  PlaylistPanel  -->
     <string name="app_name">GM Assistant</string>
-    <string name="playlist">add new playlist</string>
-    <string name="file_browser">Browse files</string>
+    <string name="add_playlist">add new playlist</string>
+    <string name="browse_files">Browse files</string>
 
-    <!--  NewPlaylist  -->
-    <string name="label">Playlist name: </string>
-    <string name="name_placeholder">Insert playlist name</string>
+    <!--  AddNewPlaylist  -->
+    <string name="playlist_name">Playlist name: </string>
+    <string name="playlist_name_placeholder">Insert playlist name</string>
     <string name="playlist_submit">Submit</string>
     <string name="cancel">Cancel</string>
     <string name="browse_device">Browse device for playlist</string>
@@ -25,13 +25,17 @@
     <string name="browse_back">../</string>
     <string name="select_directory">Select current directory</string>
 
-    <!--  SceneConfiguration  -->
+    <!--  SceneConfig  -->
     <string name="scene_name">Scene Name</string>
     <string name="set_light">Set light effects</string>
-    <string name="next_track">Set next track</string>
+    <string name="set_starting_track">Set starting track</string>
+    <string name="set_next_track">Set next track</string>
     <string name="submit_scene">Submit</string>
 
-    <!--  LightConfiguration  -->
-    <string name="light_submit">Submit</string>
+    <!--  SceneHandler  -->
+    <string name="add_scene">Add new scene</string>
+
+    <!--  LightConfig  -->
+    <string name="submit_light">Submit</string>
     <string name="manage_scenes">Scenes</string>
 </resources>

@@ -120,7 +120,7 @@ public class PlaylistContentDao
         return "-1";
     }
 
-    public void addScene(String sceneId, String playlistId, String trackId)
+    public void insertOrUpdateScene(String sceneId, String playlistId, String trackId)
     {
         StringBuilder query = new StringBuilder("UPDATE ")
             .append(TABLE_NAME)
@@ -140,51 +140,13 @@ public class PlaylistContentDao
         dbWrite.execSQL(query.toString());
     }
 
-    /**
-     * Uptdate row in track table.
-     */
-    public void update(PlaylistContent content)
-    {
-        StringBuilder query = new StringBuilder("UPDATE ")
-            .append(TABLE_NAME)
-            .append(" SET ")
-            .append(PLAYLIST_KEY)
-            .append(" = '")
-            .append(content.getPlaylist())
-            .append("', ")
-            .append(TRACK_KEY)
-            .append("' = ")
-            .append(content.getTrack())
-            .append("' WHERE playlist = '")
-            .append(content.getPlaylist())
-            .append("'");
-        dbWrite.execSQL(query.toString());
-    }
 
     /**
      * Deletes row from database by id.
      *
-     * @param trackId to remove from database.
+     * @param playlistId of playlist to remove its content..
      */
-    public void deleteByTrackId(String trackId)
-    {
-
-        StringBuilder query = new StringBuilder("DELETE FROM ")
-            .append(TABLE_NAME)
-            .append(" WHERE ")
-            .append(TRACK_KEY)
-            .append(" = '")
-            .append(trackId)
-            .append("'");
-        dbWrite.execSQL(query.toString());
-    }
-
-    /**
-     * Deletes row from database by id.
-     *
-     * @param trackId to remove from database.
-     */
-    public void deleteByPlaylistId(String trackId)
+    public void deleteByPlaylistId(String playlistId)
     {
 
         StringBuilder query = new StringBuilder("DELETE FROM ")
@@ -192,7 +154,7 @@ public class PlaylistContentDao
             .append(" WHERE ")
             .append(PLAYLIST_KEY)
             .append(" = '")
-            .append(trackId)
+            .append(playlistId)
             .append("'");
         dbWrite.execSQL(query.toString());
     }

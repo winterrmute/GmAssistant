@@ -35,6 +35,8 @@ public class TrackDao
 
     /**
      * Insert row into playlist table.
+     * TODO: refactor me
+     *
      *
      * @return id of inserted element.
      */
@@ -80,18 +82,6 @@ public class TrackDao
         }
     }
 
-    public String getTag(String id)
-    {
-        StringBuilder query = new StringBuilder("SELECT tag FROM ")
-            .append(TABLE_NAME)
-            .append(" WHERE ")
-            .append(ID_KEY)
-            .append(" = '")
-            .append(id)
-            .append("'");
-        return mapObject(dbRead.rawQuery(query.toString(), null)).get(0).getTag();
-    }
-
     /**
      * Convinience method for getting track.
      *
@@ -123,14 +113,21 @@ public class TrackDao
     }
 
     /**
-     * Get track by id.
+     * Get track by id if present or new object.
      *
      * @param id of track to find.
-     * @return selected track.
+     * @return queried track if present, empty track if id was null.
      */
-    public Track getTrackById(String id)
+    public Track computeTrackIfAbsent(String id)
     {
-        return getTrack(ID_KEY, id);
+        if (id != null) {
+            return getTrack(ID_KEY, id);
+        }
+        else {
+            Track result = new Track();
+            result.setName("NONE");
+            return result;
+        }
     }
 
     /**

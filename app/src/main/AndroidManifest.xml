@@ -21,9 +21,9 @@
         <activity android:name=".client.panel.ScenePanel"></activity>
         <activity android:name=".client.panel.LightPanel" />
         <activity android:name=".client.panel.TrackPanel" />
-        <activity android:name=".configurator.LightConfiguration" />
-        <activity android:name=".configurator.SceneConfiguration" />
-        <activity android:name=".client.NewPlaylist" />
+        <activity android:name=".config.LightConfig" />
+        <activity android:name=".config.SceneConfig" />
+        <activity android:name=".client.AddNewPlaylist" />
         <activity android:name=".handler.PlaylistHandler" />
         <activity android:name=".client.FileBrowser" />
         <activity android:name=".client.panel.PlaylistPanel" />

@@ -86,7 +86,7 @@ public class BasePlayerService extends Service
     String getTrackPath(String trackId)
     {
         TrackDao dao = new TrackDao(getBaseContext());
-        return dao.getTrackById(trackId).getPath();
+        return dao.computeTrackIfAbsent(trackId).getPath();
     }
 
     @Nullable

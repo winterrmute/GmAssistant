@@ -7,5 +7,14 @@
     <ListView
             android:id="@+id/scene_view"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
+            android:layout_height="fill_parent"
+            android:paddingBottom="70sp"/>
+
+    <Button
+            android:id="@+id/add_scene"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/scene_view"
+            android:layout_alignEnd="@id/scene_view"
+            android:text="@string/add_scene" />
 </RelativeLayout>

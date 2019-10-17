@@ -34,7 +34,6 @@ public class TrackDaoTest
         track.setName("sample");
         track.setPath("/here/be/path");
         track.setArtist("Dj-yo-mama");
-        track.setSceneId("0");
     }
 
     /**
@@ -61,7 +60,7 @@ public class TrackDaoTest
         dao.update(track);
         assertEquals("changed", dao.getTrack("name", track.getId()).getName());
 
-        dao.deleteById(track);
+        dao.deleteById(track.getId());
         assertEquals(0, dao.getAll().size());
     }
 

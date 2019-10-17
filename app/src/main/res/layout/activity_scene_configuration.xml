@@ -4,16 +4,16 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".configurator.SceneConfiguration">
+        tools:context=".config.SceneConfig">
 
 
     <Button
             android:id="@+id/next_track"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/next_track"
+            android:text="@string/set_next_track"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/set_light" />
+            app:layout_constraintTop_toBottomOf="@+id/add_starting_track" />
 
     <Button
             android:id="@+id/scene_submit"
@@ -27,8 +27,8 @@
             android:id="@+id/scene_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
             android:autofillHints="@string/scene_name"
+            android:ems="10"
             android:hint="@string/scene_name"
             android:inputType="textPersonName"
             app:layout_constraintStart_toStartOf="parent"
@@ -41,5 +41,13 @@
             android:text="@string/set_light"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/scene_name" />
+
+    <Button
+            android:id="@+id/add_starting_track"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/set_starting_track"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/set_light" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

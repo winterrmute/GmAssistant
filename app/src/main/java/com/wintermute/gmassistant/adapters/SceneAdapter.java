@@ -14,12 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.database.dao.LightDao;
-import com.wintermute.gmassistant.database.dao.TrackDao;
 import com.wintermute.gmassistant.database.dto.Scene;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 
 /**
  * Custom adapter for listing the scenes as ListView.
@@ -66,16 +64,13 @@ public class SceneAdapter extends BaseAdapter
 
         Scene target = scenes.get(position);
         String light = target.getLight();
-        if (light != "-1")
+        if (light != null)
         {
             image.setImageBitmap(extractColor(light));
         }
         name.setText(target.getName());
-
-        TrackDao dao = new TrackDao(ctx);
-        startingTrack.setText("Start:" + dao.getTrackById(target.getStartingTrack()).getName());
-        nextTrack.setText("Next: " + dao.getTrackById(target.getNextTrack()).getName());
-
+        startingTrack.setText("Start:" + target.computeStartingTrackIfAbsent());
+        nextTrack.setText("Next: " +  target.computeNextTrackIfAbsent());
         result.setTag(position);
         return result;
     }

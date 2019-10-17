@@ -77,7 +77,6 @@ public class PlaylistCreateService
      *
      * @param playlist which should be referenced.
      */
-    //TODO: Add with transaction
     private void addTracks(Playlist playlist)
     {
         TrackDao dao = new TrackDao(ctx);
@@ -85,12 +84,18 @@ public class PlaylistCreateService
         List<File> tracksFound = fs.collectTracks(browsePath);
         for (File file : tracksFound)
         {
-            Track track = new Track();
-            track.setName(file.getName());
-            track.setPath(file.getPath());
+            Track track = getTrack(file);
             track.setId(dao.insert(track));
 
             fillPlaylistContent(playlist, track);
         }
+    }
+
+    private Track getTrack(File file)
+    {
+        Track track = new Track();
+        track.setName(file.getName());
+        track.setPath(file.getPath());
+        return track;
     }
 }

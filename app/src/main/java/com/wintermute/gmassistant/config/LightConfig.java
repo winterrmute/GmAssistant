@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.configurator;
+package com.wintermute.gmassistant.config;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,7 +13,7 @@ import com.wintermute.gmassistant.handler.LightHandler;
 
 import java.math.BigDecimal;
 
-public class LightConfiguration extends AppCompatActivity
+public class LightConfig extends AppCompatActivity
 {
 
     private int picked;

@@ -12,7 +12,7 @@ import com.wintermute.gmassistant.services.PlaylistCreateService;
 /**
  * Represents activity in which the user can create new playlist.
  */
-public class NewPlaylist extends AppCompatActivity
+public class AddNewPlaylist extends AppCompatActivity
 {
 
     private String path;
@@ -22,6 +22,13 @@ public class NewPlaylist extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_playlist);
+
+        Button browseDevice = findViewById(R.id.browse_device);
+        browseDevice.setOnClickListener(v ->
+        {
+            Intent fileBrowser = new Intent(AddNewPlaylist.this, FileBrowser.class);
+            startActivityForResult(fileBrowser, 1);
+        });
 
         Button submit = findViewById(R.id.submit);
         submit.setOnClickListener(v ->
@@ -37,13 +44,6 @@ public class NewPlaylist extends AppCompatActivity
             {
                 Toast.makeText(this, "playlist name must not be empty", Toast.LENGTH_SHORT).show();
             }
-        });
-
-        Button browseDevice = findViewById(R.id.browse_device);
-        browseDevice.setOnClickListener(v ->
-        {
-            Intent fileBrowser = new Intent(NewPlaylist.this, FileBrowser.class);
-            startActivityForResult(fileBrowser, 1);
         });
     }
 

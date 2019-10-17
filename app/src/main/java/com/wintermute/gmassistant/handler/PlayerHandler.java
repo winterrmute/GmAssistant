@@ -30,21 +30,22 @@ public class PlayerHandler
      */
     public void startPlayerByScene(String sceneId)
     {
-
         SceneDao dao = new SceneDao(ctx);
         Scene scene = dao.getById(sceneId);
-
         String trackId;
-        if (scene.getStartingTrack() == null)
+        if (null != scene.getStartingTrack() && null != scene.getNextTrack())
         {
-            trackId = scene.getNextTrack();
-        } else
-        {
-            trackId = scene.getStartingTrack();
-        }
+            if (scene.getStartingTrack() == null)
+            {
+                trackId = scene.getNextTrack();
+            } else
+            {
+                trackId = scene.getStartingTrack();
+            }
 
-        Intent player = prepareIntent(trackId, sceneId);
-        ctx.startService(player);
+            Intent player = prepareIntent(trackId, sceneId);
+            ctx.startService(player);
+        }
     }
 
     /**
@@ -80,7 +81,8 @@ public class PlayerHandler
     private Class specifyServicePlayer(String trackId)
     {
         TrackDao dao = new TrackDao(ctx);
-        String tag = dao.getTrackById(trackId).getTag() == null ? tag = "music" : dao.getTrackById(trackId).getTag();
+        String tag = dao.computeTrackIfAbsent(trackId).getTag() == null ? tag = "music"
+                                                                        : dao.computeTrackIfAbsent(trackId).getTag();
 
         if (tag.equals("ambiente"))
         {
