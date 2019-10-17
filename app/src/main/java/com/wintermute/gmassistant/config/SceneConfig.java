@@ -2,6 +2,7 @@ package com.wintermute.gmassistant.config;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -10,7 +11,9 @@ import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.client.FileBrowser;
 import com.wintermute.gmassistant.database.ObjectHandler;
 import com.wintermute.gmassistant.database.dao.LightDao;
+import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
 import com.wintermute.gmassistant.database.dao.SceneDao;
+import com.wintermute.gmassistant.database.dao.TrackDao;
 import com.wintermute.gmassistant.database.dto.Light;
 import com.wintermute.gmassistant.database.dto.Scene;
 import com.wintermute.gmassistant.database.dto.Track;
@@ -30,12 +33,15 @@ public class SceneConfig extends AppCompatActivity
     private Track startingTrack;
     private Track nextTrack;
     private String path;
+    private boolean addSceneToTrack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scene_configuration);
+
+        addSceneToTrack = getIntent().getBooleanExtra("addSceneToTrack", false);
 
         EditText nameField = findViewById(R.id.scene_name);
 
@@ -76,11 +82,18 @@ public class SceneConfig extends AppCompatActivity
                 } else
                 {
                     this.sceneName = currentSceneName;
-                    createScene();
+                    updatePlaylistContent();
                     finish();
                 }
             }
         });
+
+        if (addSceneToTrack) {
+            setStartTrack.setVisibility(View.GONE);
+            TrackDao dao = new TrackDao(this);
+            startingTrack = dao.getById(getIntent().getStringExtra("trackId"));
+        }
+
     }
 
     /**
@@ -88,7 +101,8 @@ public class SceneConfig extends AppCompatActivity
      */
     private Track createTrackIfNotExist()
     {
-        if (path != null) {
+        if (path != null)
+        {
             ObjectHandler objectHandler = new ObjectHandler(this);
             objectHandler.createTrack(new File(path));
             return objectHandler.createTrack(new File(path));
@@ -96,7 +110,6 @@ public class SceneConfig extends AppCompatActivity
         {
             Toast.makeText(SceneConfig.this, "Next track not set!", Toast.LENGTH_SHORT).show();
         }
-
         return null;
     }
 
@@ -139,13 +152,9 @@ public class SceneConfig extends AppCompatActivity
     //TODO: Refactor me
     private void updatePlaylistContent()
     {
-//        TrackDao trackDao = new TrackDao(this);
-//        startingTrack = trackDao.computeTrackIfAbsent(getIntent().getStringExtra("trackId"));
-//
-//        String playlistId = getIntent().getStringExtra("playlistId");
-//
-//        PlaylistContentDao dao = new PlaylistContentDao(this);
-//        dao.insertOrUpdateScene(createScene().getId(), playlistId, startingTrack.getId());
+        String playlistId = getIntent().getStringExtra("playlistId");
+        PlaylistContentDao dao = new PlaylistContentDao(this);
+        dao.insertOrUpdateScene(createScene().getId(), playlistId, startingTrack.getId());
     }
 
     @Override
@@ -154,7 +163,7 @@ public class SceneConfig extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         path = data.getStringExtra("path");
         if (requestCode == 1)
-        {   path = data.getStringExtra("path");
+        {
             startingTrack = createTrackIfNotExist();
         } else if (requestCode == 2)
         {

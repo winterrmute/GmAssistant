@@ -34,10 +34,7 @@ public class FileBrowser extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_browser);
 
-        fileBrowserService = new FileBrowserService();
-        getRootDir();
-        ArrayList<File> files = fileBrowserService.scanDir(path);
-        browseOrSelectFiles(files);
+        init();
 
         Button browseParent = findViewById(R.id.parent_directory);
         browseParent.setOnClickListener(v ->
@@ -63,6 +60,14 @@ public class FileBrowser extends AppCompatActivity
         {
             selectDirectory.setVisibility(View.GONE);
         }
+    }
+
+    private void init()
+    {
+        fileBrowserService = new FileBrowserService();
+        getRootDir();
+        ArrayList<File> files = fileBrowserService.scanDir(path);
+        browseOrSelectFiles(files);
     }
 
     /**

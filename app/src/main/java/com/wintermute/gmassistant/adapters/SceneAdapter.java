@@ -70,8 +70,9 @@ public class SceneAdapter extends BaseAdapter
             image.setImageBitmap(extractColor(light));
         }
         name.setText(target.getName());
-        startingTrack.setText("Start: " + getTrackName(target, target.getStartingTrack()));
-        nextTrack.setText("Next: " + getTrackName(target, target.getNextTrack()));
+
+        startingTrack.setText("Start: " + getTrackName(target.computeStartingTrackIfAbsent(), target.getStartingTrack()));
+        nextTrack.setText("Next: " + getTrackName(target.computeNextTrackNameIfAbsent(), target.getNextTrack()));
         result.setTag(position);
         return result;
     }
@@ -79,15 +80,14 @@ public class SceneAdapter extends BaseAdapter
     /**
      * Get track name
      *
-     * @param target scene.
+     * @param name of track.
      * @param trackId that should be added.
      * @return
      */
-    private String getTrackName(Scene target, String trackId)
+    private String getTrackName(String name, String trackId)
     {
         TrackDao dao = new TrackDao(ctx);
-        return target.computeStartingTrackIfAbsent().equals("NONE") ? "NONE"
-                                                                    : dao.computeTrackIfAbsent(trackId).getName();
+        return name.equals("NONE") ? "NONE" : dao.computeTrackIfAbsent(trackId).getName();
     }
 
     /**

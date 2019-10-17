@@ -55,7 +55,6 @@ public class PlaylistHandler extends AppCompatActivity
                 dialog.dismiss();
                 switch (which)
                 {
-
                     case 0:
                         setTag(position, "music");
                         break;
@@ -67,8 +66,10 @@ public class PlaylistHandler extends AppCompatActivity
                         break;
                     case 3:
                         Intent sceneManager = new Intent(PlaylistHandler.this, SceneConfig.class);
-                        sceneManager.putExtra("trackId", allTracks.get(position).getId());
-                        sceneManager.putExtra("playlistId", playlistId);
+                        sceneManager
+                            .putExtra("trackId", allTracks.get(position).getId())
+                            .putExtra("playlistId", playlistId)
+                            .putExtra("addSceneToTrack", true);
                         startActivity(sceneManager);
                         break;
                     case 4:
