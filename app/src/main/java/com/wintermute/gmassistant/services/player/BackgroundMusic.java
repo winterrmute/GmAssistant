@@ -28,10 +28,7 @@ public class BackgroundMusic extends BasePlayerService
     }
 
     @Override
-    public void onCompletion(MediaPlayer mp)
-    {
-
-    }
+    public void onCompletion(MediaPlayer mp) { }
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra)
@@ -59,7 +56,8 @@ public class BackgroundMusic extends BasePlayerService
         mediaPlayer = create(this, Uri.parse(getTrackPath(trackId)));
         mediaPlayer.setVolume(0.2f, 0.2f);
         mediaPlayer.start();
-        if (sceneId != null) {
+        if (sceneId != null)
+        {
             changeLight(sceneId);
         }
         mediaPlayer.setLooping(true);
