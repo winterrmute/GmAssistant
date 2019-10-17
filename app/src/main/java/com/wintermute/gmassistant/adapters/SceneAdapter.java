@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.database.dao.LightDao;
+import com.wintermute.gmassistant.database.dao.TrackDao;
 import com.wintermute.gmassistant.database.dto.Scene;
 
 import java.math.BigDecimal;
@@ -69,10 +70,24 @@ public class SceneAdapter extends BaseAdapter
             image.setImageBitmap(extractColor(light));
         }
         name.setText(target.getName());
-        startingTrack.setText("Start:" + target.computeStartingTrackIfAbsent());
-        nextTrack.setText("Next: " +  target.computeNextTrackIfAbsent());
+        startingTrack.setText("Start: " + getTrackName(target, target.getStartingTrack()));
+        nextTrack.setText("Next: " + getTrackName(target, target.getNextTrack()));
         result.setTag(position);
         return result;
+    }
+
+    /**
+     * Get track name
+     *
+     * @param target scene.
+     * @param trackId that should be added.
+     * @return
+     */
+    private String getTrackName(Scene target, String trackId)
+    {
+        TrackDao dao = new TrackDao(ctx);
+        return target.computeStartingTrackIfAbsent().equals("NONE") ? "NONE"
+                                                                    : dao.computeTrackIfAbsent(trackId).getName();
     }
 
     /**

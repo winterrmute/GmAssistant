@@ -7,7 +7,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
-import com.wintermute.gmassistant.services.PlaylistCreateService;
+import com.wintermute.gmassistant.database.dto.Playlist;
+import com.wintermute.gmassistant.database.ObjectHandler;
 
 /**
  * Represents activity in which the user can create new playlist.
@@ -36,9 +37,9 @@ public class AddNewPlaylist extends AppCompatActivity
             EditText playlistName = findViewById(R.id.playlist_name);
             if (!playlistName.getText().toString().equals(""))
             {
-                PlaylistCreateService playlistCreator =
-                    new PlaylistCreateService(this, playlistName.getText().toString(), path);
-                playlistCreator.createPlaylistAndReferences();
+                ObjectHandler objectHandler = new ObjectHandler(this);
+                Playlist playlist = objectHandler.createPlaylist(playlistName.getText().toString());
+                objectHandler.fillPlaylist(playlist, path);
                 this.finish();
             } else
             {

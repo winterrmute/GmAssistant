@@ -34,9 +34,7 @@ public class TrackDao
     }
 
     /**
-     * Insert row into playlist table.
-     * TODO: refactor me
-     *
+     * Insert row into playlist table. TODO: refactor me
      *
      * @return id of inserted element.
      */
@@ -101,6 +99,11 @@ public class TrackDao
         return mapObject(dbRead.rawQuery(query.toString(), null)).get(0);
     }
 
+    public Track getById(String id)
+    {
+        return getTrack(ID_KEY, id);
+    }
+
     /**
      * Get track by path.
      *
@@ -120,10 +123,11 @@ public class TrackDao
      */
     public Track computeTrackIfAbsent(String id)
     {
-        if (id != null) {
+        if (id != null)
+        {
             return getTrack(ID_KEY, id);
-        }
-        else {
+        } else
+        {
             Track result = new Track();
             result.setName("NONE");
             return result;

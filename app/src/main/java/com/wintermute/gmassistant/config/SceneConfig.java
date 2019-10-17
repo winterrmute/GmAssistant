@@ -8,14 +8,14 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.client.FileBrowser;
+import com.wintermute.gmassistant.database.ObjectHandler;
 import com.wintermute.gmassistant.database.dao.LightDao;
-import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
 import com.wintermute.gmassistant.database.dao.SceneDao;
-import com.wintermute.gmassistant.database.dao.TrackDao;
 import com.wintermute.gmassistant.database.dto.Light;
 import com.wintermute.gmassistant.database.dto.Scene;
 import com.wintermute.gmassistant.database.dto.Track;
-import com.wintermute.gmassistant.services.PlaylistCreateService;
+
+import java.io.File;
 
 /**
  * Creates new scene and updates dependency in related playlist content.
@@ -29,6 +29,7 @@ public class SceneConfig extends AppCompatActivity
     private String sceneName;
     private Track startingTrack;
     private Track nextTrack;
+    private String path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -42,10 +43,20 @@ public class SceneConfig extends AppCompatActivity
         lightEffects.setOnClickListener(v -> setLights());
 
         Button setStartTrack = findViewById(R.id.add_starting_track);
-        setStartTrack.setOnClickListener(v -> selectTrack());
+        setStartTrack.setOnClickListener(v ->
+        {
+            Intent fileBrowser = new Intent(SceneConfig.this, FileBrowser.class);
+            fileBrowser.putExtra("selectTrack", true);
+            startActivityForResult(fileBrowser, 1);
+        });
 
         Button setNextTrack = findViewById(R.id.next_track);
-        setNextTrack.setOnClickListener(v -> selectTrack());
+        setNextTrack.setOnClickListener(v ->
+        {
+            Intent fileBrowser = new Intent(SceneConfig.this, FileBrowser.class);
+            fileBrowser.putExtra("selectTrack", true);
+            startActivityForResult(fileBrowser, 2);
+        });
 
         Button sceneSubmit = findViewById(R.id.scene_submit);
         sceneSubmit.setOnClickListener(v ->
@@ -54,8 +65,9 @@ public class SceneConfig extends AppCompatActivity
             if (currentSceneName.equals(""))
             {
                 Toast.makeText(this, "Scene name must not be empty!", Toast.LENGTH_SHORT).show();
-            } else {
-                if (startingTrack == null || nextTrack == null)
+            } else
+            {
+                if (startingTrack == null && nextTrack == null)
                 {
                     Toast
                         .makeText(this, "The scene must contain either starting track or next track!",
@@ -64,7 +76,7 @@ public class SceneConfig extends AppCompatActivity
                 } else
                 {
                     this.sceneName = currentSceneName;
-                    updatePlaylistContent();
+                    createScene();
                     finish();
                 }
             }
@@ -72,13 +84,20 @@ public class SceneConfig extends AppCompatActivity
     }
 
     /**
-     * Sets following nextTrack to current playing nextTrack.
+     * @return new created track if the requested one did not exist in the database.
      */
-    private void selectTrack()
+    private Track createTrackIfNotExist()
     {
-        Intent fileBrowser = new Intent(SceneConfig.this, FileBrowser.class);
-        fileBrowser.putExtra("selectTrack", true);
-        startActivityForResult(fileBrowser, 1);
+        if (path != null) {
+            ObjectHandler objectHandler = new ObjectHandler(this);
+            objectHandler.createTrack(new File(path));
+            return objectHandler.createTrack(new File(path));
+        } else
+        {
+            Toast.makeText(SceneConfig.this, "Next track not set!", Toast.LENGTH_SHORT).show();
+        }
+
+        return null;
     }
 
     /**
@@ -87,7 +106,7 @@ public class SceneConfig extends AppCompatActivity
     private void setLights()
     {
         Intent fileBrowser = new Intent(SceneConfig.this, LightConfig.class);
-        startActivityForResult(fileBrowser, 2);
+        startActivityForResult(fileBrowser, 3);
     }
 
     /**
@@ -117,37 +136,30 @@ public class SceneConfig extends AppCompatActivity
     /**
      * Inserts the scene into playlist content if empty or overwrites the existing one.
      */
+    //TODO: Refactor me
     private void updatePlaylistContent()
     {
-        TrackDao trackDao = new TrackDao(this);
-        startingTrack = trackDao.computeTrackIfAbsent(getIntent().getStringExtra("trackId"));
-
-        String playlistId = getIntent().getStringExtra("playlistId");
-
-        PlaylistContentDao dao = new PlaylistContentDao(this);
-        dao.insertOrUpdateScene(createScene().getId(), playlistId, startingTrack.getId());
+//        TrackDao trackDao = new TrackDao(this);
+//        startingTrack = trackDao.computeTrackIfAbsent(getIntent().getStringExtra("trackId"));
+//
+//        String playlistId = getIntent().getStringExtra("playlistId");
+//
+//        PlaylistContentDao dao = new PlaylistContentDao(this);
+//        dao.insertOrUpdateScene(createScene().getId(), playlistId, startingTrack.getId());
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
+        path = data.getStringExtra("path");
         if (requestCode == 1)
+        {   path = data.getStringExtra("path");
+            startingTrack = createTrackIfNotExist();
+        } else if (requestCode == 2)
         {
-            String path = data.getStringExtra("path");
-            if (path != null)
-            {
-                TrackDao dao = new TrackDao(this);
-                nextTrack = dao.getTrackByPath(path);
-                if (nextTrack == null) {
-                    //TODO: add new track if it does not exist.
-                }
-            } else
-            {
-                Toast.makeText(SceneConfig.this, "Next track not set!", Toast.LENGTH_SHORT).show();
-            }
-        }
-        if (requestCode == 2)
+            nextTrack = createTrackIfNotExist();
+        } else if (requestCode == 3)
         {
             Light dto = new Light();
             int color = data.getIntExtra("color", 0);

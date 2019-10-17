@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.handler;
+package com.wintermute.gmassistant.database;
 
 import android.content.Context;
 import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
