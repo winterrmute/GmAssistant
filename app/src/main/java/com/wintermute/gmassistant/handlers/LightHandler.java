@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.handler;
+package com.wintermute.gmassistant.handlers;
 
 import android.content.Context;
 import android.graphics.Color;

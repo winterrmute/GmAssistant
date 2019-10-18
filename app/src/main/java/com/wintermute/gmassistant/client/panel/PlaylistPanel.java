@@ -1,6 +1,5 @@
 package com.wintermute.gmassistant.client.panel;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -12,9 +11,11 @@ import com.wintermute.gmassistant.client.AddNewPlaylist;
 import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
 import com.wintermute.gmassistant.database.dao.PlaylistDao;
 import com.wintermute.gmassistant.database.dto.Playlist;
-import com.wintermute.gmassistant.handler.PlaylistHandler;
+import com.wintermute.gmassistant.dialogs.ListDialog;
+import com.wintermute.gmassistant.handlers.PlaylistHandler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -27,6 +28,7 @@ public class PlaylistPanel extends AppCompatActivity
     private ListView playlistView;
     private PlaylistDao playlistDao;
     private List<Playlist> playlists;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -52,32 +54,37 @@ public class PlaylistPanel extends AppCompatActivity
 
         playlistView.setOnItemLongClickListener((parent, view, position, id) ->
         {
-            AlertDialog.Builder dialog = new AlertDialog.Builder(PlaylistPanel.this);
-            dialog.setTitle(playlists.get(position).getName());
-            String[] opts = {"RENAME", "DELETE"};
-            dialog.setItems(opts, (opt, which) ->
-            {
-                opt.dismiss();
-                switch (which)
-                {
-                    case 0:
-                        Playlist playlist = playlists.get(position);
-                        playlists.get(position).setName("implement me!");
-                        playlistDao.update(playlist);
-                        renderPlaylist();
-                        break;
-                    case 1:
-                        playlistDao.delete(playlists.get(position).getId());
-                        PlaylistContentDao pcd = new PlaylistContentDao(PlaylistPanel.this);
-                        pcd.deleteByPlaylistId(playlists.get(position).getId());
-                        playlistDao.delete(playlists.get(position).getId());
-                        renderPlaylist();
-                        break;
-                }
-            });
-            dialog.show();
+            this.position = position;
+            Intent dialog = new Intent(PlaylistPanel.this, ListDialog.class);
+            dialog.putStringArrayListExtra("opts", new ArrayList<>(Arrays.asList("rename", "delete")));
+            startActivityForResult(dialog, 1);
             return true;
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == 1)
+        {
+            String selected = data.getStringExtra("selected");
+
+            if ("rename".equals(selected))
+            {
+                Playlist playlist = playlists.get(position);
+                playlists.get(position).setName("implement me!");
+                playlistDao.update(playlist);
+                renderPlaylist();
+            } else if ("delete".equals(selected))
+            {
+                playlistDao.delete(playlists.get(position).getId());
+                PlaylistContentDao pcd = new PlaylistContentDao(PlaylistPanel.this);
+                pcd.deleteByPlaylistId(playlists.get(position).getId());
+                playlistDao.delete(playlists.get(position).getId());
+                renderPlaylist();
+            }
+        }
     }
 
     @Override
@@ -97,7 +104,6 @@ public class PlaylistPanel extends AppCompatActivity
 
     private void init()
     {
-
         playlistDao = new PlaylistDao(this);
         playlistView = findViewById(R.id.playlists);
         renderPlaylist();

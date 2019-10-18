@@ -1,6 +1,5 @@
 package com.wintermute.gmassistant.client.panel;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -11,9 +10,11 @@ import com.wintermute.gmassistant.adapters.SceneAdapter;
 import com.wintermute.gmassistant.config.SceneConfig;
 import com.wintermute.gmassistant.database.dao.SceneDao;
 import com.wintermute.gmassistant.database.dto.Scene;
-import com.wintermute.gmassistant.handler.PlayerHandler;
+import com.wintermute.gmassistant.dialogs.ListDialog;
+import com.wintermute.gmassistant.handlers.PlayerHandler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Allows the user to manage all scenes.
@@ -25,6 +26,7 @@ public class ScenePanel extends AppCompatActivity
 
     private ListView sceneView;
     private ArrayList<Scene> allScenes;
+    private String sceneId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -36,7 +38,8 @@ public class ScenePanel extends AppCompatActivity
 
         sceneView.setOnItemClickListener((parent, view, position, id) ->
         {
-            if (allScenes.get(position).getStartingTrack() != null) {
+            if (allScenes.get(position).getStartingTrack() != null)
+            {
                 PlayerHandler handler = new PlayerHandler(getBaseContext());
                 handler.startPlayerByScene(allScenes.get(position).getId());
             }
@@ -44,12 +47,16 @@ public class ScenePanel extends AppCompatActivity
 
         sceneView.setOnItemLongClickListener((parent, view, position, id) ->
         {
-            handleDialog(allScenes.get(position).getName(), allScenes.get(position).getId());
+            sceneId = allScenes.get(position).getId();
+            Intent dialog = new Intent(ScenePanel.this, ListDialog.class);
+            dialog.putStringArrayListExtra("opts", new ArrayList<>(Arrays.asList("edit", "delete")));
+            startActivityForResult(dialog, 1);
             return true;
         });
 
         Button addScene = findViewById(R.id.add_scene);
-        addScene.setOnClickListener((v) -> {
+        addScene.setOnClickListener((v) ->
+        {
             Intent sceneConfig = new Intent(ScenePanel.this, SceneConfig.class);
             startActivityForResult(sceneConfig, 1);
         });
@@ -59,34 +66,20 @@ public class ScenePanel extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1)
+        if (resultCode == RESULT_OK && requestCode == 1)
         {
-            showScenes();
-        }
-    }
+            String selected = data.getStringExtra("selected");
 
-    /**
-     * Handle dialog on long click.
-     *
-     * @param name of selected element
-     * @param id of selected element
-     */
-    private void handleDialog(String name, String id)
-    {
-        SceneDao dao = new SceneDao(this);
-        AlertDialog.Builder dialog = new AlertDialog.Builder(ScenePanel.this);
-        dialog.setTitle(name);
-        String[] opts = {"DELETE"};
-        dialog.setItems(opts, (opt, which) ->
-        {
-            opt.dismiss();
-            if (which == 0)
+            if ("edit".equals(selected))
             {
-                dao.deleteById(id);
-                showScenes();
+                //TODO: do stuff
+            } else if ("delete".equals(selected))
+            {
+                SceneDao dao = new SceneDao(this);
+                dao.deleteById(sceneId);
             }
-        });
-        dialog.show();
+        }
+        showScenes();
     }
 
     /**

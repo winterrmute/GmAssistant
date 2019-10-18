@@ -10,7 +10,7 @@ import com.wintermute.gmassistant.database.dao.LightDao;
 import com.wintermute.gmassistant.database.dao.SceneDao;
 import com.wintermute.gmassistant.database.dao.TrackDao;
 import com.wintermute.gmassistant.database.dto.Light;
-import com.wintermute.gmassistant.handler.LightHandler;
+import com.wintermute.gmassistant.handlers.LightHandler;
 
 import java.math.BigDecimal;
 

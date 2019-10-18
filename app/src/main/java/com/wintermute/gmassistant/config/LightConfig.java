@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.skydoves.colorpickerview.ColorPickerView;
 import com.skydoves.colorpickerview.listeners.ColorListener;
 import com.wintermute.gmassistant.R;
-import com.wintermute.gmassistant.handler.LightHandler;
+import com.wintermute.gmassistant.handlers.LightHandler;
 
 import java.math.BigDecimal;
 

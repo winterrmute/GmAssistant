@@ -18,13 +18,14 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
-        <activity android:name=".client.panel.ScenePanel"></activity>
+        <activity android:theme="@android:style/Theme.Dialog" android:name=".dialogs.ListDialog"></activity>
+        <activity android:name=".client.panel.ScenePanel" />
         <activity android:name=".client.panel.LightPanel" />
         <activity android:name=".client.panel.TrackPanel" />
         <activity android:name=".config.LightConfig" />
         <activity android:name=".config.SceneConfig" />
         <activity android:name=".client.AddNewPlaylist" />
-        <activity android:name=".handler.PlaylistHandler" />
+        <activity android:name=".handlers.PlaylistHandler" />
         <activity android:name=".client.FileBrowser" />
         <activity android:name=".client.panel.PlaylistPanel" />
         <activity android:name=".GmAssistant">
