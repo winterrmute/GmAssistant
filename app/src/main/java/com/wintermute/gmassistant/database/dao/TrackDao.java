@@ -129,7 +129,7 @@ public class TrackDao
         } else
         {
             Track result = new Track();
-            result.setName("NONE");
+            result.setName("not set");
             return result;
         }
     }

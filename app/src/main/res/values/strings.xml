@@ -28,8 +28,10 @@
     <!--  SceneConfig  -->
     <string name="scene_name">Scene Name</string>
     <string name="set_light">Set light effects</string>
-    <string name="set_starting_track">Set starting track</string>
-    <string name="set_next_track">Set next track</string>
+    <string name="set_start_effect">Set starting track</string>
+    <string name="set_music">Set next track</string>
+    <string name="set_ambience">set ambience sound</string>
+    <string name="trackname_placeholder">not set</string>
     <string name="submit_scene">Submit</string>
 
     <!--  SceneHandler  -->
@@ -38,4 +40,5 @@
     <!--  LightConfig  -->
     <string name="submit_light">Submit</string>
     <string name="manage_scenes">Scenes</string>
+
 </resources>

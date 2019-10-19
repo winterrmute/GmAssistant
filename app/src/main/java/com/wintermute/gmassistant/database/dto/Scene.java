@@ -13,17 +13,8 @@ public class Scene
 {
     private String id;
     private String name;
-    private String startingTrack;
     private String light;
-    private String nextTrack;
-
-    public String computeStartingTrackIfAbsent()
-    {
-        return startingTrack != null ? startingTrack : "NONE";
-    }
-
-    public String computeNextTrackNameIfAbsent()
-    {
-        return nextTrack != null ? nextTrack : "NONE";
-    }
+    private String startEffect;
+    private String backgroundMusic;
+    private String backgroundAmbience;
 }

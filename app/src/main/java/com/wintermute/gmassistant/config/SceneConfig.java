@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
@@ -29,8 +30,9 @@ public class SceneConfig extends AppCompatActivity
 {
 
     private Light light;
-    private Track startingTrack;
-    private Track nextTrack;
+    private Track startEffect;
+    private Track music;
+    private Track ambience;
     private String path;
     private EditText nameField;
     private boolean editScene;
@@ -51,18 +53,21 @@ public class SceneConfig extends AppCompatActivity
         Button lightEffects = findViewById(R.id.set_light);
         lightEffects.setOnClickListener(v -> setLights());
 
-        Button setStartTrack = findViewById(R.id.add_starting_track);
-        setStartTrack.setOnClickListener(v -> browseFilesForTrack(1));
+        Button setStartEffect = findViewById(R.id.set_start_effect);
+        setStartEffect.setOnClickListener(v -> browseFilesForTrack(1));
 
-        Button setNextTrack = findViewById(R.id.next_track);
-        setNextTrack.setOnClickListener(v -> browseFilesForTrack(2));
+        Button setMusic = findViewById(R.id.set_music);
+        setMusic.setOnClickListener(v -> browseFilesForTrack(2));
+
+        Button setAmbience = findViewById(R.id.set_ambience);
+        setAmbience.setOnClickListener(v -> browseFilesForTrack(3));
 
         Button sceneSubmit = findViewById(R.id.scene_submit);
         sceneSubmit.setOnClickListener(v -> createOrUpdateScene(sceneDao));
 
         if (addSceneToTrack)
         {
-            setStartTrack.setVisibility(View.GONE);
+            setStartEffect.setVisibility(View.GONE);
         }
         if (editScene || getIntent().getStringExtra("playlistId") != null)
         {
@@ -89,7 +94,7 @@ public class SceneConfig extends AppCompatActivity
      */
     private void createOrUpdateScene(SceneDao sceneDao)
     {
-        if (!(startingTrack == null && nextTrack == null))
+        if (!(startEffect == null && music == null))
         {
             if (nameField.getVisibility() == View.VISIBLE && "".equals(nameField.getText().toString()))
             {
@@ -128,17 +133,21 @@ public class SceneConfig extends AppCompatActivity
         if (null != scene)
         {
             nameField.setText(scene.getName());
-            if (null != scene.getStartingTrack())
+            if (null != scene.getStartEffect())
             {
-                startingTrack = trackDao.getById(scene.getStartingTrack());
+                startEffect = trackDao.getById(scene.getStartEffect());
             }
-            if (null != scene.getNextTrack())
+            if (null != scene.getBackgroundMusic())
             {
-                nextTrack = trackDao.getById(scene.getNextTrack());
+                music = trackDao.getById(scene.getBackgroundMusic());
+            }
+            if (null != scene.getBackgroundAmbience())
+            {
+                ambience = trackDao.getById(scene.getBackgroundAmbience());
             }
         } else
         {
-            startingTrack = trackDao.getById((getIntent().getStringExtra("trackId")));
+            startEffect = trackDao.getById((getIntent().getStringExtra("trackId")));
         }
     }
 
@@ -160,7 +169,7 @@ public class SceneConfig extends AppCompatActivity
     }
 
     /**
-     * Creates light effect for given nextTrack.
+     * Creates light effect for given backgroundMusic.
      */
     private void setLights()
     {
@@ -194,13 +203,17 @@ public class SceneConfig extends AppCompatActivity
         {
             result.setLight(light.getId());
         }
-        if (nextTrack != null)
+        if (startEffect != null)
         {
-            result.setNextTrack(nextTrack.getId());
+            result.setStartEffect(startEffect.getId());
         }
-        if (startingTrack != null)
+        if (music != null)
         {
-            result.setStartingTrack(startingTrack.getId());
+            result.setBackgroundMusic(music.getId());
+        }
+        if (ambience != null)
+        {
+            result.setBackgroundAmbience(ambience.getId());
         }
         return result;
     }
@@ -215,7 +228,7 @@ public class SceneConfig extends AppCompatActivity
         if (null != playlistId)
         {
             PlaylistContentDao dao = new PlaylistContentDao(this);
-            dao.updateScene(sceneId, playlistId, startingTrack.getId());
+            dao.updateScene(sceneId, playlistId, startEffect.getId());
         }
     }
 
@@ -228,11 +241,14 @@ public class SceneConfig extends AppCompatActivity
             path = data.getStringExtra("path");
             if (requestCode == 1)
             {
-                startingTrack = createTrackIfNotExist();
+                startEffect = createTrackIfNotExist();
             } else if (requestCode == 2)
             {
-                nextTrack = createTrackIfNotExist();
+                music = createTrackIfNotExist();
             } else if (requestCode == 3)
+            {
+                ambience = createTrackIfNotExist();
+            } else if (requestCode == 4)
             {
                 Light dto = new Light();
                 int color = data.getIntExtra("color", 0);

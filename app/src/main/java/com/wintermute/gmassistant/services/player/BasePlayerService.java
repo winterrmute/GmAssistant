@@ -28,11 +28,11 @@ public class BasePlayerService extends Service
     void changeLight(String sceneId)
     {
         SceneDao sceneDao = new SceneDao(this);
-        if (sceneDao.getById(sceneId).getLight() != null)
+        String lightId = sceneDao.getById(sceneId).getLight();
+        if (!"null".equals(lightId) && null != lightId)
         {
-            String sceneLight = sceneDao.getById(sceneId).getLight();
             LightDao dao = new LightDao(getBaseContext());
-            Light light = dao.getById(sceneLight);
+            Light light = dao.getById(lightId);
             Color color = Color.valueOf(new BigDecimal(String.valueOf(light.getColor())).intValue());
             LightHandler handler = new LightHandler(getBaseContext(), color, Integer.parseInt(light.getBrightness()));
             handler.setLight(false);
@@ -62,9 +62,9 @@ public class BasePlayerService extends Service
         {
             player.setOnCompletionListener(mp ->
             {
-                Intent intent = new Intent(getBaseContext(), BackgroundMusic.class);
+                Intent intent = new Intent(getBaseContext(), MusicPlayerService.class);
                 SceneDao dao = new SceneDao(getBaseContext());
-                intent.putExtra("trackId", dao.getById(sceneId).getNextTrack());
+                intent.putExtra("trackId", dao.getById(sceneId).getBackgroundMusic());
                 startService(intent);
             });
         }
@@ -76,7 +76,7 @@ public class BasePlayerService extends Service
     String getNextTrack(String sceneId)
     {
         SceneDao dao = new SceneDao(getBaseContext());
-        return dao.getById(sceneId).getNextTrack();
+        return dao.getById(sceneId).getBackgroundMusic();
     }
 
     /**

@@ -26,14 +26,21 @@
                 android:textStyle="bold" />
 
         <TextView
-                android:id="@+id/starting_track"
+                android:id="@+id/effect"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#000000"
                 android:textSize="18sp" />
 
         <TextView
-                android:id="@+id/next_track"
+                android:id="@+id/music"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:textSize="18sp" />
+
+        <TextView
+                android:id="@+id/ambience"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#000000"

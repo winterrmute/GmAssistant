@@ -18,10 +18,11 @@ public class SceneDao
 {
     private static final String TABLE_NAME = "scene";
     private static final String ID_KEY = "id";
-    private static final String STARTING_TRACK_KEY = "start_track";
+    private static final String START_EFFECT = "start_effect";
+    private static final String MUSIC = "music";
+    private static final String AMBIENCE = "ambience";
     private static final String NAME_KEY = "name";
     private static final String LIGHT_KEY = "light";
-    private static final String NEXT_TRACK_KEY = "next_track";
 
     private SQLiteDatabase dbRead;
     private SQLiteDatabase dbWrite;
@@ -43,8 +44,9 @@ public class SceneDao
         ContentValues values = new ContentValues();
         values.put(LIGHT_KEY, scene.getLight());
         values.put(NAME_KEY, scene.getName());
-        values.put(STARTING_TRACK_KEY, scene.getStartingTrack());
-        values.put(NEXT_TRACK_KEY, scene.getNextTrack());
+        values.put(START_EFFECT, scene.getStartEffect());
+        values.put(MUSIC, scene.getBackgroundMusic());
+        values.put(AMBIENCE, scene.getBackgroundAmbience());
         return dbWrite.insert(TABLE_NAME, null, values);
     }
 
@@ -83,13 +85,17 @@ public class SceneDao
             .append(" = '")
             .append(scene.getLight())
             .append("', ")
-            .append(STARTING_TRACK_KEY)
+            .append(START_EFFECT)
             .append(" = '")
-            .append(scene.getStartingTrack())
+            .append(scene.getStartEffect())
             .append("', ")
-            .append(NEXT_TRACK_KEY)
+            .append(MUSIC)
             .append(" = '")
-            .append(scene.getNextTrack())
+            .append(scene.getBackgroundMusic())
+            .append("', ")
+            .append(AMBIENCE)
+            .append(" = '")
+            .append(scene.getBackgroundAmbience())
             .append("' WHERE ")
             .append(ID_KEY)
             .append(" = '")
@@ -113,8 +119,9 @@ public class SceneDao
             scene.setId(getKeyValue(cursor, ID_KEY));
             scene.setName(getKeyValue(cursor, NAME_KEY));
             scene.setLight(getKeyValue(cursor, LIGHT_KEY));
-            scene.setStartingTrack(getKeyValue(cursor, STARTING_TRACK_KEY));
-            scene.setNextTrack(getKeyValue(cursor, NEXT_TRACK_KEY));
+            scene.setStartEffect(getKeyValue(cursor, START_EFFECT));
+            scene.setBackgroundMusic(getKeyValue(cursor, MUSIC));
+            scene.setBackgroundAmbience(getKeyValue(cursor, AMBIENCE));
             result.add(scene);
         }
         return result;

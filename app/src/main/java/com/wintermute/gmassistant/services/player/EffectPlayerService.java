@@ -9,12 +9,7 @@ import android.net.Uri;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
 
-/**
- * Handles the background music player.
- *
- * @author wintermute
- */
-public class BackgroundMusic extends BasePlayerService
+public class EffectPlayerService extends BasePlayerService
     implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener
 {
 
@@ -26,9 +21,6 @@ public class BackgroundMusic extends BasePlayerService
     {
         return null;
     }
-
-    @Override
-    public void onCompletion(MediaPlayer mp) { }
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra)
@@ -54,14 +46,26 @@ public class BackgroundMusic extends BasePlayerService
         getExtras(intent);
         mediaPlayer.stop();
         mediaPlayer = create(this, Uri.parse(getTrackPath(trackId)));
-        mediaPlayer.setVolume(0.2f, 0.2f);
+        mediaPlayer.setVolume(1f, 1f);
         mediaPlayer.start();
         if (sceneId != null)
         {
             changeLight(sceneId);
+            String nextTrack = getNextTrack(sceneId);
+            if (nextTrack != null)
+            {
+                stopService(new Intent(getBaseContext(), MusicPlayerService.class));
+                Intent backgroundMusic = new Intent(getBaseContext(), MusicPlayerService.class);
+                backgroundMusic.putExtra("trackId", nextTrack);
+                playNextOnComplete(mediaPlayer);
+            }
         }
-        mediaPlayer.setLooping(true);
-
         return Service.START_NOT_STICKY;
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mp)
+    {
+
     }
 }

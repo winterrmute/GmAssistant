@@ -37,9 +37,9 @@
         </activity>
 
         <service android:name=".services.player.BasePlayerService" />
-        <service android:name=".services.player.BackgroundMusic" />
-        <service android:name=".services.player.AmbientSound" />
-        <service android:name=".services.player.JumpScareSound" />
+        <service android:name=".services.player.MusicPlayerService" />
+        <service android:name=".services.player.AmbiencePlayerService" />
+        <service android:name=".services.player.EffectPlayerService" />
     </application>
 
 </manifest>

@@ -60,8 +60,9 @@ public class SceneAdapter extends BaseAdapter
         LinearLayout result = (LinearLayout) inflater.inflate(R.layout.scene, parent, false);
         ImageView image = result.findViewById(R.id.color_image);
         TextView name = result.findViewById(R.id.scene_name);
-        TextView startingTrack = result.findViewById(R.id.starting_track);
-        TextView nextTrack = result.findViewById(R.id.next_track);
+        TextView startEffect = result.findViewById(R.id.effect);
+        TextView music = result.findViewById(R.id.music);
+        TextView ambience = result.findViewById(R.id.ambience);
 
         Scene target = scenes.get(position);
         String light = target.getLight();
@@ -71,11 +72,16 @@ public class SceneAdapter extends BaseAdapter
         }
         name.setText(target.getName());
 
-        startingTrack.setText(
-            "Start: " + getTrackName(target.computeStartingTrackIfAbsent(), target.getStartingTrack()));
-        nextTrack.setText("Next: " + getTrackName(target.computeNextTrackNameIfAbsent(), target.getNextTrack()));
+        startEffect.setText(
+            "Start: " + getTrackName(computeDisplayNameIfAbsent(target.getStartEffect()), target.getStartEffect()));
+        music.setText("Next: " + getTrackName(computeDisplayNameIfAbsent(target.getStartEffect()), target.getBackgroundMusic()));
+        ambience.setText("Ambience: " + getTrackName(computeDisplayNameIfAbsent(target.getStartEffect()), target.getBackgroundAmbience()));
         result.setTag(position);
         return result;
+    }
+
+    private String computeDisplayNameIfAbsent(String name){
+        return name != null ? name : "not set";
     }
 
     /**
@@ -88,7 +94,8 @@ public class SceneAdapter extends BaseAdapter
     private String getTrackName(String name, String trackId)
     {
         TrackDao dao = new TrackDao(ctx);
-        return name.equals("NONE") ? "NONE" : dao.computeTrackIfAbsent(trackId).getName();
+//        return computeDisplayNameIfAbsent(dao.computeTrackIfAbsent(trackId).getName());
+        return name.equals("not set") ? "not set" : dao.computeTrackIfAbsent(trackId).getName();
     }
 
     /**

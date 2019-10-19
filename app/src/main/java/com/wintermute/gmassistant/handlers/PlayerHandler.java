@@ -6,9 +6,9 @@ import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
 import com.wintermute.gmassistant.database.dao.SceneDao;
 import com.wintermute.gmassistant.database.dao.TrackDao;
 import com.wintermute.gmassistant.database.dto.Scene;
-import com.wintermute.gmassistant.services.player.AmbientSound;
-import com.wintermute.gmassistant.services.player.BackgroundMusic;
-import com.wintermute.gmassistant.services.player.JumpScareSound;
+import com.wintermute.gmassistant.services.player.AmbiencePlayerService;
+import com.wintermute.gmassistant.services.player.MusicPlayerService;
+import com.wintermute.gmassistant.services.player.EffectPlayerService;
 
 /**
  * Manages triggering of player services.
@@ -33,14 +33,14 @@ public class PlayerHandler
         SceneDao dao = new SceneDao(ctx);
         Scene scene = dao.getById(sceneId);
         String trackId;
-        if (null != scene.getStartingTrack() || null != scene.getNextTrack())
+        if (null != scene.getStartEffect() || null != scene.getBackgroundMusic())
         {
-            if (scene.getStartingTrack() == null)
+            if (scene.getStartEffect() == null)
             {
-                trackId = scene.getNextTrack();
+                trackId = scene.getBackgroundMusic();
             } else
             {
-                trackId = scene.getStartingTrack();
+                trackId = scene.getStartEffect();
             }
 
             Intent player = prepareIntent(trackId, sceneId);
@@ -86,13 +86,13 @@ public class PlayerHandler
 
         if (tag.equals("ambiente"))
         {
-            return AmbientSound.class;
+            return AmbiencePlayerService.class;
         } else if (tag.equals("jumpscare"))
         {
-            return JumpScareSound.class;
+            return EffectPlayerService.class;
         } else
         {
-            return BackgroundMusic.class;
+            return MusicPlayerService.class;
         }
     }
 }

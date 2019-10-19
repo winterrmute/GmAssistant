@@ -5,10 +5,10 @@
 //import androidx.appcompat.app.AppCompatActivity;
 //import android.os.Bundle;
 //import com.wintermute.soundboard.R;
-//import com.wintermute.soundboard.services.player.BackgroundMusic;
+//import com.wintermute.soundboard.services.player.MusicPlayerService;
 //
 ///**
-// * This client interacts with the BackgroundMusic. Allows to start, stop and pause music.
+// * This client interacts with the MusicPlayerService. Allows to start, stop and pause music.
 // *
 // * @author wintermute
 // */
@@ -33,7 +33,7 @@
 //    @Override
 //    public void start()
 //    {
-//        Intent playerService = new Intent(ClientPlayer.this, BackgroundMusic.class);
+//        Intent playerService = new Intent(ClientPlayer.this, MusicPlayerService.class);
 //        playerService.putExtra("path", "/storage/emulated/0/Download/song.mp3");
 //        startService(playerService);
 //    }

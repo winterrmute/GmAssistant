@@ -10,12 +10,12 @@ import android.os.IBinder;
 import androidx.annotation.Nullable;
 
 /**
- * Handles the ambient sound player.
+ * Handles the background music player.
  *
  * @author wintermute
  */
-public class AmbientSound extends BasePlayerService
-    implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener
+public class MusicPlayerService extends BasePlayerService
+    implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener
 {
 
     MediaPlayer mediaPlayer;
@@ -26,6 +26,9 @@ public class AmbientSound extends BasePlayerService
     {
         return null;
     }
+
+    @Override
+    public void onCompletion(MediaPlayer mp) { }
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra)
@@ -51,8 +54,12 @@ public class AmbientSound extends BasePlayerService
         getExtras(intent);
         mediaPlayer.stop();
         mediaPlayer = create(this, Uri.parse(getTrackPath(trackId)));
-        mediaPlayer.setVolume(0.1f, 0.1f);
+        mediaPlayer.setVolume(0.2f, 0.2f);
         mediaPlayer.start();
+        if (sceneId != null)
+        {
+            changeLight(sceneId);
+        }
         mediaPlayer.setLooping(true);
 
         return Service.START_NOT_STICKY;

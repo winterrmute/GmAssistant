@@ -9,8 +9,13 @@ import android.net.Uri;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
 
-public class JumpScareSound extends BasePlayerService
-    implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener
+/**
+ * Handles the ambient sound player.
+ *
+ * @author wintermute
+ */
+public class AmbiencePlayerService extends BasePlayerService
+    implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener
 {
 
     MediaPlayer mediaPlayer;
@@ -46,26 +51,10 @@ public class JumpScareSound extends BasePlayerService
         getExtras(intent);
         mediaPlayer.stop();
         mediaPlayer = create(this, Uri.parse(getTrackPath(trackId)));
-        mediaPlayer.setVolume(1f, 1f);
+        mediaPlayer.setVolume(0.1f, 0.1f);
         mediaPlayer.start();
-        if (sceneId != null)
-        {
-            changeLight(sceneId);
-            String nextTrack = getNextTrack(sceneId);
-            if (nextTrack != null)
-            {
-                stopService(new Intent(getBaseContext(), BackgroundMusic.class));
-                Intent backgroundMusic = new Intent(getBaseContext(), BackgroundMusic.class);
-                backgroundMusic.putExtra("trackId", nextTrack);
-                playNextOnComplete(mediaPlayer);
-            }
-        }
+        mediaPlayer.setLooping(true);
+
         return Service.START_NOT_STICKY;
-    }
-
-    @Override
-    public void onCompletion(MediaPlayer mp)
-    {
-
     }
 }

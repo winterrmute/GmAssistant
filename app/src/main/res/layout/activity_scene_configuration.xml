@@ -8,12 +8,12 @@
 
 
     <Button
-            android:id="@+id/next_track"
+            android:id="@+id/set_music"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/set_next_track"
+            android:text="@string/set_music"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add_starting_track" />
+            app:layout_constraintTop_toBottomOf="@+id/set_start_effect" />
 
     <Button
             android:id="@+id/scene_submit"
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:text="@string/submit_scene"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/next_track" />
+            app:layout_constraintTop_toBottomOf="@+id/set_ambience" />
 
     <EditText
             android:id="@+id/scene_name"
@@ -43,11 +43,48 @@
             app:layout_constraintTop_toBottomOf="@+id/scene_name" />
 
     <Button
-            android:id="@+id/add_starting_track"
+            android:id="@+id/set_start_effect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/set_starting_track"
+            android:text="@string/set_start_effect"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/set_light" />
+
+    <Button
+            android:id="@+id/set_ambience"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/set_ambience"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/set_music" />
+
+    <TextView
+            android:id="@+id/music_name"
+            android:layout_width="150dp"
+            android:layout_height="33dp"
+            android:layout_marginStart="44dp"
+            android:text="@string/trackname_placeholder"
+            app:layout_constraintStart_toEndOf="@+id/set_start_effect"
+            app:layout_constraintTop_toBottomOf="@+id/set_light" />
+
+    <TextView
+            android:id="@+id/backgroundSound"
+            android:layout_width="150dp"
+            android:layout_height="33dp"
+            android:layout_marginStart="76dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/trackname_placeholder"
+            app:layout_constraintStart_toEndOf="@+id/set_music"
+            app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+    <TextView
+            android:id="@+id/textView5"
+            android:layout_width="150dp"
+            android:layout_height="33dp"
+            android:layout_marginStart="76dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/trackname_placeholder"
+            app:layout_constraintStart_toEndOf="@+id/set_music"
+            app:layout_constraintTop_toBottomOf="@+id/music_name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
