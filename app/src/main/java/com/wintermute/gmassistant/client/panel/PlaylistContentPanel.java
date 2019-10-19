@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.handlers;
+package com.wintermute.gmassistant.client.panel;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,9 +8,12 @@ import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.TrackAdapter;
 import com.wintermute.gmassistant.config.SceneConfig;
 import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
+import com.wintermute.gmassistant.database.dao.SceneDao;
 import com.wintermute.gmassistant.database.dao.TrackDao;
+import com.wintermute.gmassistant.database.dto.Scene;
 import com.wintermute.gmassistant.database.dto.Track;
 import com.wintermute.gmassistant.dialogs.ListDialog;
+import com.wintermute.gmassistant.handlers.PlayerHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +24,7 @@ import java.util.List;
  *
  * @author wintermute
  */
-public class PlaylistHandler extends AppCompatActivity
+public class PlaylistContentPanel extends AppCompatActivity
 {
 
     private ListView songView;
@@ -39,11 +42,11 @@ public class PlaylistHandler extends AppCompatActivity
         trackDao = new TrackDao(this);
         renderFilesAsList();
 
-        playlistId = PlaylistHandler.this.getIntent().getStringExtra("playlistId");
+        playlistId = PlaylistContentPanel.this.getIntent().getStringExtra("playlistId");
 
         songView.setOnItemClickListener((parent, view, position, id) ->
         {
-            PlayerHandler handler = new PlayerHandler(PlaylistHandler.this);
+            PlayerHandler handler = new PlayerHandler(PlaylistContentPanel.this);
             handler.startPlayerByTrack(playlistId, allTracks.get(position).getId());
         });
 
@@ -58,7 +61,7 @@ public class PlaylistHandler extends AppCompatActivity
 
     private void openDialog(String... opts)
     {
-        Intent dialog = new Intent(PlaylistHandler.this, ListDialog.class);
+        Intent dialog = new Intent(PlaylistContentPanel.this, ListDialog.class);
         dialog.putStringArrayListExtra("opts", new ArrayList<>(Arrays.asList(opts)));
         startActivityForResult(dialog, 1);
     }
@@ -66,7 +69,7 @@ public class PlaylistHandler extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        PlaylistContentDao dao = new PlaylistContentDao(PlaylistHandler.this);
+        PlaylistContentDao dao = new PlaylistContentDao(PlaylistContentPanel.this);
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == 1)
         {
@@ -88,7 +91,7 @@ public class PlaylistHandler extends AppCompatActivity
                 case "edit":
                     String sceneId =
                         dao.getSceneIdForTrackInPlaylist(playlistId, allTracks.get(position).getId());
-                    Intent sceneConfig = new Intent(PlaylistHandler.this, SceneConfig.class);
+                    Intent sceneConfig = new Intent(PlaylistContentPanel.this, SceneConfig.class);
                     sceneConfig
                         .putExtra("edit", true)
                         .putExtra("sceneId", sceneId)
@@ -97,7 +100,7 @@ public class PlaylistHandler extends AppCompatActivity
                     startActivityForResult(sceneConfig, 1);
                     break;
                 case "add new":
-                    sceneConfig = new Intent(PlaylistHandler.this, SceneConfig.class);
+                    sceneConfig = new Intent(PlaylistContentPanel.this, SceneConfig.class);
                     sceneConfig
                         .putExtra("trackId", allTracks.get(position).getId())
                         .putExtra("playlistId", playlistId)
@@ -105,7 +108,7 @@ public class PlaylistHandler extends AppCompatActivity
                     startActivityForResult(sceneConfig, 1);
                     break;
                 case "DELETE":
-                    dao = new PlaylistContentDao(PlaylistHandler.this);
+                    dao = new PlaylistContentDao(PlaylistContentPanel.this);
                     dao.deleteTrackFromPlaylist(playlistId, allTracks.get(position).getId());
                     renderFilesAsList();
                     break;
@@ -117,6 +120,9 @@ public class PlaylistHandler extends AppCompatActivity
     {
         PlaylistContentDao dao = new PlaylistContentDao(this);
         String sceneId = dao.getSceneIdForTrackInPlaylist(playlistId, allTracks.get(position).getId());
+
+        List<String> opts = new ArrayList<>();
+        opts.add("add new");
         if (null != sceneId)
         {
             return new String[] {"edit", "add new"};

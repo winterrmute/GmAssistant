@@ -25,7 +25,7 @@
         <activity android:name=".config.LightConfig" />
         <activity android:name=".config.SceneConfig" />
         <activity android:name=".client.AddNewPlaylist" />
-        <activity android:name=".handlers.PlaylistHandler" />
+        <activity android:name=".client.panel.PlaylistContentPanel" />
         <activity android:name=".client.FileBrowser" />
         <activity android:name=".client.panel.PlaylistPanel" />
         <activity android:name=".GmAssistant">

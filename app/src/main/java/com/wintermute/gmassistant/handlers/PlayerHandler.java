@@ -81,8 +81,8 @@ public class PlayerHandler
     private Class specifyServicePlayer(String trackId)
     {
         TrackDao dao = new TrackDao(ctx);
-        String tag = dao.computeTrackIfAbsent(trackId).getTag() == null ? tag = "music"
-                                                                        : dao.computeTrackIfAbsent(trackId).getTag();
+        String tag =
+            dao.computeTrackIfAbsent(trackId).getTag() == null ? "music" : dao.computeTrackIfAbsent(trackId).getTag();
 
         if (tag.equals("ambiente"))
         {
