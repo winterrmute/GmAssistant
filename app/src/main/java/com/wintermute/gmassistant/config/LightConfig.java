@@ -34,7 +34,7 @@ public class LightConfig extends AppCompatActivity
         Button btn = findViewById(R.id.light_submit);
         btn.setOnClickListener(v ->
         {
-            setResult(2, new Intent().putExtra("color", picked).putExtra("brightness", brightness));
+            setResult(RESULT_OK, new Intent().putExtra("color", picked).putExtra("brightness", brightness));
             lightHandler.setLight(true);
             finish();
         });

@@ -33,7 +33,7 @@ public class PlayerHandler
         SceneDao dao = new SceneDao(ctx);
         Scene scene = dao.getById(sceneId);
         String trackId;
-        if (null != scene.getStartingTrack() && null != scene.getNextTrack())
+        if (null != scene.getStartingTrack() || null != scene.getNextTrack())
         {
             if (scene.getStartingTrack() == null)
             {

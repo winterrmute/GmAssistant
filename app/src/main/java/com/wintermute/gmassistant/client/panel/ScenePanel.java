@@ -87,8 +87,8 @@ public class ScenePanel extends AppCompatActivity
             {
                 SceneDao dao = new SceneDao(this);
                 dao.deleteById(sceneId);
-                PlaylistContentDao pdao = new PlaylistContentDao(this);
-                pdao.deleteScene(sceneId);
+                PlaylistContentDao playlistContentDao = new PlaylistContentDao(this);
+                playlistContentDao.deleteScene(sceneId);
             }
         }
         showScenes();
