@@ -73,10 +73,16 @@ public class BasePlayerService extends Service
     /**
      * @return next track to play.
      */
-    String getNextTrack(String sceneId)
+    String getMusic(String sceneId)
     {
         SceneDao dao = new SceneDao(getBaseContext());
         return dao.getById(sceneId).getBackgroundMusic();
+    }
+
+    String getAmbience(String sceneId)
+    {
+        SceneDao dao = new SceneDao(getBaseContext());
+        return dao.getById(sceneId).getBackgroundAmbience();
     }
 
     /**

@@ -53,7 +53,7 @@ public class PlaylistContentPanel extends AppCompatActivity
         songView.setOnItemLongClickListener((parent, view, position, id) ->
         {
             this.position = position;
-            openDialog("set tag: \"music\"", "set tag: \"ambiente\"", "set tag: \"jumpscare\"", "manage scene",
+            openDialog("set tag: \"music\"", "set tag: \"ambience\"", "set tag: \"effect\"", "manage scene",
                 "delete");
             return true;
         });
@@ -79,11 +79,11 @@ public class PlaylistContentPanel extends AppCompatActivity
                 case "set tag: \"music\"":
                     setTag(position, "music");
                     break;
-                case "set tag: \"ambiente\"":
-                    setTag(position, "ambiente");
+                case "set tag: \"ambience\"":
+                    setTag(position, "ambience");
                     break;
-                case "set tag: \"jumpscare\"":
-                    setTag(position, "jumpscare");
+                case "set tag: \"effect\"":
+                    setTag(position, "effect");
                     break;
                 case "manage scene":
                     openDialog(prepareSceneConfigDialog());

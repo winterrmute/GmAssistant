@@ -84,10 +84,10 @@ public class PlayerHandler
         String tag =
             dao.computeTrackIfAbsent(trackId).getTag() == null ? "music" : dao.computeTrackIfAbsent(trackId).getTag();
 
-        if (tag.equals("ambiente"))
+        if (tag.equals("ambience"))
         {
             return AmbiencePlayerService.class;
-        } else if (tag.equals("jumpscare"))
+        } else if (tag.equals("effect"))
         {
             return EffectPlayerService.class;
         } else

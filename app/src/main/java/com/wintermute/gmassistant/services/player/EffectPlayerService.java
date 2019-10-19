@@ -51,12 +51,12 @@ public class EffectPlayerService extends BasePlayerService
         if (sceneId != null)
         {
             changeLight(sceneId);
-            String nextTrack = getNextTrack(sceneId);
-            if (nextTrack != null)
+            String music = getMusic(sceneId);
+//            String ambience = getAmbience(sceneId);
+            if (music != null)
             {
-                stopService(new Intent(getBaseContext(), MusicPlayerService.class));
-                Intent backgroundMusic = new Intent(getBaseContext(), MusicPlayerService.class);
-                backgroundMusic.putExtra("trackId", nextTrack);
+//                Intent backgroundMusic = new Intent(getBaseContext(), MusicPlayerService.class);
+//                backgroundMusic.putExtra("trackId", music);
                 playNextOnComplete(mediaPlayer);
             }
         }

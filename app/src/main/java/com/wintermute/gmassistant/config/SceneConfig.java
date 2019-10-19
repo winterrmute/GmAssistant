@@ -239,15 +239,26 @@ public class SceneConfig extends AppCompatActivity
         if (resultCode == RESULT_OK)
         {
             path = data.getStringExtra("path");
+            TrackDao trackDao = new TrackDao(this);
+            Track toUpdate;
             if (requestCode == 1)
             {
                 startEffect = createTrackIfNotExist();
+                toUpdate = trackDao.getById(startEffect.getId());
+                toUpdate.setTag("effect");
+                trackDao.update(toUpdate);
             } else if (requestCode == 2)
             {
                 music = createTrackIfNotExist();
+                toUpdate = trackDao.getById(music.getId());
+                toUpdate.setTag("music");
+                trackDao.update(toUpdate);
             } else if (requestCode == 3)
             {
                 ambience = createTrackIfNotExist();
+                toUpdate = trackDao.getById(ambience.getId());
+                toUpdate.setTag("ambience");
+                trackDao.update(toUpdate);
             } else if (requestCode == 4)
             {
                 Light dto = new Light();
