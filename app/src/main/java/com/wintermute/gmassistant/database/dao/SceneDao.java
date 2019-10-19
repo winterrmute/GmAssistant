@@ -49,8 +49,7 @@ public class SceneDao
     }
 
     /**
-     * Get all available sceens.
-     * @return
+     * @return list of scenes.
      */
     public ArrayList<Scene> getAll()
     {
@@ -67,7 +66,36 @@ public class SceneDao
     public Scene getById(String sceneId)
     {
         String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + ID_KEY + " = '" + sceneId + "'";
-        return mapObject(dbRead.rawQuery(query, null)).get(0);
+        ArrayList<Scene> scenes = mapObject(dbRead.rawQuery(query, null));
+        return scenes.size() != 0 ? scenes.get(0) : null;
+    }
+
+    public void updateScene(Scene scene)
+    {
+        StringBuilder query = new StringBuilder("UPDATE ")
+            .append(TABLE_NAME)
+            .append(" SET ")
+            .append(NAME_KEY)
+            .append("= '")
+            .append(scene.getName())
+            .append("', ")
+            .append(LIGHT_KEY)
+            .append(" = '")
+            .append(scene.getLight())
+            .append("', ")
+            .append(STARTING_TRACK_KEY)
+            .append(" = '")
+            .append(scene.getStartingTrack())
+            .append("', ")
+            .append(NEXT_TRACK_KEY)
+            .append(" = '")
+            .append(scene.getNextTrack())
+            .append("' WHERE ")
+            .append(ID_KEY)
+            .append(" = '")
+            .append(scene.getId())
+            .append("'");
+        dbWrite.execSQL(query.toString());
     }
 
     /**

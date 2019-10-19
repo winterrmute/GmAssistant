@@ -120,7 +120,7 @@ public class PlaylistContentDao
         return "-1";
     }
 
-    public void insertOrUpdateScene(String sceneId, String playlistId, String trackId)
+    public void updateScene(String sceneId, String playlistId, String trackId)
     {
         StringBuilder query = new StringBuilder("UPDATE ")
             .append(TABLE_NAME)
@@ -140,11 +140,22 @@ public class PlaylistContentDao
         dbWrite.execSQL(query.toString());
     }
 
+    public String getSceneIdForTrackInPlaylist(String playlist, String trackId)
+    {
+        StringBuilder query = new StringBuilder("SELECT scene FROM ")
+            .append(TABLE_NAME)
+            .append(" WHERE playlist ='")
+            .append(playlist)
+            .append("' AND track ='")
+            .append(trackId)
+            .append("'");
+        return mapObject(dbRead.rawQuery(query.toString(), null)).get(0).getScene();
+    }
 
     /**
      * Deletes row from database by id.
      *
-     * @param playlistId of playlist to remove its content..
+     * @param playlistId of playlist to remove its content.
      */
     public void deleteByPlaylistId(String playlistId)
     {
@@ -177,6 +188,23 @@ public class PlaylistContentDao
             .append(TRACK_KEY)
             .append(" = '")
             .append(trackId)
+            .append("'");
+        dbWrite.execSQL(query.toString());
+    }
+
+    /**
+     * removes deleted scene from playlsit content.
+     */
+    public void deleteScene(String sceneId)
+    {
+        StringBuilder query = new StringBuilder("UPDATE ")
+            .append(TABLE_NAME)
+            .append(" SET ")
+            .append(SCENE_KEY)
+            .append(" = NULL WHERE ")
+            .append(SCENE_KEY)
+            .append(" = '")
+            .append(sceneId)
             .append("'");
         dbWrite.execSQL(query.toString());
     }

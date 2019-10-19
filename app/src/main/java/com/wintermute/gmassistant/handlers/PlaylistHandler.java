@@ -50,7 +50,8 @@ public class PlaylistHandler extends AppCompatActivity
         songView.setOnItemLongClickListener((parent, view, position, id) ->
         {
             this.position = position;
-            openDialog("set tag: \"music\"", "set tag: \"ambiente\"", "set tag: \"jumpscare\"", "add scene", "delete");
+            openDialog("set tag: \"music\"", "set tag: \"ambiente\"", "set tag: \"jumpscare\"", "manage scene",
+                "delete");
             return true;
         });
     }
@@ -65,6 +66,7 @@ public class PlaylistHandler extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        PlaylistContentDao dao = new PlaylistContentDao(PlaylistHandler.this);
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == 1)
         {
@@ -80,26 +82,47 @@ public class PlaylistHandler extends AppCompatActivity
                 case "set tag: \"jumpscare\"":
                     setTag(position, "jumpscare");
                     break;
-                case "add scene":
-                    openDialog("edit scene", "add new scene");
+                case "manage scene":
+                    openDialog(prepareSceneConfigDialog());
                     break;
-                case "edit scene":
+                case "edit":
+                    String sceneId =
+                        dao.getSceneIdForTrackInPlaylist(playlistId, allTracks.get(position).getId());
+                    Intent sceneConfig = new Intent(PlaylistHandler.this, SceneConfig.class);
+                    sceneConfig
+                        .putExtra("edit", true)
+                        .putExtra("sceneId", sceneId)
+                        .putExtra("trackId", allTracks.get(position).getId())
+                        .putExtra("playlistId", playlistId);
+                    startActivityForResult(sceneConfig, 1);
                     break;
-                case "add new scene":
-                    Intent sceneManager = new Intent(PlaylistHandler.this, SceneConfig.class);
-                    sceneManager
+                case "add new":
+                    sceneConfig = new Intent(PlaylistHandler.this, SceneConfig.class);
+                    sceneConfig
                         .putExtra("trackId", allTracks.get(position).getId())
                         .putExtra("playlistId", playlistId)
                         .putExtra("addSceneToTrack", true);
-                    startActivity(sceneManager);
+                    startActivityForResult(sceneConfig, 1);
                     break;
                 case "DELETE":
-                    PlaylistContentDao dao = new PlaylistContentDao(PlaylistHandler.this);
-                    playlistId = PlaylistHandler.this.getIntent().getStringExtra("playlistId");
+                    dao = new PlaylistContentDao(PlaylistHandler.this);
                     dao.deleteTrackFromPlaylist(playlistId, allTracks.get(position).getId());
                     renderFilesAsList();
                     break;
             }
+        }
+    }
+
+    private String[] prepareSceneConfigDialog()
+    {
+        PlaylistContentDao dao = new PlaylistContentDao(this);
+        String sceneId = dao.getSceneIdForTrackInPlaylist(playlistId, allTracks.get(position).getId());
+        if (null != sceneId)
+        {
+            return new String[] {"edit", "add new"};
+        } else
+        {
+            return new String[] {"add new"};
         }
     }
 

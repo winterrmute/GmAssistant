@@ -21,7 +21,7 @@ import com.wintermute.gmassistant.database.dto.Track;
 import java.io.File;
 
 /**
- * Creates new scene and updates dependency in related playlist content.
+ * Handles creating or editing new scenes and updating it on playlist content if related.
  *
  * @author wintermute
  */
@@ -29,11 +29,11 @@ public class SceneConfig extends AppCompatActivity
 {
 
     private Light light;
-    private String sceneName;
     private Track startingTrack;
     private Track nextTrack;
     private String path;
-    private boolean addSceneToTrack;
+    private EditText nameField;
+    private boolean editScene;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -41,59 +41,105 @@ public class SceneConfig extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scene_configuration);
 
-        addSceneToTrack = getIntent().getBooleanExtra("addSceneToTrack", false);
+        boolean addSceneToTrack = getIntent().getBooleanExtra("addSceneToTrack", false);
+        editScene = getIntent().getBooleanExtra("edit", false);
+        nameField = findViewById(R.id.scene_name);
 
-        EditText nameField = findViewById(R.id.scene_name);
+        SceneDao sceneDao = new SceneDao(this);
+        TrackDao trackDao = new TrackDao(this);
 
         Button lightEffects = findViewById(R.id.set_light);
         lightEffects.setOnClickListener(v -> setLights());
 
         Button setStartTrack = findViewById(R.id.add_starting_track);
-        setStartTrack.setOnClickListener(v ->
-        {
-            Intent fileBrowser = new Intent(SceneConfig.this, FileBrowser.class);
-            fileBrowser.putExtra("selectTrack", true);
-            startActivityForResult(fileBrowser, 1);
-        });
+        setStartTrack.setOnClickListener(v -> browseFilesForTrack(1));
 
         Button setNextTrack = findViewById(R.id.next_track);
-        setNextTrack.setOnClickListener(v ->
-        {
-            Intent fileBrowser = new Intent(SceneConfig.this, FileBrowser.class);
-            fileBrowser.putExtra("selectTrack", true);
-            startActivityForResult(fileBrowser, 2);
-        });
+        setNextTrack.setOnClickListener(v -> browseFilesForTrack(2));
 
         Button sceneSubmit = findViewById(R.id.scene_submit);
-        sceneSubmit.setOnClickListener(v ->
+        sceneSubmit.setOnClickListener(v -> createOrUpdateScene(sceneDao));
+
+        if (addSceneToTrack)
         {
-            String currentSceneName = nameField.getText().toString();
-            if (currentSceneName.equals(""))
+            setStartTrack.setVisibility(View.GONE);
+        }
+        if (editScene || getIntent().getStringExtra("playlistId") != null)
+        {
+            getDetailsOnEdit(sceneDao, trackDao);
+        }
+    }
+
+    /**
+     * Start file browser for single track selection.
+     *
+     * @param requestCode to differ between starting and next track.
+     */
+    void browseFilesForTrack(int requestCode)
+    {
+        Intent fileBrowser = new Intent(SceneConfig.this, FileBrowser.class);
+        fileBrowser.putExtra("selectTrack", true);
+        startActivityForResult(fileBrowser, requestCode);
+    }
+
+    /**
+     * Creates a scene if does not exists, updates the one that is edited.
+     *
+     * @param sceneDao scene data access object.
+     */
+    private void createOrUpdateScene(SceneDao sceneDao)
+    {
+        if (!(startingTrack == null && nextTrack == null))
+        {
+            if (nameField.getVisibility() == View.VISIBLE && "".equals(nameField.getText().toString()))
             {
                 Toast.makeText(this, "Scene name must not be empty!", Toast.LENGTH_SHORT).show();
             } else
             {
-                if (startingTrack == null && nextTrack == null)
+                String sceneId;
+                if (!editScene)
                 {
-                    Toast
-                        .makeText(this, "The scene must contain either starting track or next track!",
-                            Toast.LENGTH_SHORT)
-                        .show();
+                    sceneId = createScene(new Scene());
                 } else
                 {
-                    this.sceneName = currentSceneName;
-                    updatePlaylistContent();
-                    finish();
+                    sceneId = getIntent().getStringExtra("sceneId");
+                    updateScene(sceneDao.getById(sceneId));
                 }
+                updatePlaylistContent(sceneId);
+                finish();
             }
-        });
-
-        if (addSceneToTrack) {
-            setStartTrack.setVisibility(View.GONE);
-            TrackDao dao = new TrackDao(this);
-            startingTrack = dao.getById(getIntent().getStringExtra("trackId"));
+        } else
+        {
+            Toast
+                .makeText(this, "The scene must contain either starting track or next track!", Toast.LENGTH_SHORT)
+                .show();
         }
+    }
 
+    /**
+     * Gets track information if editing existing scene.
+     *
+     * @param sceneDao data access object for scenes.
+     * @param trackDao data access object for tracks.
+     */
+    public void getDetailsOnEdit(SceneDao sceneDao, TrackDao trackDao)
+    {
+        Scene scene = sceneDao.getById(getIntent().getStringExtra("sceneId"));
+        if (null != scene)
+        {
+            nameField.setText(scene.getName());
+            if (null != scene.getStartingTrack())
+            {
+                startingTrack = trackDao.getById(scene.getStartingTrack());
+            }
+            if (null != scene.getNextTrack())
+            {
+                nextTrack = trackDao.getById(scene.getNextTrack());
+            }
+        } else
+        {
+            startingTrack = trackDao.getById((getIntent().getStringExtra("trackId")));
+        }
     }
 
     /**
@@ -125,10 +171,25 @@ public class SceneConfig extends AppCompatActivity
     /**
      * Configures and creates new scene.
      */
-    private Scene createScene()
+    private String createScene(Scene scene)
     {
-        Scene result = new Scene();
-        result.setName(sceneName);
+        SceneDao sceneDao = new SceneDao(this);
+        Scene result = prepareScene(scene);
+        return String.valueOf(sceneDao.insert(result));
+    }
+
+    private void updateScene(Scene scene)
+    {
+        SceneDao dao = new SceneDao(this);
+        dao.updateScene(prepareScene(scene));
+    }
+
+    private Scene prepareScene(Scene result)
+    {
+        if (!"".equals(nameField.getText().toString()))
+        {
+            result.setName(nameField.getText().toString());
+        }
         if (light != null)
         {
             result.setLight(light.getId());
@@ -141,8 +202,6 @@ public class SceneConfig extends AppCompatActivity
         {
             result.setStartingTrack(startingTrack.getId());
         }
-        SceneDao sceneDao = new SceneDao(this);
-        result.setId(String.valueOf(sceneDao.insert(result)));
         return result;
     }
 
@@ -150,35 +209,41 @@ public class SceneConfig extends AppCompatActivity
      * Inserts the scene into playlist content if empty or overwrites the existing one.
      */
     //TODO: Refactor me
-    private void updatePlaylistContent()
+    private void updatePlaylistContent(String sceneId)
     {
         String playlistId = getIntent().getStringExtra("playlistId");
-        PlaylistContentDao dao = new PlaylistContentDao(this);
-        dao.insertOrUpdateScene(createScene().getId(), playlistId, startingTrack.getId());
+        if (null != playlistId)
+        {
+            PlaylistContentDao dao = new PlaylistContentDao(this);
+            dao.updateScene(sceneId, playlistId, startingTrack.getId());
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-        path = data.getStringExtra("path");
-        if (requestCode == 1)
+        if (resultCode == RESULT_OK)
         {
-            startingTrack = createTrackIfNotExist();
-        } else if (requestCode == 2)
-        {
-            nextTrack = createTrackIfNotExist();
-        } else if (requestCode == 3)
-        {
-            Light dto = new Light();
-            int color = data.getIntExtra("color", 0);
-            int brightness = data.getIntExtra("brightness", 0);
-            dto.setColor(String.valueOf(color));
-            dto.setBrightness(String.valueOf(brightness));
+            path = data.getStringExtra("path");
+            if (requestCode == 1)
+            {
+                startingTrack = createTrackIfNotExist();
+            } else if (requestCode == 2)
+            {
+                nextTrack = createTrackIfNotExist();
+            } else if (requestCode == 3)
+            {
+                Light dto = new Light();
+                int color = data.getIntExtra("color", 0);
+                int brightness = data.getIntExtra("brightness", 0);
+                dto.setColor(String.valueOf(color));
+                dto.setBrightness(String.valueOf(brightness));
 
-            LightDao dao = new LightDao(this);
-            dto.setId(String.valueOf(dao.insert(dto)));
-            light = dao.getById(dto.getId());
+                LightDao dao = new LightDao(this);
+                dto.setId(String.valueOf(dao.insert(dto)));
+                light = dao.getById(dto.getId());
+            }
         }
     }
 }

@@ -65,13 +65,14 @@ public class SceneAdapter extends BaseAdapter
 
         Scene target = scenes.get(position);
         String light = target.getLight();
-        if (light != null)
+        if (null != light && !"null".equals(light))
         {
             image.setImageBitmap(extractColor(light));
         }
         name.setText(target.getName());
 
-        startingTrack.setText("Start: " + getTrackName(target.computeStartingTrackIfAbsent(), target.getStartingTrack()));
+        startingTrack.setText(
+            "Start: " + getTrackName(target.computeStartingTrackIfAbsent(), target.getStartingTrack()));
         nextTrack.setText("Next: " + getTrackName(target.computeNextTrackNameIfAbsent(), target.getNextTrack()));
         result.setTag(position);
         return result;

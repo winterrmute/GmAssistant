@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.SceneAdapter;
 import com.wintermute.gmassistant.config.SceneConfig;
+import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
 import com.wintermute.gmassistant.database.dao.SceneDao;
 import com.wintermute.gmassistant.database.dto.Scene;
 import com.wintermute.gmassistant.dialogs.ListDialog;
@@ -55,11 +56,20 @@ public class ScenePanel extends AppCompatActivity
         });
 
         Button addScene = findViewById(R.id.add_scene);
-        addScene.setOnClickListener((v) ->
-        {
-            Intent sceneConfig = new Intent(ScenePanel.this, SceneConfig.class);
-            startActivityForResult(sceneConfig, 1);
-        });
+        addScene.setOnClickListener((v) -> startSceneConfiguration(false));
+    }
+
+    /**
+     * Open scene config activity with editing flag.
+     *
+     * @param edit flag to refer if scene should be edited or a new one will be created.
+     */
+    private void startSceneConfiguration(boolean edit)
+    {
+        Intent sceneConfig = new Intent(ScenePanel.this, SceneConfig.class);
+        sceneConfig.putExtra("edit", edit);
+        sceneConfig.putExtra("sceneId", sceneId);
+        startActivityForResult(sceneConfig, 1);
     }
 
     @Override
@@ -72,11 +82,13 @@ public class ScenePanel extends AppCompatActivity
 
             if ("edit".equals(selected))
             {
-                //TODO: do stuff
+                startSceneConfiguration(true);
             } else if ("delete".equals(selected))
             {
                 SceneDao dao = new SceneDao(this);
                 dao.deleteById(sceneId);
+                PlaylistContentDao pdao = new PlaylistContentDao(this);
+                pdao.deleteScene(sceneId);
             }
         }
         showScenes();

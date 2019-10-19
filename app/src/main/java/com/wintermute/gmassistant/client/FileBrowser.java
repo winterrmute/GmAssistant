@@ -22,7 +22,6 @@ import java.util.ArrayList;
 public class FileBrowser extends AppCompatActivity
 {
 
-    private final static int RESULT_CODE = 1;
     private File path;
     private ListView fileView;
     private FileBrowserService fileBrowserService;
@@ -52,7 +51,7 @@ public class FileBrowser extends AppCompatActivity
         Button selectDirectory = findViewById(R.id.select_directory);
         selectDirectory.setOnClickListener((v) ->
         {
-            setResult(RESULT_CODE, new Intent().putExtra("path", path.toString()));
+            setResult(RESULT_OK, new Intent().putExtra("path", path.toString()));
             finish();
         });
 
@@ -91,7 +90,7 @@ public class FileBrowser extends AppCompatActivity
                 if (addingNextTrack)
                 {
                     path = new File(dirContent.get(position).getPath());
-                    setResult(RESULT_CODE, new Intent().putExtra("path", path.toString()));
+                    setResult(RESULT_OK, new Intent().putExtra("path", path.toString()));
                     finish();
                 }
             }
