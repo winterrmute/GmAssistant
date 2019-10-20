@@ -51,7 +51,7 @@ public class AmbiencePlayerService extends BasePlayerService
         getExtras(intent);
         mediaPlayer.stop();
         mediaPlayer = create(this, Uri.parse(getTrackPath(trackId)));
-        mediaPlayer.setVolume(0.1f, 0.1f);
+        mediaPlayer.setVolume(0.03f, 0.03f);
         mediaPlayer.start();
         mediaPlayer.setLooping(true);
 

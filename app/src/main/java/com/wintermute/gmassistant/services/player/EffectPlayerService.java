@@ -8,6 +8,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
+import com.wintermute.gmassistant.database.dao.SceneDao;
 
 public class EffectPlayerService extends BasePlayerService
     implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener
@@ -52,12 +53,16 @@ public class EffectPlayerService extends BasePlayerService
         {
             changeLight(sceneId);
             String music = getMusic(sceneId);
-//            String ambience = getAmbience(sceneId);
             if (music != null)
             {
-//                Intent backgroundMusic = new Intent(getBaseContext(), MusicPlayerService.class);
-//                backgroundMusic.putExtra("trackId", music);
-                playNextOnComplete(mediaPlayer);
+                mediaPlayer.setOnCompletionListener(mp ->
+                {
+                    Intent musicService = new Intent(getBaseContext(), MusicPlayerService.class);
+                    musicService
+                        .putExtra("trackId", getMusic(sceneId))
+                        .putExtra("sceneId", sceneId);
+                    startService(musicService);
+                });
             }
         }
         return Service.START_NOT_STICKY;

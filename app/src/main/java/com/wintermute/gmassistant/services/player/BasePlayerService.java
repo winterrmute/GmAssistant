@@ -47,27 +47,8 @@ public class BasePlayerService extends Service
     void getExtras(Intent intent)
     {
         sceneId = intent.getStringExtra("sceneId");
-        trackId = intent.getStringExtra("trackId");
         playlistId = intent.getStringExtra("playlistId");
-    }
-
-    /**
-     * Play following music on complete if not null.
-     *
-     * @param player to set completion listener.
-     */
-    void playNextOnComplete(MediaPlayer player)
-    {
-        if (sceneId != null)
-        {
-            player.setOnCompletionListener(mp ->
-            {
-                Intent intent = new Intent(getBaseContext(), MusicPlayerService.class);
-                SceneDao dao = new SceneDao(getBaseContext());
-                intent.putExtra("trackId", dao.getById(sceneId).getBackgroundMusic());
-                startService(intent);
-            });
-        }
+        trackId = intent.getStringExtra("trackId");
     }
 
     /**

@@ -8,6 +8,8 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
+import com.wintermute.gmassistant.database.dao.SceneDao;
+import com.wintermute.gmassistant.database.dto.Scene;
 
 /**
  * Handles the background music player.
@@ -54,13 +56,19 @@ public class MusicPlayerService extends BasePlayerService
         getExtras(intent);
         mediaPlayer.stop();
         mediaPlayer = create(this, Uri.parse(getTrackPath(trackId)));
-        mediaPlayer.setVolume(0.5f, 0.5f);
+        mediaPlayer.setVolume(0.2f, 0.2f);
         mediaPlayer.start();
+        mediaPlayer.setLooping(true);
         if (sceneId != null)
         {
             changeLight(sceneId);
+            String ambience = getAmbience(sceneId);
+            if (null != ambience) {
+                Intent backgroundService = new Intent(getBaseContext(), AmbiencePlayerService.class);
+                backgroundService.putExtra("trackId", ambience);
+                startService(backgroundService);
+            }
         }
-        mediaPlayer.setLooping(true);
 
         return Service.START_NOT_STICKY;
     }
