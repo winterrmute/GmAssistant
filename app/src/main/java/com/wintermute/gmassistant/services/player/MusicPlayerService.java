@@ -62,6 +62,7 @@ public class MusicPlayerService extends BasePlayerService
         if (sceneId != null)
         {
             changeLight(sceneId);
+            stopService(new Intent(getBaseContext(), AmbiencePlayerService.class));
             String ambience = getAmbience(sceneId);
             if (null != ambience) {
                 Intent backgroundService = new Intent(getBaseContext(), AmbiencePlayerService.class);
@@ -71,5 +72,10 @@ public class MusicPlayerService extends BasePlayerService
         }
 
         return Service.START_NOT_STICKY;
+    }
+
+    @Override
+    public void onDestroy(){
+        mediaPlayer.stop();
     }
 }

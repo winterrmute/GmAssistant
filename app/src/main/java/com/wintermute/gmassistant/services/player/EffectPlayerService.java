@@ -51,6 +51,8 @@ public class EffectPlayerService extends BasePlayerService
         mediaPlayer.start();
         if (sceneId != null)
         {
+            stopService(new Intent(getBaseContext(), MusicPlayerService.class));
+            stopService(new Intent(getBaseContext(), AmbiencePlayerService.class));
             changeLight(sceneId);
             String music = getMusic(sceneId);
             if (music != null)
@@ -72,5 +74,10 @@ public class EffectPlayerService extends BasePlayerService
     public void onCompletion(MediaPlayer mp)
     {
 
+    }
+
+    @Override
+    public void onDestroy(){
+        mediaPlayer.stop();
     }
 }
