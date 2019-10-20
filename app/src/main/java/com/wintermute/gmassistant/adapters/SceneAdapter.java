@@ -66,36 +66,30 @@ public class SceneAdapter extends BaseAdapter
 
         Scene target = scenes.get(position);
         String light = target.getLight();
-        if (null != light && !"null".equals(light))
+        if (null != light)
         {
             image.setImageBitmap(extractColor(light));
         }
         name.setText(target.getName());
 
         startEffect.setText(
-            "Start: " + getTrackName(computeDisplayNameIfAbsent(target.getStartEffect()), target.getStartEffect()));
-        music.setText("Next: " + getTrackName(computeDisplayNameIfAbsent(target.getStartEffect()), target.getBackgroundMusic()));
-        ambience.setText("Ambience: " + getTrackName(computeDisplayNameIfAbsent(target.getStartEffect()), target.getBackgroundAmbience()));
+            "Start: " + getTrackName(target.getStartEffect()));
+        music.setText("Next: " + getTrackName(target.getBackgroundMusic()));
+        ambience.setText("Ambience: " + getTrackName(target.getBackgroundAmbience()));
         result.setTag(position);
         return result;
     }
 
-    private String computeDisplayNameIfAbsent(String name){
-        return name != null ? name : "not set";
-    }
-
     /**
-     * Get track name
-     *
-     * @param name of track.
      * @param trackId that should be added.
-     * @return
+     * @return display name if track exists or not set.
      */
-    private String getTrackName(String name, String trackId)
+    //TODO: refactor me
+    private String getTrackName(String trackId)
     {
         TrackDao dao = new TrackDao(ctx);
-//        return computeDisplayNameIfAbsent(dao.computeTrackIfAbsent(trackId).getName());
-        return name.equals("not set") ? "not set" : dao.computeTrackIfAbsent(trackId).getName();
+        String trackname = dao.computeTrackIfAbsent(trackId).getName();
+        return trackname != null ? trackname : "not set";
     }
 
     /**

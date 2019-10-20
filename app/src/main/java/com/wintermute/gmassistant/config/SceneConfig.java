@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
@@ -174,7 +173,7 @@ public class SceneConfig extends AppCompatActivity
     private void setLights()
     {
         Intent fileBrowser = new Intent(SceneConfig.this, LightConfig.class);
-        startActivityForResult(fileBrowser, 3);
+        startActivityForResult(fileBrowser, 4);
     }
 
     /**

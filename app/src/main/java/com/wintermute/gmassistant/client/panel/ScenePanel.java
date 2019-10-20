@@ -39,11 +39,8 @@ public class ScenePanel extends AppCompatActivity
 
         sceneView.setOnItemClickListener((parent, view, position, id) ->
         {
-            if (allScenes.get(position).getStartEffect() != null)
-            {
                 PlayerHandler handler = new PlayerHandler(getBaseContext());
                 handler.startPlayerByScene(allScenes.get(position).getId());
-            }
         });
 
         sceneView.setOnItemLongClickListener((parent, view, position, id) ->

@@ -8,6 +8,9 @@ import com.wintermute.gmassistant.database.DbManager;
 import com.wintermute.gmassistant.database.dto.Scene;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Represents Scene data access object.
@@ -77,31 +80,55 @@ public class SceneDao
         StringBuilder query = new StringBuilder("UPDATE ")
             .append(TABLE_NAME)
             .append(" SET ")
-            .append(NAME_KEY)
-            .append("= '")
-            .append(scene.getName())
-            .append("', ")
-            .append(LIGHT_KEY)
-            .append(" = '")
-            .append(scene.getLight())
-            .append("', ")
-            .append(START_EFFECT)
-            .append(" = '")
-            .append(scene.getStartEffect())
-            .append("', ")
-            .append(MUSIC)
-            .append(" = '")
-            .append(scene.getBackgroundMusic())
-            .append("', ")
-            .append(AMBIENCE)
-            .append(" = '")
-            .append(scene.getBackgroundAmbience())
-            .append("' WHERE ")
+            .append(updateQueryBuilder(scene))
+            .append(" WHERE ")
             .append(ID_KEY)
             .append(" = '")
             .append(scene.getId())
             .append("'");
         dbWrite.execSQL(query.toString());
+    }
+
+    /**
+     * Avoid writing unwanted values into database.
+     *
+     * @param scene to update
+     * @return update query
+     */
+    private StringBuilder updateQueryBuilder(Scene scene)
+    {
+        StringBuilder query = new StringBuilder();
+        HashMap<String, String> keyValue = new HashMap<>();
+        if (null != scene.getName()) {
+            keyValue.put(NAME_KEY, scene.getName());
+        }
+        if (null != scene.getLight()) {
+            keyValue.put(LIGHT_KEY, scene.getLight());
+        }
+        if (null != scene.getStartEffect()) {
+            keyValue.put(START_EFFECT, scene.getStartEffect());
+        }
+        if (null !=scene.getBackgroundMusic()){
+
+            keyValue.put(MUSIC, scene.getBackgroundMusic());
+        }
+        if (null !=scene.getBackgroundAmbience()){
+            keyValue.put(AMBIENCE, scene.getBackgroundAmbience());
+        }
+
+        Iterator<Map.Entry<String, String>> it = keyValue.entrySet().iterator();
+
+        while(it.hasNext()) {
+            Map.Entry<String, String> entry = it.next();
+            if (entry.getValue() != null) {
+                query.append(entry.getKey()).append(" = '").append(entry.getValue()).append("'");
+            }
+            if (it.hasNext()) {
+                query.append(", ");
+            }
+
+        }
+        return query;
     }
 
     /**
