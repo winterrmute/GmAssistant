@@ -47,7 +47,7 @@ public class LightHandler
         try
         {
             return new JSONObject(
-                "{ \"on\":true, \"bri\": 10, \"xy\": [ 0.31822298615917416, 0.32930599409450195 ], \"bri\": 255, "
+                "{ \"on\":true, \"bri\": 10, \"xy\": [ 0.3454, 0.3557 ], \"bri\": 255, "
                     + "\"transitiontime\": 1, \"hue\": " + "46920 }");
         } catch (JSONException e)
         {

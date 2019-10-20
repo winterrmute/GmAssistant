@@ -1,10 +1,16 @@
 package com.wintermute.gmassistant.config;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
@@ -19,6 +25,7 @@ import com.wintermute.gmassistant.database.dto.Scene;
 import com.wintermute.gmassistant.database.dto.Track;
 
 import java.io.File;
+import java.math.BigDecimal;
 
 /**
  * Handles creating or editing new scenes and updating it on playlist content if related.
@@ -36,11 +43,19 @@ public class SceneConfig extends AppCompatActivity
     private EditText nameField;
     private boolean editScene;
 
+    private TextView selectedEffect;
+    private TextView selectedMusic;
+    private TextView selectedAmbience;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scene_configuration);
+
+        selectedEffect = findViewById(R.id.selected_effect);
+        selectedMusic = findViewById(R.id.selected_music);
+        selectedAmbience = findViewById(R.id.selected_ambience);
 
         boolean addSceneToTrack = getIntent().getBooleanExtra("addSceneToTrack", false);
         editScene = getIntent().getBooleanExtra("edit", false);
@@ -192,6 +207,10 @@ public class SceneConfig extends AppCompatActivity
         dao.updateScene(prepareScene(scene));
     }
 
+    /**
+     * @param result scene to return.
+     * @return scene filled with its attrs.
+     */
     private Scene prepareScene(Scene result)
     {
         if (!"".equals(nameField.getText().toString()))
@@ -220,7 +239,6 @@ public class SceneConfig extends AppCompatActivity
     /**
      * Inserts the scene into playlist content if empty or overwrites the existing one.
      */
-    //TODO: Refactor me
     private void updatePlaylistContent(String sceneId)
     {
         String playlistId = getIntent().getStringExtra("playlistId");
@@ -246,30 +264,44 @@ public class SceneConfig extends AppCompatActivity
                 toUpdate = trackDao.getById(startEffect.getId());
                 toUpdate.setTag("effect");
                 trackDao.update(toUpdate);
+                selectedEffect.setText(startEffect.getName());
             } else if (requestCode == 2)
             {
                 music = createTrackIfNotExist();
                 toUpdate = trackDao.getById(music.getId());
                 toUpdate.setTag("music");
                 trackDao.update(toUpdate);
+                selectedMusic.setText(music.getName());
             } else if (requestCode == 3)
             {
                 ambience = createTrackIfNotExist();
                 toUpdate = trackDao.getById(ambience.getId());
                 toUpdate.setTag("ambience");
                 trackDao.update(toUpdate);
+                selectedAmbience.setText(ambience.getName());
             } else if (requestCode == 4)
             {
                 Light dto = new Light();
-                int color = data.getIntExtra("color", 0);
-                int brightness = data.getIntExtra("brightness", 0);
-                dto.setColor(String.valueOf(color));
-                dto.setBrightness(String.valueOf(brightness));
-
+                String color = String.valueOf(data.getIntExtra("color", 0));
+                dto.setColor(color);
+                dto.setBrightness(String.valueOf(data.getIntExtra("brightness", 0)));
                 LightDao dao = new LightDao(this);
                 dto.setId(String.valueOf(dao.insert(dto)));
                 light = dao.getById(dto.getId());
+                ImageView image = findViewById(R.id.selected_color);
+                image.setImageBitmap(extractColor(color));
             }
         }
+    }
+
+    private Bitmap extractColor(String color)
+    {
+        Rect rect = new Rect(0, 0, 1, 1);
+        Bitmap image = Bitmap.createBitmap(rect.width(), rect.height(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(image);
+        Paint paint = new Paint();
+        paint.setColor(new BigDecimal(color).intValue());
+        canvas.drawRect(0, 0, 1, 1, paint);
+        return image;
     }
 }

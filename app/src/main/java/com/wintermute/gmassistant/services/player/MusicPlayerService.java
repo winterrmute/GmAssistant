@@ -56,7 +56,7 @@ public class MusicPlayerService extends BasePlayerService
         getExtras(intent);
         mediaPlayer.stop();
         mediaPlayer = create(this, Uri.parse(getTrackPath(trackId)));
-        mediaPlayer.setVolume(0.2f, 0.2f);
+        mediaPlayer.setVolume(0.08f, 0.08f);
         mediaPlayer.start();
         mediaPlayer.setLooping(true);
         if (sceneId != null)

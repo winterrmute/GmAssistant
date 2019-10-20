@@ -59,32 +59,36 @@
             app:layout_constraintTop_toBottomOf="@+id/set_music" />
 
     <TextView
-            android:id="@+id/music_name"
+            android:id="@+id/selected_ambience"
             android:layout_width="150dp"
             android:layout_height="33dp"
-            android:layout_marginStart="44dp"
             android:text="@string/trackname_placeholder"
-            app:layout_constraintStart_toEndOf="@+id/set_start_effect"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/set_music" />
+
+    <TextView
+            android:id="@+id/selected_effect"
+            android:layout_width="150dp"
+            android:layout_height="33dp"
+            android:text="@string/trackname_placeholder"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/set_light" />
 
     <TextView
-            android:id="@+id/backgroundSound"
+            android:id="@+id/selected_music"
             android:layout_width="150dp"
             android:layout_height="33dp"
-            android:layout_marginStart="76dp"
-            android:layout_marginTop="24dp"
             android:text="@string/trackname_placeholder"
-            app:layout_constraintStart_toEndOf="@+id/set_music"
-            app:layout_constraintTop_toBottomOf="@+id/textView5" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/set_start_effect" />
 
-    <TextView
-            android:id="@+id/textView5"
-            android:layout_width="150dp"
-            android:layout_height="33dp"
-            android:layout_marginStart="76dp"
-            android:layout_marginTop="20dp"
-            android:text="@string/trackname_placeholder"
-            app:layout_constraintStart_toEndOf="@+id/set_music"
-            app:layout_constraintTop_toBottomOf="@+id/music_name" />
+    <ImageView
+            android:id="@+id/selected_color"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="108dp"
+            android:layout_marginTop="28dp"
+            app:layout_constraintStart_toEndOf="@+id/set_light"
+            app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

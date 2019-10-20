@@ -218,7 +218,7 @@ public class TrackDao extends BaseDao
             .append(TABLE_NAME)
             .append(" SET ")
             .append(updateQueryBuilder(createObject(track)))
-            .append("' WHERE id = '")
+            .append(" WHERE id = '")
             .append(track.getId())
             .append("'");
         dbWrite.execSQL(query.toString());
