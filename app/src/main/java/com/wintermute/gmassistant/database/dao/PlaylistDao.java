@@ -8,7 +8,9 @@ import com.wintermute.gmassistant.database.DbManager;
 import com.wintermute.gmassistant.database.dto.Playlist;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -16,11 +18,11 @@ import java.util.stream.Collectors;
  *
  * @author wintermute
  */
-public class PlaylistDao
+public class PlaylistDao extends BaseDao
 {
     private static final String TABLE_NAME = "playlist";
-    private static final String ID_COLUMN = "id";
-    private static final String NAME_COLUMN = "name";
+    private static final String ID_KEY = "id";
+    private static final String NAME_KEY = "name";
 
     private SQLiteDatabase dbRead;
     private SQLiteDatabase dbWrite;
@@ -37,11 +39,20 @@ public class PlaylistDao
      */
     public long insert(Playlist playlist)
     {
-        ContentValues values = new ContentValues();
-        values.put(ID_COLUMN, playlist.getId());
-        values.put(NAME_COLUMN, playlist.getName());
-
+        Map<String, String> object = createObject(playlist);
+        ContentValues values = getContentValues(object);
         return dbWrite.insert(TABLE_NAME, null, values);
+    }
+
+    /**
+     * @return map containing non null values.
+     */
+    private Map<String, String> createObject(Playlist content)
+    {
+        HashMap<String, String> obj = new HashMap<>();
+        obj.put(ID_KEY, content.getId());
+        obj.put(NAME_KEY, content.getName());
+        return removeEmptyValues(obj);
     }
 
     /**
@@ -55,7 +66,7 @@ public class PlaylistDao
         StringBuilder query = new StringBuilder("SELECT * FROM ")
             .append(TABLE_NAME)
             .append("  WHERE ")
-            .append(ID_COLUMN)
+            .append(ID_KEY)
             .append("  =  '")
             .append(id)
             .append("'");
@@ -74,8 +85,8 @@ public class PlaylistDao
         while (cursor.moveToNext())
         {
             Playlist playlist = new Playlist();
-            playlist.setId(getColumnValue(cursor, ID_COLUMN));
-            playlist.setName(getColumnValue(cursor, NAME_COLUMN));
+            playlist.setId(getColumnValue(cursor, ID_KEY));
+            playlist.setName(getColumnValue(cursor, NAME_KEY));
             result.add(playlist);
         }
         return result;
@@ -98,9 +109,7 @@ public class PlaylistDao
     }
 
     /**
-     * Select all from playlist. TODO: Return list instead of cursor
-     *
-     * @return query result as Cursor.
+     * @return all existing playlists.
      */
     public ArrayList<Playlist> getAll()
     {
@@ -109,8 +118,6 @@ public class PlaylistDao
     }
 
     /**
-     * Get all records from table playlist as list.
-     *
      * @return list of playlist names.
      */
     public List<String> getPlaylistNames()
@@ -126,30 +133,20 @@ public class PlaylistDao
         StringBuilder query = new StringBuilder("UPDATE ")
             .append(TABLE_NAME)
             .append(" SET ")
-            .append(NAME_COLUMN)
-            .append(" = '")
-            .append(playlist.getName())
-            .append("' WHERE id = '")
+            .append(updateQueryBuilder(createObject(playlist)))
+            .append(" WHERE id = '")
             .append(playlist.getId())
             .append("'");
-        String qry = query.toString();
         dbWrite.execSQL(query.toString());
     }
 
     /**
      * Deletes row by id.
      *
-     * @param id of playlist to delete.
+     * @param id of playlist to deleteById.
      */
-    public void delete(String id)
+    public void deleteById(String id)
     {
-        StringBuilder query = new StringBuilder("DELETE FROM ")
-            .append(TABLE_NAME)
-            .append(" WHERE ")
-            .append(ID_COLUMN)
-            .append(" = '")
-            .append(id)
-            .append("'");
-        dbWrite.execSQL(query.toString());
+        delete(TABLE_NAME, ID_KEY, id);
     }
 }

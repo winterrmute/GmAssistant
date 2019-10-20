@@ -8,13 +8,15 @@ import com.wintermute.gmassistant.database.DbManager;
 import com.wintermute.gmassistant.database.dto.Track;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents database access object for track.
  *
  * @author wintermute
  */
-public class TrackDao
+public class TrackDao extends BaseDao
 {
     private static final String TABLE_NAME = "track";
     private static final String ID_KEY = "id";
@@ -45,12 +47,8 @@ public class TrackDao
             return computeIdIfAbsent(track.getName());
         } else
         {
-            ContentValues values = new ContentValues();
-            values.put(NAME_KEY, track.getName());
-            values.put(ARTIST_KEY, track.getArtist());
-            values.put(TAG_KEY, track.getTag());
-            values.put(PATH_KEY, track.getPath());
-
+            Map<String, String> object = createObject(track);
+            ContentValues values = getContentValues(object);
             dbWrite.insert(TABLE_NAME, null, values);
             return computeIdIfAbsent(track.getName());
         }
@@ -78,6 +76,20 @@ public class TrackDao
         {
             return null;
         }
+    }
+
+    /**
+     * @param track to create dao.
+     * @return map containing non null values.
+     */
+    private Map<String, String> createObject(Track track)
+    {
+        HashMap<String, String> obj = new HashMap<>();
+        obj.put(NAME_KEY, track.getName());
+        obj.put(ARTIST_KEY, track.getArtist());
+        obj.put(TAG_KEY, track.getTag());
+        obj.put(PATH_KEY, track.getPath());
+        return removeEmptyValues(obj);
     }
 
     /**
@@ -205,21 +217,7 @@ public class TrackDao
         StringBuilder query = new StringBuilder("UPDATE ")
             .append(TABLE_NAME)
             .append(" SET ")
-            .append(NAME_KEY)
-            .append(" = '")
-            .append(track.getName())
-            .append("', ")
-            .append(ARTIST_KEY)
-            .append(" = '")
-            .append(track.getArtist())
-            .append("', ")
-            .append(TAG_KEY)
-            .append(" = '")
-            .append(track.getTag())
-            .append("', ")
-            .append(PATH_KEY)
-            .append(" = '")
-            .append(track.getPath())
+            .append(updateQueryBuilder(createObject(track)))
             .append("' WHERE id = '")
             .append(track.getId())
             .append("'");
@@ -233,13 +231,6 @@ public class TrackDao
      */
     public void deleteById(String id)
     {
-        StringBuilder query = new StringBuilder("DELETE FROM ")
-            .append(TABLE_NAME)
-            .append(" WHERE ")
-            .append(ID_KEY)
-            .append(" = '")
-            .append(id)
-            .append("'");
-        dbWrite.execSQL(query.toString());
+        delete(TABLE_NAME, ID_KEY, id);
     }
 }

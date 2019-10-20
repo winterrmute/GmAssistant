@@ -8,9 +8,11 @@ import com.wintermute.gmassistant.database.DbManager;
 import com.wintermute.gmassistant.database.dto.PlaylistContent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class PlaylistContentDao
+public class PlaylistContentDao extends BaseDao
 {
     private static final String TABLE_NAME = "playlist_content";
     private static final String PLAYLIST_KEY = "playlist";
@@ -27,6 +29,19 @@ public class PlaylistContentDao
         dbWrite = dbManager.getWritableDatabase();
     }
 
+
+    /**
+     * @return map containing non null values.
+     */
+    private Map<String, String> createObject(PlaylistContent content)
+    {
+        HashMap<String, String> obj = new HashMap<>();
+        obj.put(PLAYLIST_KEY, content.getPlaylist());
+        obj.put(TRACK_KEY, content.getTrack());
+        obj.put(SCENE_KEY, content.getScene());
+        return removeEmptyValues(obj);
+    }
+
     /**
      * Insert row into playlist_content table.
      *
@@ -34,10 +49,9 @@ public class PlaylistContentDao
      */
     public void insert(PlaylistContent content)
     {
-        ContentValues values = new ContentValues();
-        values.put(PLAYLIST_KEY, content.getPlaylist());
-        values.put(TRACK_KEY, content.getTrack());
-        values.put(SCENE_KEY, content.getScene());
+        Map<String, String> object = createObject(content);
+        ContentValues values = getContentValues(object);
+        getContentValues(object);
         dbWrite.insert(TABLE_NAME, null, values);
     }
 
@@ -140,6 +154,11 @@ public class PlaylistContentDao
         dbWrite.execSQL(query.toString());
     }
 
+    /**
+     * @param playlist to get its content
+     * @param trackId to identify from playlist content
+     * @return sceneId for selected playlist
+     */
     public String getSceneIdForTrackInPlaylist(String playlist, String trackId)
     {
         StringBuilder query = new StringBuilder("SELECT scene FROM ")
@@ -159,15 +178,7 @@ public class PlaylistContentDao
      */
     public void deleteByPlaylistId(String playlistId)
     {
-
-        StringBuilder query = new StringBuilder("DELETE FROM ")
-            .append(TABLE_NAME)
-            .append(" WHERE ")
-            .append(PLAYLIST_KEY)
-            .append(" = '")
-            .append(playlistId)
-            .append("'");
-        dbWrite.execSQL(query.toString());
+        delete(TABLE_NAME, PLAYLIST_KEY, playlistId);
     }
 
     /**
@@ -177,7 +188,6 @@ public class PlaylistContentDao
      */
     public void deleteTrackFromPlaylist(String playlistId, String trackId)
     {
-
         StringBuilder query = new StringBuilder("DELETE FROM ")
             .append(TABLE_NAME)
             .append(" WHERE ")

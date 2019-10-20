@@ -48,7 +48,7 @@ public class PlaylistDaoTest
         dao.update(playlist);
         assertEquals("Lolz", dao.getPlaylist(playlist.getId()).getName());
 
-        dao.delete(playlist);
+        dao.deleteById(playlist.getId());
         assertEquals(0, dao.getPlaylistNames().size());
     }
 

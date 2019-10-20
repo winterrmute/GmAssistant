@@ -120,9 +120,6 @@ public class PlaylistContentPanel extends AppCompatActivity
     {
         PlaylistContentDao dao = new PlaylistContentDao(this);
         String sceneId = dao.getSceneIdForTrackInPlaylist(playlistId, allTracks.get(position).getId());
-
-        List<String> opts = new ArrayList<>();
-        opts.add("add new");
         if (null != sceneId)
         {
             return new String[] {"edit", "add new"};

@@ -77,10 +77,10 @@ public class PlaylistPanel extends AppCompatActivity
                 renderPlaylist();
             } else if ("delete".equals(selected))
             {
-                playlistDao.delete(playlists.get(position).getId());
+                playlistDao.deleteById(playlists.get(position).getId());
                 PlaylistContentDao pcd = new PlaylistContentDao(PlaylistPanel.this);
                 pcd.deleteByPlaylistId(playlists.get(position).getId());
-                playlistDao.delete(playlists.get(position).getId());
+                playlistDao.deleteById(playlists.get(position).getId());
                 renderPlaylist();
             }
         }

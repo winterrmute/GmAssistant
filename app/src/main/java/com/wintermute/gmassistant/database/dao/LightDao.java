@@ -9,6 +9,8 @@ import com.wintermute.gmassistant.database.dto.Light;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents Light Scene data access object.
@@ -16,7 +18,7 @@ import java.util.ArrayList;
  * @author wintermute
  */
 @Data
-public class LightDao
+public class LightDao extends BaseDao
 {
     private static final String TABLE_NAME = "light";
     private static final String ID_KEY = "id";
@@ -33,6 +35,7 @@ public class LightDao
         dbWrite = dbManager.getWritableDatabase();
     }
 
+
     /**
      * Create new light scene.
      *
@@ -41,11 +44,8 @@ public class LightDao
      */
     public long insert(Light light)
     {
-
-        ContentValues values = new ContentValues();
-        values.put(COLOR_KEY, light.getColor());
-        values.put(BRIGHTNESS_KEY, light.getBrightness());
-
+        Map<String, String> object = createObject(light);
+        ContentValues values = getContentValues(object);
         return dbWrite.insert(TABLE_NAME, null, values);
     }
 
@@ -75,6 +75,18 @@ public class LightDao
             result.add(light);
         }
         return result;
+    }
+
+    /**
+     * @return map containing non null values.
+     */
+    private Map<String, String> createObject(Light target)
+    {
+        HashMap<String, String> obj = new HashMap<>();
+        obj.put(ID_KEY, target.getId());
+        obj.put(COLOR_KEY, target.getColor());
+        obj.put(BRIGHTNESS_KEY, target.getBrightness());
+        return removeEmptyValues(obj);
     }
 
     /**
