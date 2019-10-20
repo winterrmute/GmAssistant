@@ -57,7 +57,7 @@ public class AmbiencePlayerService extends BasePlayerService
 
         return Service.START_NOT_STICKY;
     }
-    
+
     @Override
     public void onDestroy(){
         mediaPlayer.stop();

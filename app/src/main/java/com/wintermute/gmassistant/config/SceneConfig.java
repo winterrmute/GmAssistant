@@ -46,6 +46,7 @@ public class SceneConfig extends AppCompatActivity
     private TextView selectedEffect;
     private TextView selectedMusic;
     private TextView selectedAmbience;
+    private ImageView selectedColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -56,6 +57,7 @@ public class SceneConfig extends AppCompatActivity
         selectedEffect = findViewById(R.id.selected_effect);
         selectedMusic = findViewById(R.id.selected_music);
         selectedAmbience = findViewById(R.id.selected_ambience);
+        selectedColor = findViewById(R.id.selected_color);
 
         boolean addSceneToTrack = getIntent().getBooleanExtra("addSceneToTrack", false);
         editScene = getIntent().getBooleanExtra("edit", false);
@@ -147,17 +149,25 @@ public class SceneConfig extends AppCompatActivity
         if (null != scene)
         {
             nameField.setText(scene.getName());
+            if (null != scene.getLight()) {
+                LightDao dao = new LightDao(this);
+                selectedColor.setImageBitmap(extractColor(dao.getById(scene.getLight()).getColor()));
+                dao.close();
+            }
             if (null != scene.getStartEffect())
             {
                 startEffect = trackDao.getById(scene.getStartEffect());
+                selectedEffect.setText(startEffect.getName());
             }
             if (null != scene.getBackgroundMusic())
             {
                 music = trackDao.getById(scene.getBackgroundMusic());
+                selectedMusic.setText(music.getName());
             }
             if (null != scene.getBackgroundAmbience())
             {
                 ambience = trackDao.getById(scene.getBackgroundAmbience());
+                selectedAmbience.setText(ambience.getName());
             }
         } else
         {
@@ -288,8 +298,7 @@ public class SceneConfig extends AppCompatActivity
                 LightDao dao = new LightDao(this);
                 dto.setId(String.valueOf(dao.insert(dto)));
                 light = dao.getById(dto.getId());
-                ImageView image = findViewById(R.id.selected_color);
-                image.setImageBitmap(extractColor(color));
+                selectedColor.setImageBitmap(extractColor(color));
             }
         }
     }

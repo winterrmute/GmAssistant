@@ -3,9 +3,7 @@ package com.wintermute.gmassistant.database.dao;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import com.google.common.collect.Maps;
-import com.wintermute.gmassistant.database.dto.Scene;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
@@ -82,4 +80,17 @@ abstract class BaseDao
             .append("'");
         dbWrite.execSQL(query.toString());
     }
+
+    /**
+     * Cloeses db con.
+     */
+    public void close(){
+        if (null != dbRead) {
+            dbRead.close();
+        }
+        if (null != dbWrite) {
+            dbWrite.close();
+        }
+    }
+
 }
