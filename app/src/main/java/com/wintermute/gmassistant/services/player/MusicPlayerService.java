@@ -8,8 +8,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
-import com.wintermute.gmassistant.database.dao.SceneDao;
-import com.wintermute.gmassistant.database.dto.Scene;
+import com.wintermute.gmassistant.services.notifications.MusicPlayerReceiver;
 
 /**
  * Handles the background music player.
@@ -20,6 +19,7 @@ public class MusicPlayerService extends BasePlayerService
     implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener
 {
 
+    public static final String CHANNEL_ID = "Music";
     MediaPlayer mediaPlayer;
 
     @Nullable
@@ -55,6 +55,7 @@ public class MusicPlayerService extends BasePlayerService
     {
         getExtras(intent);
         mediaPlayer.stop();
+        startForeground(2, createNotification(intent, "Background Music", CHANNEL_ID,  MusicPlayerReceiver.class));
         mediaPlayer = create(this, Uri.parse(getTrackPath(trackId)));
         mediaPlayer.setVolume(0.08f, 0.08f);
         mediaPlayer.start();

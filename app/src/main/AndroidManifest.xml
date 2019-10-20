@@ -40,6 +40,9 @@
         <service android:name=".services.player.MusicPlayerService" />
         <service android:name=".services.player.AmbiencePlayerService" />
         <service android:name=".services.player.EffectPlayerService" />
+
+        <receiver android:name=".services.notifications.MusicPlayerReceiver"/>
+        <receiver android:name=".services.notifications.AmbiencePlayerReceiver"/>
     </application>
 
 </manifest>

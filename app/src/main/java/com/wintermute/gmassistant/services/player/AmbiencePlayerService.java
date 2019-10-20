@@ -8,6 +8,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
+import com.wintermute.gmassistant.services.notifications.AmbiencePlayerReceiver;
 
 /**
  * Handles the ambient sound player.
@@ -18,6 +19,7 @@ public class AmbiencePlayerService extends BasePlayerService
     implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener
 {
 
+    private static final String CHANNEL_ID = "Ambience";
     MediaPlayer mediaPlayer;
 
     @Nullable
@@ -50,6 +52,7 @@ public class AmbiencePlayerService extends BasePlayerService
     {
         getExtras(intent);
         mediaPlayer.stop();
+        startForeground(1, createNotification(intent, "Ambience sound", CHANNEL_ID,  AmbiencePlayerReceiver.class));
         mediaPlayer = create(this, Uri.parse(getTrackPath(trackId)));
         mediaPlayer.setVolume(0.03f, 0.03f);
         mediaPlayer.start();
