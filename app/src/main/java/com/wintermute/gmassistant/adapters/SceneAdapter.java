@@ -74,7 +74,7 @@ public class SceneAdapter extends BaseAdapter
 
         startEffect.setText(
             "Start: " + getTrackName(target.getStartEffect()));
-        music.setText("Next: " + getTrackName(target.getBackgroundMusic()));
+        music.setText("Music: " + getTrackName(target.getBackgroundMusic()));
         ambience.setText("Ambience: " + getTrackName(target.getBackgroundAmbience()));
         result.setTag(position);
         return result;

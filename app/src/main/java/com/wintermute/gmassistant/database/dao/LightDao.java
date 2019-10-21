@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.gmassistant.database.DbManager;
 import com.wintermute.gmassistant.database.dto.Light;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import java.util.Map;
  * @author wintermute
  */
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class LightDao extends BaseDao
 {
     private static final String TABLE_NAME = "light";

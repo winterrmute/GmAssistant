@@ -37,6 +37,7 @@ dependencies {
 
     //lombok
     implementation 'org.projectlombok:lombok:1.18.10'
+    implementation 'com.google.android.material:material:1.0.0'
     annotationProcessor 'org.projectlombok:lombok:1.18.10'
 
     //REST Client

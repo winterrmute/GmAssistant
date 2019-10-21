@@ -18,7 +18,13 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
-        <activity android:theme="@android:style/Theme.Dialog" android:name=".dialogs.ListDialog"></activity>
+        <activity
+                android:name=".client.panel.ControlPanel"
+                android:label="@string/title_activity_control_panel"
+                android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+                android:name=".dialogs.ListDialog"
+                android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".client.panel.ScenePanel" />
         <activity android:name=".client.panel.LightPanel" />
         <activity android:name=".client.panel.TrackPanel" />
@@ -41,8 +47,8 @@
         <service android:name=".services.player.AmbiencePlayerService" />
         <service android:name=".services.player.EffectPlayerService" />
 
-        <receiver android:name=".services.notifications.MusicPlayerReceiver"/>
-        <receiver android:name=".services.notifications.AmbiencePlayerReceiver"/>
+        <receiver android:name=".services.notifications.MusicPlayerReceiver" />
+        <receiver android:name=".services.notifications.AmbiencePlayerReceiver" />
     </application>
 
 </manifest>

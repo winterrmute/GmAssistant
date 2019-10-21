@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
+import com.wintermute.gmassistant.client.panel.ControlPanel;
 import com.wintermute.gmassistant.client.panel.LightPanel;
 import com.wintermute.gmassistant.client.panel.PlaylistPanel;
 import com.wintermute.gmassistant.client.panel.ScenePanel;
@@ -24,6 +25,9 @@ public class GmAssistant extends AppCompatActivity
         setContentView(R.layout.activity_gm_assistant);
 
         grantUserPermission();
+
+        Button gmPanel = findViewById(R.id.gm_panel);
+        gmPanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, ControlPanel.class)));
 
         Button playlistPanel = findViewById(R.id.manage_playlists);
         playlistPanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, PlaylistPanel.class)));
