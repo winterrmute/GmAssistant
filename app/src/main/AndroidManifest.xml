@@ -19,10 +19,6 @@
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
         <activity
-                android:name=".client.panel.ControlPanel"
-                android:label="@string/title_activity_control_panel"
-                android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity
                 android:name=".dialogs.ListDialog"
                 android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".client.panel.ScenePanel" />
