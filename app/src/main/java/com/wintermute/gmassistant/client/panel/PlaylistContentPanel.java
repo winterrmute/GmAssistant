@@ -8,9 +8,7 @@ import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.TrackAdapter;
 import com.wintermute.gmassistant.config.SceneConfig;
 import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
-import com.wintermute.gmassistant.database.dao.SceneDao;
 import com.wintermute.gmassistant.database.dao.TrackDao;
-import com.wintermute.gmassistant.database.dto.Scene;
 import com.wintermute.gmassistant.database.dto.Track;
 import com.wintermute.gmassistant.dialogs.ListDialog;
 import com.wintermute.gmassistant.handlers.PlayerHandler;
@@ -89,8 +87,7 @@ public class PlaylistContentPanel extends AppCompatActivity
                     openDialog(prepareSceneConfigDialog());
                     break;
                 case "edit":
-                    String sceneId =
-                        dao.getSceneIdForTrackInPlaylist(playlistId, allTracks.get(position).getId());
+                    String sceneId = dao.getSceneIdForTrackInPlaylist(playlistId, allTracks.get(position).getId());
                     Intent sceneConfig = new Intent(PlaylistContentPanel.this, SceneConfig.class);
                     sceneConfig
                         .putExtra("edit", true)

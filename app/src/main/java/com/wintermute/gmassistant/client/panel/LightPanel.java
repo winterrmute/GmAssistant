@@ -1,7 +1,7 @@
 package com.wintermute.gmassistant.client.panel;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
 
 public class LightPanel extends AppCompatActivity

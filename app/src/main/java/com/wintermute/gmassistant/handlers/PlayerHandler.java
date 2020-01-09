@@ -7,8 +7,8 @@ import com.wintermute.gmassistant.database.dao.SceneDao;
 import com.wintermute.gmassistant.database.dao.TrackDao;
 import com.wintermute.gmassistant.database.dto.Scene;
 import com.wintermute.gmassistant.services.player.AmbiencePlayerService;
-import com.wintermute.gmassistant.services.player.MusicPlayerService;
 import com.wintermute.gmassistant.services.player.EffectPlayerService;
+import com.wintermute.gmassistant.services.player.MusicPlayerService;
 
 /**
  * Manages triggering of player services.

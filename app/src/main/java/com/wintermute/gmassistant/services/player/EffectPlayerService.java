@@ -8,7 +8,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
-import com.wintermute.gmassistant.database.dao.SceneDao;
 
 public class EffectPlayerService extends BasePlayerService
     implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener
@@ -60,9 +59,7 @@ public class EffectPlayerService extends BasePlayerService
                 mediaPlayer.setOnCompletionListener(mp ->
                 {
                     Intent musicService = new Intent(getBaseContext(), MusicPlayerService.class);
-                    musicService
-                        .putExtra("trackId", getMusic(sceneId))
-                        .putExtra("sceneId", sceneId);
+                    musicService.putExtra("trackId", getMusic(sceneId)).putExtra("sceneId", sceneId);
                     startService(musicService);
                 });
             }
@@ -71,13 +68,14 @@ public class EffectPlayerService extends BasePlayerService
     }
 
     @Override
-    public void onCompletion(MediaPlayer mp)
+    public void onDestroy()
     {
-
+        mediaPlayer.stop();
     }
 
     @Override
-    public void onDestroy(){
-        mediaPlayer.stop();
+    public void onCompletion(MediaPlayer mp)
+    {
+
     }
 }

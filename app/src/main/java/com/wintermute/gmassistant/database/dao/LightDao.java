@@ -37,7 +37,6 @@ public class LightDao extends BaseDao
         dbWrite = dbManager.getWritableDatabase();
     }
 
-
     /**
      * Create new light scene.
      *

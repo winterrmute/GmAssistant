@@ -20,8 +20,7 @@ public class ListDialog extends Activity
 
         ListView optsView = findViewById(R.id.opts);
         ArrayList<String> opts = getIntent().getStringArrayListExtra("opts");
-        ArrayAdapter<String> itemsAdapter =
-            new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, opts);
+        ArrayAdapter<String> itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, opts);
         optsView.setAdapter(itemsAdapter);
 
         optsView.setOnItemClickListener((parent, view, position, id) ->
@@ -32,7 +31,8 @@ public class ListDialog extends Activity
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed()
+    {
         finish();
     }
 }

@@ -15,14 +15,14 @@ abstract class BaseDao
     SQLiteDatabase dbWrite;
 
     /**
-     * @param updateValues map containing changed values.
-     * @return query containing changed values.
+     * @param dbQueryParams containing key value pairs to process in db.
+     * @return database query.
      */
-    StringBuilder updateQueryBuilder(Map<String, String> updateValues)
+    StringBuilder updateQueryBuilder(Map<String, String> dbQueryParams)
     {
-        updateValues = removeEmptyValues(updateValues);
+        dbQueryParams = Maps.filterValues(dbQueryParams, Objects::nonNull);
         StringBuilder query = new StringBuilder();
-        Iterator<Map.Entry<String, String>> it = updateValues.entrySet().iterator();
+        Iterator<Map.Entry<String, String>> it = dbQueryParams.entrySet().iterator();
         while (it.hasNext())
         {
             Map.Entry<String, String> entry = it.next();
@@ -84,13 +84,15 @@ abstract class BaseDao
     /**
      * Cloeses db con.
      */
-    public void close(){
-        if (null != dbRead) {
+    public void close()
+    {
+        if (null != dbRead)
+        {
             dbRead.close();
         }
-        if (null != dbWrite) {
+        if (null != dbWrite)
+        {
             dbWrite.close();
         }
     }
-
 }

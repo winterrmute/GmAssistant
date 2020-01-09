@@ -14,7 +14,6 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "androidx.test.ext.junit.runners.AndroidJUnit4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -49,12 +48,20 @@ dependencies {
     //Guava
     implementation 'com.google.guava:guava:28.1-android'
 
-//    testImplementation 'org.assertj:assertj-core:3.13.2'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.hamcrest:hamcrest-library:2.2'
+
+    androidTestImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+
+//    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
+
+    //    testImplementation 'org.assertj:assertj-core:3.13.2'
 //    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
 //    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
-
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
 }

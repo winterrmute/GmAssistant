@@ -55,7 +55,7 @@ public class MusicPlayerService extends BasePlayerService
     {
         getExtras(intent);
         mediaPlayer.stop();
-        startForeground(2, createNotification(intent, "Background Music", CHANNEL_ID,  MusicPlayerReceiver.class));
+        startForeground(2, createNotification(intent, "Background Music", CHANNEL_ID, MusicPlayerReceiver.class));
         mediaPlayer = create(this, Uri.parse(getTrackPath(trackId)));
         mediaPlayer.setVolume(0.08f, 0.08f);
         mediaPlayer.start();
@@ -65,7 +65,8 @@ public class MusicPlayerService extends BasePlayerService
             changeLight(sceneId);
             stopService(new Intent(getBaseContext(), AmbiencePlayerService.class));
             String ambience = getAmbience(sceneId);
-            if (null != ambience) {
+            if (null != ambience)
+            {
                 Intent backgroundService = new Intent(getBaseContext(), AmbiencePlayerService.class);
                 backgroundService.putExtra("trackId", ambience);
                 startService(backgroundService);
@@ -76,7 +77,8 @@ public class MusicPlayerService extends BasePlayerService
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy()
+    {
         mediaPlayer.stop();
     }
 }

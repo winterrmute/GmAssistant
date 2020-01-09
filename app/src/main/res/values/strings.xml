@@ -3,8 +3,8 @@
     <string name="gm_panel">gm panel</string>
     <string name="manage_playlists">Playlists</string>
     <string name="manage_tracks">Audio files</string>
-    <string name="manage_lights">Lights</string>
     <string name="manage_scenes">Scenes</string>
+    <string name="manage_lights">Lights</string>
 
     <!--  PlaylistPanel  -->
     <string name="app_name">GM Assistant</string>
@@ -41,11 +41,5 @@
 
     <!--  LightConfig  -->
     <string name="submit_light">Submit</string>
-
-    <string name="title_activity_control_panel">ControlPanel</string>
-    <string name="tab_text_0">Scenes</string>
-    <string name="tab_text_1">Effect</string>
-    <string name="tab_text_2">Music</string>
-    <string name="tab_text_3">Ambiente</string>
 
 </resources>

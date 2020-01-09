@@ -53,7 +53,8 @@ public class ObjectHandler
     {
         FileBrowserService fs = new FileBrowserService();
         List<File> tracksFound = fs.collectTracks(path);
-        for (File track: tracksFound) {
+        for (File track : tracksFound)
+        {
             createPlaylistContent(playlist, createTrack(track));
         }
     }

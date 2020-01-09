@@ -149,7 +149,8 @@ public class SceneConfig extends AppCompatActivity
         if (null != scene)
         {
             nameField.setText(scene.getName());
-            if (null != scene.getLight()) {
+            if (null != scene.getLight())
+            {
                 LightDao dao = new LightDao(this);
                 selectedColor.setImageBitmap(extractColor(dao.getById(scene.getLight()).getColor()));
                 dao.close();

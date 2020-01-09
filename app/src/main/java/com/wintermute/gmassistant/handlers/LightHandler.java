@@ -46,9 +46,8 @@ public class LightHandler
     {
         try
         {
-            return new JSONObject(
-                "{ \"on\":true, \"bri\": 10, \"xy\": [ 0.3454, 0.3557 ], \"bri\": 255, "
-                    + "\"transitiontime\": 1, \"hue\": " + "46920 }");
+            return new JSONObject("{ \"on\":true, \"bri\": 10, \"xy\": [ 0.3454, 0.3557 ], \"bri\": 255, "
+                + "\"transitiontime\": 1, \"hue\": " + "46920 }");
         } catch (JSONException e)
         {
             e.printStackTrace();

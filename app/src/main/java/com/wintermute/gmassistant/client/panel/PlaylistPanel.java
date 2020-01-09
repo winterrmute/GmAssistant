@@ -37,7 +37,7 @@ public class PlaylistPanel extends AppCompatActivity
 
         init();
 
-        Button addPlaylist = findViewById(R.id.playlist);
+        Button addPlaylist = findViewById(R.id.add_playlist);
         addPlaylist.setOnClickListener(v ->
         {
             Intent createPlaylist = new Intent(PlaylistPanel.this, AddNewPlaylist.class);

@@ -7,8 +7,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
-import com.wintermute.gmassistant.database.dto.Playlist;
 import com.wintermute.gmassistant.database.ObjectHandler;
+import com.wintermute.gmassistant.database.dto.Playlist;
 
 /**
  * Represents activity in which the user can create new playlist.

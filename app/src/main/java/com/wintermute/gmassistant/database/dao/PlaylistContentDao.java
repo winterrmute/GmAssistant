@@ -29,7 +29,6 @@ public class PlaylistContentDao extends BaseDao
         dbWrite = dbManager.getWritableDatabase();
     }
 
-
     /**
      * @return map containing non null values.
      */

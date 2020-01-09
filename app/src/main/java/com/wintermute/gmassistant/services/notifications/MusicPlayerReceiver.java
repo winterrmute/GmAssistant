@@ -8,8 +8,8 @@ import com.wintermute.gmassistant.services.player.MusicPlayerService;
 public class MusicPlayerReceiver extends BroadcastReceiver
 {
     @Override
-    public void onReceive(Context ctx, Intent intent) {
+    public void onReceive(Context ctx, Intent intent)
+    {
         ctx.stopService(new Intent(ctx, MusicPlayerService.class));
     }
-
 }

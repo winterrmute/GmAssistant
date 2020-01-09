@@ -6,6 +6,8 @@ import java.util.List;
 
 public class FileBrowserService
 {
+    private List<File> result = new ArrayList<>();
+
     /**
      * Scans directory for files.
      *
@@ -29,8 +31,6 @@ public class FileBrowserService
         }
         return browsedFiles;
     }
-
-    private List<File> result = new ArrayList<>();
 
     /**
      * Scans directory for audio tracks.
