@@ -31,7 +31,7 @@ public class AddNewPlaylist extends AppCompatActivity
             startActivityForResult(fileBrowser, 1);
         });
 
-        Button submit = findViewById(R.id.submit);
+        Button submit = findViewById(R.id.create_playlist_submit);
         submit.setOnClickListener(v ->
         {
             EditText playlistName = findViewById(R.id.playlist_name);

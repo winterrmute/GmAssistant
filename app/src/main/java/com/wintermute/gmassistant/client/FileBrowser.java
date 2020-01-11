@@ -48,7 +48,7 @@ public class FileBrowser extends AppCompatActivity
             }
         });
 
-        Button selectDirectory = findViewById(R.id.select_directory);
+        Button selectDirectory = findViewById(R.id.select_current_directory);
         selectDirectory.setOnClickListener((v) ->
         {
             setResult(RESULT_OK, new Intent().putExtra("path", path.toString()));
