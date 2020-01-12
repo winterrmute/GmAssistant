@@ -63,22 +63,21 @@ abstract class BaseDao
     }
 
     /**
-     * Delete row from table.
+     * @param tableName to delete an item from.
+     * @param key is the row name in defined database table.
+     * @param value to identify element to delete.
      *
-     * @param tableName to deleteById the row from.
-     * @param key is the unique element id.
-     * @param value of id to remove.
+     * @return database delete query by specified key for element as String.
      */
-    public void delete(String tableName, String key, String value)
+    public String getDeleteQuery(String tableName, String key, String value)
     {
-        StringBuilder query = new StringBuilder("DELETE FROM ")
+        return new StringBuilder("DELETE FROM ")
             .append(tableName)
             .append(" WHERE ")
             .append(key)
             .append(" = '")
             .append(value)
-            .append("'");
-        dbWrite.execSQL(query.toString());
+            .append("'").toString();
     }
 
     /**

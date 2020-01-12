@@ -177,7 +177,7 @@ public class PlaylistContentDao extends BaseDao
      */
     public void deleteByPlaylistId(String playlistId)
     {
-        delete(TABLE_NAME, PLAYLIST_KEY, playlistId);
+        dbWrite.execSQL(getDeleteQuery(TABLE_NAME, PLAYLIST_KEY, playlistId));
     }
 
     /**

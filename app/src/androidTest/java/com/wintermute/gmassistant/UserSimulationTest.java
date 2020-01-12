@@ -35,7 +35,7 @@ public class UserSimulationTest
         clickOn(R.id.manage_playlists, R.id.add_playlist);
         onView(withId(R.id.playlist_name)).perform(typeText(TEST_PLAYLIST));
         clickOn(R.id.browse_device);
-        clickOn("files", "DeadLands", "gunslinger");
+        clickOn("files");
         clickOn(R.id.select_current_directory, R.id.create_playlist_submit);
         ViewInteraction createdPlaylist = onView(withText(TEST_PLAYLIST));
         createdPlaylist.check(matches(isDisplayed()));
