@@ -51,8 +51,7 @@ public class PlaylistContentPanel extends AppCompatActivity
         songView.setOnItemLongClickListener((parent, view, position, id) ->
         {
             this.position = position;
-            openDialog("set tag: \"music\"", "set tag: \"ambience\"", "set tag: \"effect\"", "manage scene",
-                "delete");
+            openDialog("set tag: \"music\"", "set tag: \"ambience\"", "set tag: \"effect\"", "manage scene", "delete");
             return true;
         });
     }

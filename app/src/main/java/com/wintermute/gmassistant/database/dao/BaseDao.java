@@ -66,7 +66,6 @@ abstract class BaseDao
      * @param tableName to delete an item from.
      * @param key is the row name in defined database table.
      * @param value to identify element to delete.
-     *
      * @return database delete query by specified key for element as String.
      */
     public String getDeleteQuery(String tableName, String key, String value)
@@ -77,7 +76,8 @@ abstract class BaseDao
             .append(key)
             .append(" = '")
             .append(value)
-            .append("'").toString();
+            .append("'")
+            .toString();
     }
 
     /**

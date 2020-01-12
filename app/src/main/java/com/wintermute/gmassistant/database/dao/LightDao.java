@@ -19,7 +19,7 @@ import java.util.Map;
  * @author wintermute
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class LightDao extends BaseDao
 {
     private static final String TABLE_NAME = "light";
