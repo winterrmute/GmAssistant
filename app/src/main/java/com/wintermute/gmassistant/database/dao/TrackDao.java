@@ -9,6 +9,7 @@ import com.wintermute.gmassistant.database.dto.Track;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -125,6 +126,24 @@ public class TrackDao extends BaseDao
     public Track getTrackByPath(String path)
     {
         return getTrack(PATH_KEY, path);
+    }
+
+    /**
+     * Get track by set tag.
+     *
+     * @param tag of track to find.
+     * @return selected track.
+     */
+    public List<Track> getTracksByTag(String tag)
+    {
+        StringBuilder query = new StringBuilder("SELECT * FROM ")
+            .append(TABLE_NAME)
+            .append(" WHERE ")
+            .append(TAG_KEY)
+            .append("='")
+            .append(tag)
+            .append("'");
+        return mapObject(dbRead.rawQuery(query.toString(), null));
     }
 
     /**

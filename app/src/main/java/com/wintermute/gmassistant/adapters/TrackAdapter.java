@@ -56,7 +56,7 @@ public class TrackAdapter extends BaseAdapter
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        LinearLayout result = (LinearLayout) inflater.inflate(R.layout.song, parent, false);
+        LinearLayout result = (LinearLayout) inflater.inflate(R.layout.audio_file, parent, false);
         TextView trackView = result.findViewById(R.id.title);
         TextView artistView = result.findViewById(R.id.tag);
         Track target = tracks.get(position);

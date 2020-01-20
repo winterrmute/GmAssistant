@@ -18,6 +18,12 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
+        <activity android:name=".client.panel.AudioFilePanel"></activity>
+        <activity android:name=".client.panel.AudioFileActivity" />
+        <activity
+                android:name=".slider.AudioFilePanel"
+                android:label="@string/title_activity_audio_file_panel"
+                android:theme="@style/AppTheme.NoActionBar" />
         <activity
                 android:name=".dialogs.ListDialog"
                 android:theme="@android:style/Theme.Dialog" />
