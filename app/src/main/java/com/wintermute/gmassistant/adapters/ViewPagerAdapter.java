@@ -8,8 +8,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import com.wintermute.gmassistant.R;
-import com.wintermute.gmassistant.database.dao.TrackDao;
 import com.wintermute.gmassistant.database.dto.Track;
+import com.wintermute.gmassistant.handlers.PlayerHandler;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -27,11 +28,11 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
         this.audioFilesSortedByTags = data;
     }
 
+    @NotNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    public ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType)
     {
-        View view = mInflater.inflate(R.layout.item_viewpager, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(mInflater.inflate(R.layout.item_viewpager, parent, false));
     }
 
     @Override
@@ -40,6 +41,12 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
         List<Track> currentlyViewed = audioFilesSortedByTags.get(position);
         TrackAdapter adapter = new TrackAdapter(ctx, currentlyViewed);
         holder.myView.setAdapter(adapter);
+
+        holder.myView.setOnItemClickListener((parent, view, pos, id) ->
+        {
+            PlayerHandler handler = new PlayerHandler(ctx);
+            handler.startPlaying(currentlyViewed.get(pos));
+        });
     }
 
     @Override
@@ -49,7 +56,7 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
     }
 
     // stores and recycles views as they are scrolled off screen
-    public class ViewHolder extends RecyclerView.ViewHolder
+    class ViewHolder extends RecyclerView.ViewHolder
     {
         ListView myView;
         RelativeLayout relativeLayout;

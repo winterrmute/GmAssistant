@@ -6,6 +6,7 @@ import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
 import com.wintermute.gmassistant.database.dao.SceneDao;
 import com.wintermute.gmassistant.database.dao.TrackDao;
 import com.wintermute.gmassistant.database.dto.Scene;
+import com.wintermute.gmassistant.database.dto.Track;
 import com.wintermute.gmassistant.services.player.AmbiencePlayerService;
 import com.wintermute.gmassistant.services.player.EffectPlayerService;
 import com.wintermute.gmassistant.services.player.MusicPlayerService;
@@ -56,6 +57,16 @@ public class PlayerHandler
         PlaylistContentDao dao = new PlaylistContentDao(ctx);
         String sceneId = dao.getSceneId(playlistId, trackId);
         Intent player = prepareIntent(trackId, sceneId);
+        ctx.startService(player);
+    }
+
+    /**
+     * Starts player service.
+     * @param track to start playing
+     */
+    public void startPlaying(Track track){
+        Intent player = new Intent(ctx, specifyServicePlayer(track.getId()));
+        player.putExtra("trackId", track.getId());
         ctx.startService(player);
     }
 
