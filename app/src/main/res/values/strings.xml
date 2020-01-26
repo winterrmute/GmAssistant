@@ -24,7 +24,7 @@
     <string name="end">End</string>
 
     <!--  FileBrowser  -->
-    <string name="browse_back">../</string>
+    <string name="browse_back">previous directory</string>
     <string name="select_directory">Select current directory</string>
 
     <!--  SceneConfig  -->
@@ -42,7 +42,6 @@
     <!--  LightConfig  -->
     <string name="submit_light">Submit</string>
     <string name="title_activity_audio_file_panel">AudioFilePanel</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
+    <string name="add_files_with_tag">add files in this category</string>
 
 </resources>

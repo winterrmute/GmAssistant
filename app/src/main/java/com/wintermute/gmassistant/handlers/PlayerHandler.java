@@ -67,6 +67,17 @@ public class PlayerHandler
     public void startPlaying(Track track){
         Intent player = new Intent(ctx, specifyServicePlayer(track.getId()));
         player.putExtra("trackId", track.getId());
+
+        if (track.getTag().equals("ambience"))
+        {
+            player = new Intent(ctx, AmbiencePlayerService.class);
+        } else if (track.getTag().equals("effect"))
+        {
+            player = new Intent(ctx, EffectPlayerService.class);
+        } else
+        {
+            player = new Intent(ctx, EffectPlayerService.class);
+        }
         ctx.startService(player);
     }
 
@@ -75,7 +86,8 @@ public class PlayerHandler
      *
      * @param trackId of track which should be played.
      * @param sceneId of scene that should be triggered
-     * @return
+     * @return intent prepared to start
+     * @deprecated will will be removed in future
      */
     private Intent prepareIntent(String trackId, String sceneId)
     {
@@ -88,6 +100,8 @@ public class PlayerHandler
     /**
      * @param trackId to identify the right player.
      * @return player that should be triggered.
+     *
+     * @deprecated will be removed in future
      */
     private Class specifyServicePlayer(String trackId)
     {

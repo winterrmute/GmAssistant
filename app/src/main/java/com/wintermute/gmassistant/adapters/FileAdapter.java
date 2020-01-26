@@ -28,6 +28,11 @@ public class FileAdapter extends BaseAdapter
         inflater = LayoutInflater.from(ctx);
     }
 
+    public void updateDisplayedElements(ArrayList<File> files){
+        browsedFiles = files;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount()
     {

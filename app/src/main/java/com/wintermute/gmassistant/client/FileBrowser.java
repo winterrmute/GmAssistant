@@ -2,7 +2,6 @@ package com.wintermute.gmassistant.client;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -13,6 +12,7 @@ import com.wintermute.gmassistant.services.FileBrowserService;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * FileBrowser client selecting whole directories or single files to create playlists.
@@ -24,8 +24,8 @@ public class FileBrowser extends AppCompatActivity
 
     private File path;
     private ListView fileView;
+    private FileAdapter fileAdapter;
     private FileBrowserService fileBrowserService;
-    private boolean addingNextTrack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -36,28 +36,24 @@ public class FileBrowser extends AppCompatActivity
         init();
 
         Button browseParent = findViewById(R.id.parent_directory);
-        browseParent.setOnClickListener(v ->
-        {
-            if (path.getParent() != null && new File(path.getParent()).canRead())
-            {
-                path = new File(path.getParent());
-                browseOrSelectFiles(fileBrowserService.scanDir(path));
-            } else
-            {
-                Toast.makeText(FileBrowser.this, "Permission denied!", Toast.LENGTH_SHORT).show();
-            }
-        });
+        browseParent.setOnClickListener(v -> browseParentDirectory());
 
         Button selectDirectory = findViewById(R.id.select_current_directory);
         selectDirectory.setOnClickListener((v) ->
         {
-            setResult(RESULT_OK, new Intent().putExtra("path", path.toString()));
+            String selectedContent = fileBrowserService.getDirectoryTree(path.toString());
+            setResult(RESULT_OK, new Intent().putExtra("path", selectedContent));
             finish();
         });
+    }
 
-        if (addingNextTrack)
-        {
-            selectDirectory.setVisibility(View.GONE);
+    private void browseParentDirectory()
+    {
+        if (fileBrowserService.checkPermission(path)){
+            path = new File(path.getParent());
+            browseFiles();
+        } else {
+            Toast.makeText(FileBrowser.this, "Permission denied!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -66,35 +62,23 @@ public class FileBrowser extends AppCompatActivity
         fileBrowserService = new FileBrowserService();
         getRootDir();
         ArrayList<File> files = fileBrowserService.scanDir(path);
-        browseOrSelectFiles(files);
+        initListView(files);
+        browseFiles();
     }
 
     /**
-     * Requests the FileBrowserService for content of currently browsed directory.
-     *
-     * @param dirContent to scan for files and directories
+     * Shows files in current directory.
      */
-    private void browseOrSelectFiles(ArrayList<File> dirContent)
-    {
-        addingNextTrack = getIntent().getBooleanExtra("selectTrack", false);
+    private void browseFiles(){
+        ArrayList<File> files= fileBrowserService.scanDir(path);
+        fileAdapter.updateDisplayedElements(files);
 
-        setListView(dirContent);
-        fileView.setOnItemClickListener((parent, view, position, id) ->
-        {
-            if (dirContent.get(position).isDirectory())
-            {
-                path = new File(dirContent.get(position).getPath());
-                browseOrSelectFiles(fileBrowserService.scanDir(path));
-            } else
-            {
-                if (addingNextTrack)
-                {
-                    path = new File(dirContent.get(position).getPath());
-                    setResult(RESULT_OK, new Intent().putExtra("path", path.toString()));
-                    finish();
-                }
+        fileView.setOnItemClickListener(((parent, view, position, id) -> {
+            if (files.get(position).isDirectory()){
+                path = files.get(position);
+                browseFiles();
             }
-        });
+        }));
     }
 
     /**
@@ -102,11 +86,12 @@ public class FileBrowser extends AppCompatActivity
      *
      * @param browsedFiles to render in the listView.
      */
-    private void setListView(ArrayList<File> browsedFiles)
+    private void initListView(ArrayList<File> browsedFiles)
     {
         fileView = findViewById(R.id.files_list);
-        FileAdapter fileAdapter = new FileAdapter(this, browsedFiles);
+        fileAdapter = new FileAdapter(this, browsedFiles);
         fileView.setAdapter(fileAdapter);
+
     }
 
     /**
