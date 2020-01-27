@@ -1,6 +1,7 @@
 package com.wintermute.gmassistant.services;
 
 import com.wintermute.gmassistant.model.DirectoryModel;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -74,37 +75,7 @@ public class FileBrowserService
         return path.getParent() != null && new File(path.getParent()).canRead();
     }
 
-    Map<String, List<String>> directoryStructure = new HashMap<>();
-    Map<String, Map<String, Object>> nestedDirectories = new HashMap<>();
-
-    private DirectoryModel walkFiles(File path){
-        DirectoryModel myDir = new DirectoryModel(path.getName(), path.getPath());
-        List<String> files = new ArrayList<>();
-        String currentDir = myDir.getName();
-
-        File[] content = new File(myDir.getPath()).listFiles();
-
-        for (File file : content){
-            if (file.isDirectory()){
-
-                HashMap<String, Object> tmpMap = new HashMap<>();
-                tmpMap.put(file.getName(), Arrays.asList(Objects.requireNonNull(file.listFiles())));
-                nestedDirectories.put(currentDir, tmpMap);
-
-                currentDir = file.getName();
-                walkFiles(file);
-            }
-            else {
-                files.add(file.getName());
-            }
-            directoryStructure.put(currentDir, files);
-            myDir.setSubDirs(directoryStructure);
-        }
-        return myDir;
-    }
-
     public String getDirectoryTree(String path) {
-        DirectoryModel directoryModel = walkFiles(new File(path));
         return "";
     }
 }

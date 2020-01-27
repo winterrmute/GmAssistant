@@ -41,8 +41,8 @@ public class FileBrowser extends AppCompatActivity
         Button selectDirectory = findViewById(R.id.select_current_directory);
         selectDirectory.setOnClickListener((v) ->
         {
-            String selectedContent = fileBrowserService.getDirectoryTree(path.toString());
-            setResult(RESULT_OK, new Intent().putExtra("path", selectedContent));
+            //TODO: implement alert
+            setResult(RESULT_OK, new Intent().putExtra("path", path.toString()).putExtra("includingSubdirs", false));
             finish();
         });
     }
