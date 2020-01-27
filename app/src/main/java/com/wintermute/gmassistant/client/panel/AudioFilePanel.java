@@ -88,6 +88,7 @@ public class AudioFilePanel extends AppCompatActivity
         if (resultCode == RESULT_OK && requestCode == BROWSE_FILES)
         {
             String selectedDirectory = data.getStringExtra("path");
+            boolean includeSubdirs = data.getBooleanExtra("includeSubdirs", true);
         }
     }
 }

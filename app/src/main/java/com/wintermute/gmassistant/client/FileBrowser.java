@@ -1,18 +1,23 @@
 package com.wintermute.gmassistant.client;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.FileAdapter;
+import com.wintermute.gmassistant.alerts.CheckBoxDialog;
 import com.wintermute.gmassistant.services.FileBrowserService;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Map;
 
 /**
  * FileBrowser client selecting whole directories or single files to create playlists.
@@ -41,18 +46,23 @@ public class FileBrowser extends AppCompatActivity
         Button selectDirectory = findViewById(R.id.select_current_directory);
         selectDirectory.setOnClickListener((v) ->
         {
-            //TODO: implement alert
-            setResult(RESULT_OK, new Intent().putExtra("path", path.toString()).putExtra("includingSubdirs", false));
+            CheckBox includeSubdirs = findViewById(R.id.include_subdirs);
+
+            setResult(RESULT_OK, new Intent()
+                .putExtra("path", path.toString())
+                .putExtra("includeSubdirs", includeSubdirs.isChecked()));
             finish();
         });
     }
 
     private void browseParentDirectory()
     {
-        if (fileBrowserService.checkPermission(path)){
+        if (fileBrowserService.checkPermission(path))
+        {
             path = new File(path.getParent());
             browseFiles();
-        } else {
+        } else
+        {
             Toast.makeText(FileBrowser.this, "Permission denied!", Toast.LENGTH_SHORT).show();
         }
     }
@@ -69,12 +79,15 @@ public class FileBrowser extends AppCompatActivity
     /**
      * Shows files in current directory.
      */
-    private void browseFiles(){
-        ArrayList<File> files= fileBrowserService.scanDir(path);
+    private void browseFiles()
+    {
+        ArrayList<File> files = fileBrowserService.scanDir(path);
         fileAdapter.updateDisplayedElements(files);
 
-        fileView.setOnItemClickListener(((parent, view, position, id) -> {
-            if (files.get(position).isDirectory()){
+        fileView.setOnItemClickListener(((parent, view, position, id) ->
+        {
+            if (files.get(position).isDirectory())
+            {
                 path = files.get(position);
                 browseFiles();
             }
@@ -91,7 +104,6 @@ public class FileBrowser extends AppCompatActivity
         fileView = findViewById(R.id.files_list);
         fileAdapter = new FileAdapter(this, browsedFiles);
         fileView.setAdapter(fileAdapter);
-
     }
 
     /**

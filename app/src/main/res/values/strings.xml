@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!--  GmAssistant  -->
     <string name="gm_panel">gm panel</string>
     <string name="manage_playlists">Playlists</string>
@@ -15,7 +15,6 @@
     <string name="playlist_name">Playlist name: </string>
     <string name="playlist_name_placeholder">Insert playlist name</string>
     <string name="playlist_submit">Submit</string>
-    <string name="cancel">Cancel</string>
     <string name="browse_device">Browse device for playlist</string>
 
     <string name="play">Play</string>
@@ -43,5 +42,14 @@
     <string name="submit_light">Submit</string>
     <string name="title_activity_audio_file_panel">AudioFilePanel</string>
     <string name="add_files_with_tag">add files in this category</string>
+
+    <!--  alert dialog  -->
+    <string name="include_subdirs_message">include files in subdirectories</string>
+    <string name="include_subdirs_title">select files in directory</string>
+
+
+    <!--  universal buttons  -->
+    <string name="ok_result">OK</string>
+    <string name="cancel_result">Cancel</string>
 
 </resources>
