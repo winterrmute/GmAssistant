@@ -17,7 +17,9 @@
             android:id="@+id/parent_directory"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="60dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="8dp"
             android:text="@string/browse_back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_chainStyle="spread"
@@ -28,19 +30,11 @@
             android:id="@+id/select_current_directory"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="60dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             android:text="@string/select_directory"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/parent_directory"
             app:layout_constraintRight_toRightOf="parent" />
-
-    <CheckBox
-            android:id="@+id/include_subdirs"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/include_subdirs_message"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/parent_directory" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

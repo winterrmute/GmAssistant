@@ -1,6 +1,5 @@
 package com.wintermute.gmassistant.client;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -13,7 +12,6 @@ import com.wintermute.gmassistant.adapters.FileAdapter;
 import com.wintermute.gmassistant.services.FileBrowserService;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -49,8 +47,7 @@ public class FileBrowser extends AppCompatActivity
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("include subdirectories?");
         builder
-            .setMessage(R.string.include_subdirs_message)
-            .setMultiChoiceItems(R.array.include_subdirs_value, new boolean[] {false},
+            .setMultiChoiceItems(R.array.include_subdirs_value, new boolean[] {true},
                 (dialog, which, isChecked) -> intent.putExtra("includeSubdirs", isChecked))
             .setPositiveButton(R.string.ok_result, (dialog, id) ->
             {
