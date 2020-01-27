@@ -4,6 +4,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 public class DbManager extends SQLiteOpenHelper
 {
 
@@ -28,6 +31,10 @@ public class DbManager extends SQLiteOpenHelper
     private static final String LIGHT =
         "CREATE TABLE light ( id INTEGER PRIMARY KEY AUTOINCREMENT, color REAL, " + "brightness REAL)";
 
+    private static final String LIBRARY =
+        "CREATE TABLE library ( id INTEGER PRIMARY KEY AUTOINCREMENT, path TEXT, tag TEXT, "
+            + "recursively TEXT)";
+
     private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS user_playlist";
 
     public DbManager(Context ctx)
@@ -38,11 +45,7 @@ public class DbManager extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase db)
     {
-        db.execSQL(PLAYLIST);
-        db.execSQL(TRACK);
-        db.execSQL(PLAYLIST_CONTENT);
-        db.execSQL(SCENE);
-        db.execSQL(LIGHT);
+        Stream.of(PLAYLIST, TRACK, PLAYLIST_CONTENT, SCENE, LIGHT, LIBRARY).forEach(db::execSQL);
     }
 
     @Override

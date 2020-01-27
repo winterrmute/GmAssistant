@@ -39,7 +39,7 @@ public class SceneDao extends BaseDao
      */
     public long insert(Scene scene)
     {
-        Map<String, String> object = createObject(scene);
+        Map<String, Object> object = createObject(scene);
         ContentValues values = getContentValues(object);
         return dbWrite.insert(TABLE_NAME, null, values);
     }
@@ -84,9 +84,9 @@ public class SceneDao extends BaseDao
      * @param scene to create dao.
      * @return map containing non null values.
      */
-    private Map<String, String> createObject(Scene scene)
+    private Map<String, Object> createObject(Scene scene)
     {
-        HashMap<String, String> obj = new HashMap<>();
+        HashMap<String, Object> obj = new HashMap<>();
         obj.put(ID_KEY, scene.getId());
         obj.put(NAME_KEY, scene.getName());
         obj.put(LIGHT_KEY, scene.getLight());

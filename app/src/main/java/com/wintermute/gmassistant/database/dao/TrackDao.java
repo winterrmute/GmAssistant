@@ -48,7 +48,7 @@ public class TrackDao extends BaseDao
             return computeIdIfAbsent(track.getName());
         } else
         {
-            Map<String, String> object = createObject(track);
+            Map<String, Object> object = createObject(track);
             ContentValues values = getContentValues(object);
             dbWrite.insert(TABLE_NAME, null, values);
             return computeIdIfAbsent(track.getName());
@@ -83,9 +83,9 @@ public class TrackDao extends BaseDao
      * @param track to create dao.
      * @return map containing non null values.
      */
-    private Map<String, String> createObject(Track track)
+    private Map<String, Object> createObject(Track track)
     {
-        HashMap<String, String> obj = new HashMap<>();
+        HashMap<String, Object> obj = new HashMap<>();
         obj.put(NAME_KEY, track.getName());
         obj.put(ARTIST_KEY, track.getArtist());
         obj.put(TAG_KEY, track.getTag());

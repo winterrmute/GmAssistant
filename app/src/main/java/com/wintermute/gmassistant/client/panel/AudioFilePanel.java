@@ -10,8 +10,11 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.ViewPagerAdapter;
 import com.wintermute.gmassistant.client.FileBrowser;
+import com.wintermute.gmassistant.database.dao.DirectoryDao;
 import com.wintermute.gmassistant.database.dao.TrackDao;
+import com.wintermute.gmassistant.database.dto.Directory;
 import com.wintermute.gmassistant.database.dto.Track;
+import com.wintermute.gmassistant.services.FileBrowserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,11 +35,15 @@ public class AudioFilePanel extends AppCompatActivity
     String currentTab;
     Button addFilesByTag;
 
+    String path;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_file_panel);
+
+        currentTab = "unsorted";
 
         viewPager = findViewById(R.id.view_pager2);
         tabLayout = findViewById(R.id.tabs);
@@ -81,14 +88,39 @@ public class AudioFilePanel extends AppCompatActivity
             .collect(Collectors.toMap(k -> k, dao::getTracksByTag));
     }
 
+    private List<Directory> getFilesList(String tag)
+    {
+        List<Directory> directories =
+            new DirectoryDao(getApplicationContext()).getDirectoriesForCategory(tag);
+
+        FileBrowserService fbs = new FileBrowserService();
+        fbs.collectTracks(path);
+
+        return null;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == BROWSE_FILES)
         {
-            String selectedDirectory = data.getStringExtra("path");
-            boolean includeSubdirs = data.getBooleanExtra("includeSubdirs", true);
+            path = data.getStringExtra("path");
+            storeDirectory(path, data.getBooleanExtra("includeSubdirs", true), currentTab);
         }
+    }
+
+    private void storeDirectory(String path, boolean recursive, String tag)
+    {
+        if (tag.isEmpty())
+        {
+            tag = "unsorted";
+        }
+        DirectoryDao dao = new DirectoryDao(getApplicationContext());
+        Directory directory = new Directory();
+        directory.setPath(path);
+        directory.setTag(tag);
+        directory.setRecursive(recursive);
+        dao.insert(directory);
     }
 }

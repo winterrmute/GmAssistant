@@ -18,14 +18,14 @@ abstract class BaseDao
      * @param dbQueryParams containing key value pairs to process in db.
      * @return database query.
      */
-    StringBuilder updateQueryBuilder(Map<String, String> dbQueryParams)
+    StringBuilder updateQueryBuilder(Map<String, Object> dbQueryParams)
     {
         dbQueryParams = Maps.filterValues(dbQueryParams, Objects::nonNull);
         StringBuilder query = new StringBuilder();
-        Iterator<Map.Entry<String, String>> it = dbQueryParams.entrySet().iterator();
+        Iterator<Map.Entry<String, Object>> it = dbQueryParams.entrySet().iterator();
         while (it.hasNext())
         {
-            Map.Entry<String, String> entry = it.next();
+            Map.Entry<String, Object> entry = it.next();
 
             if (entry.getValue() != null)
             {
@@ -43,7 +43,7 @@ abstract class BaseDao
      * @param object to edit.
      * @return map contining only non-null entries.
      */
-    Map<String, String> removeEmptyValues(Map<String, String> object)
+    Map<String, Object> removeEmptyValues(Map<String, Object> object)
     {
         return Maps.filterValues(object, Objects::nonNull);
     }
@@ -51,13 +51,20 @@ abstract class BaseDao
     /**
      * @param object to translate into values
      * @return values to insert into database
+     * TODO: optimize check fo type especially for ids and exception handling
      */
-    ContentValues getContentValues(Map<String, String> object)
+    ContentValues getContentValues(Map<String, Object> object)
     {
         ContentValues values = new ContentValues();
-        for (Map.Entry<String, String> entry : object.entrySet())
+        for (Map.Entry<String, Object> entry : object.entrySet())
         {
-            values.put(entry.getKey(), entry.getValue());
+            if (entry.getValue() instanceof String) {
+                values.put(entry.getKey(), (String) entry.getValue());
+            } else if (entry.getValue() instanceof Long) {
+                values.put(entry.getKey(), (Long) entry.getValue());
+            } else if (entry.getValue() instanceof Boolean) {
+                values.put(entry.getKey(), (Boolean) entry.getValue());
+            }
         }
         return values;
     }

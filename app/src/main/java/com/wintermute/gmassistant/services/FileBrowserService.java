@@ -1,6 +1,5 @@
 package com.wintermute.gmassistant.services;
 
-import com.wintermute.gmassistant.model.DirectoryModel;
 import org.json.JSONObject;
 
 import java.io.File;

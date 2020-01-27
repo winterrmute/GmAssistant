@@ -45,7 +45,7 @@ public class LightDao extends BaseDao
      */
     public long insert(Light light)
     {
-        Map<String, String> object = createObject(light);
+        Map<String, Object> object = createObject(light);
         ContentValues values = getContentValues(object);
         return dbWrite.insert(TABLE_NAME, null, values);
     }
@@ -81,9 +81,9 @@ public class LightDao extends BaseDao
     /**
      * @return map containing non null values.
      */
-    private Map<String, String> createObject(Light target)
+    private Map<String, Object> createObject(Light target)
     {
-        HashMap<String, String> obj = new HashMap<>();
+        HashMap<String, Object> obj = new HashMap<>();
         obj.put(ID_KEY, target.getId());
         obj.put(COLOR_KEY, target.getColor());
         obj.put(BRIGHTNESS_KEY, target.getBrightness());

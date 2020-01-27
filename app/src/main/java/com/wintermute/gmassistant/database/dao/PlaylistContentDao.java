@@ -32,9 +32,9 @@ public class PlaylistContentDao extends BaseDao
     /**
      * @return map containing non null values.
      */
-    private Map<String, String> createObject(PlaylistContent content)
+    private Map<String, Object> createObject(PlaylistContent content)
     {
-        HashMap<String, String> obj = new HashMap<>();
+        HashMap<String, Object> obj = new HashMap<>();
         obj.put(PLAYLIST_KEY, content.getPlaylist());
         obj.put(TRACK_KEY, content.getTrack());
         obj.put(SCENE_KEY, content.getScene());
@@ -48,7 +48,7 @@ public class PlaylistContentDao extends BaseDao
      */
     public void insert(PlaylistContent content)
     {
-        Map<String, String> object = createObject(content);
+        Map<String, Object> object = createObject(content);
         ContentValues values = getContentValues(object);
         getContentValues(object);
         dbWrite.insert(TABLE_NAME, null, values);
