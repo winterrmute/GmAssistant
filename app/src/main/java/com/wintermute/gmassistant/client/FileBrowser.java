@@ -1,22 +1,19 @@
 package com.wintermute.gmassistant.client;
 
-import android.app.Activity;
-import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.FileAdapter;
-import com.wintermute.gmassistant.alerts.CheckBoxDialog;
 import com.wintermute.gmassistant.services.FileBrowserService;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -44,15 +41,25 @@ public class FileBrowser extends AppCompatActivity
         browseParent.setOnClickListener(v -> browseParentDirectory());
 
         Button selectDirectory = findViewById(R.id.select_current_directory);
-        selectDirectory.setOnClickListener((v) ->
-        {
-            CheckBox includeSubdirs = findViewById(R.id.include_subdirs);
+        selectDirectory.setOnClickListener((v) -> handleDialog(new Intent()));
+    }
 
-            setResult(RESULT_OK, new Intent()
-                .putExtra("path", path.toString())
-                .putExtra("includeSubdirs", includeSubdirs.isChecked()));
-            finish();
-        });
+    private void handleDialog(Intent intent)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("include subdirectories?");
+        builder
+            .setMessage(R.string.include_subdirs_message)
+            .setMultiChoiceItems(R.array.include_subdirs_value, new boolean[] {false},
+                (dialog, which, isChecked) -> intent.putExtra("includeSubdirs", isChecked))
+            .setPositiveButton(R.string.ok_result, (dialog, id) ->
+            {
+                setResult(RESULT_OK, intent.putExtra("path", path.toString()));
+                finish();
+            })
+            .setNegativeButton(R.string.cancel_result, (dialog, id) -> dialog.cancel());
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     private void browseParentDirectory()

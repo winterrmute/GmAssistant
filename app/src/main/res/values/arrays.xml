@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="include_subdirs_value">
+        <item>include subdirectories</item>
+    </array>
+</resources>
