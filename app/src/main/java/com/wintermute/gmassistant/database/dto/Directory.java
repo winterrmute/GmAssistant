@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 public class Directory
 {
-    long id;
+    Long id;
     String path;
     String tag;
     Boolean recursive;

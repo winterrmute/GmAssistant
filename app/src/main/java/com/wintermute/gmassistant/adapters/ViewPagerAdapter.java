@@ -4,12 +4,12 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.wintermute.gmassistant.R;
-import com.wintermute.gmassistant.database.dto.Track;
-import com.wintermute.gmassistant.handlers.PlayerHandler;
+import com.wintermute.gmassistant.view.ItemList;
+import com.wintermute.gmassistant.view.ItemListAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -17,15 +17,15 @@ import java.util.List;
 public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.ViewHolder>
 {
 
-    private List<List<Track>> audioFilesSortedByTags;
+    private List<List<String>> audioFilesSortedByTags;
     private LayoutInflater mInflater;
     private Context ctx;
 
-    public ViewPagerAdapter(Context context, List<List<Track>> data)
+    public ViewPagerAdapter(Context context, List<List<String>> data)
     {
-        this.ctx = context;
         this.mInflater = LayoutInflater.from(context);
         this.audioFilesSortedByTags = data;
+        this.ctx = context;
     }
 
     @NotNull
@@ -38,15 +38,15 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
     @Override
     public void onBindViewHolder(ViewHolder holder, int position)
     {
-        List<Track> currentlyViewed = audioFilesSortedByTags.get(position);
-        TrackAdapter adapter = new TrackAdapter(ctx, currentlyViewed);
-        holder.myView.setAdapter(adapter);
+        ItemListAdapter adapter = new ItemListAdapter(audioFilesSortedByTags.get(position),
+        new ItemList.OnListFragmentInteractionListener() {
+            @Override
+            public void onListFragmentInteraction(String item)
+            {
 
-        holder.myView.setOnItemClickListener((parent, view, pos, id) ->
-        {
-            PlayerHandler handler = new PlayerHandler(ctx);
-            handler.startPlaying(currentlyViewed.get(pos));
+            }
         });
+        holder.myView.setAdapter(adapter);
     }
 
     @Override
@@ -55,17 +55,16 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
         return audioFilesSortedByTags.size();
     }
 
-    // stores and recycles views as they are scrolled off screen
     class ViewHolder extends RecyclerView.ViewHolder
     {
-        ListView myView;
+        RecyclerView myView;
         RelativeLayout relativeLayout;
 
         ViewHolder(View itemView)
         {
             super(itemView);
-
-            myView = itemView.findViewById(R.id.track_list);
+            myView = itemView.findViewById(R.id.my_list);
+            myView.setLayoutManager(new LinearLayoutManager(ctx));
             relativeLayout = itemView.findViewById(R.id.container);
         }
     }

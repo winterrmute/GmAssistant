@@ -43,9 +43,9 @@ public class FileBrowserService
      * @param path to browse for files.
      * @return list of found tracks.
      */
-    public List<File> collectTracks(String path)
+    public List<String> collectTracks(String path)
     {
-        List<File> result = new ArrayList<>();
+        List<String> result = new ArrayList<>();
         File[] fList = new File(path).listFiles();
         if (fList != null)
         {
@@ -53,7 +53,7 @@ public class FileBrowserService
             {
                 if (file.isFile())
                 {
-                    result.add(file);
+                    result.add(file.getName());
                 } else if (file.isDirectory())
                 {
                     collectTracks(file.getAbsolutePath());

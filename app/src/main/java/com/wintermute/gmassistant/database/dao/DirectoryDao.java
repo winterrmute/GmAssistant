@@ -110,7 +110,7 @@ public class DirectoryDao extends BaseDao
      */
     private String getKeyValue(Cursor cursor, String column)
     {
-        if (!ID_KEY.equals(column) && cursor.getColumnIndex(column) != -1)
+        if (ID_KEY.equals(column) && cursor.getColumnIndex(column) != -1)
         {
             return String.valueOf(cursor.getLong(cursor.getColumnIndex(column)));
         } else if (cursor.getColumnIndex(column) != -1)

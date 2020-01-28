@@ -5,31 +5,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <ListView
-            android:id="@+id/track_list"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/my_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:padding="20dp"
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal"/>
 
-
-    <!--    <androidx.appcompat.widget.AppCompatTextView-->
-    <!--            android:id="@+id/tvTitle"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_centerInParent="true"-->
-    <!--            android:textColor="@android:color/white"-->
-    <!--            android:textSize="32sp"-->
-    <!--            tools:text="item" />-->
-
-
-    <!--    <androidx.appcompat.widget.AppCompatButton-->
-    <!--            android:id="@+id/btnToggle"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_alignParentBottom="true"-->
-    <!--            android:layout_centerHorizontal="true"-->
-    <!--            android:text="Toggle Orientation" />-->
-
+<!--    <ListView-->
+<!--            android:id="@+id/track_list"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="wrap_content" />-->
 </RelativeLayout>

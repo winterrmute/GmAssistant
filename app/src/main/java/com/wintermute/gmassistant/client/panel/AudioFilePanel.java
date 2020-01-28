@@ -11,16 +11,12 @@ import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.ViewPagerAdapter;
 import com.wintermute.gmassistant.client.FileBrowser;
 import com.wintermute.gmassistant.database.dao.DirectoryDao;
-import com.wintermute.gmassistant.database.dao.TrackDao;
 import com.wintermute.gmassistant.database.dto.Directory;
-import com.wintermute.gmassistant.database.dto.Track;
-import com.wintermute.gmassistant.services.FileBrowserService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Manages audio files by tags.
@@ -30,12 +26,9 @@ import java.util.stream.Stream;
 public class AudioFilePanel extends AppCompatActivity
 {
     public static final int BROWSE_FILES = 1;
-    ViewPager2 viewPager;
-    TabLayout tabLayout;
-    String currentTab;
-    Button addFilesByTag;
+    private String currentTab;
 
-    String path;
+    private String path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -43,15 +36,20 @@ public class AudioFilePanel extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_file_panel);
 
-        currentTab = "unsorted";
+        ViewPager2 viewPager = findViewById(R.id.view_pager2);
+        TabLayout tabLayout = findViewById(R.id.tabs);
+        Button addFilesByTag = findViewById(R.id.add_files_with_tag);
 
-        viewPager = findViewById(R.id.view_pager2);
-        tabLayout = findViewById(R.id.tabs);
-        addFilesByTag = findViewById(R.id.add_files_with_tag);
+        if (null == currentTab)
+        {
+            currentTab = "music";
+        }
 
-        viewPager.setAdapter(new ViewPagerAdapter(this, new ArrayList<>(listByTag().values())));
+        Map<String, List<String>> content = listByTag();
+
+        viewPager.setAdapter(new ViewPagerAdapter(getApplicationContext(), new ArrayList<>(content.values())));
         new TabLayoutMediator(tabLayout, viewPager,
-            (tab, position) -> tab.setText(listByTag().keySet().toArray()[position].toString())).attach();
+            (tab, position) -> tab.setText(content.keySet().toArray()[position].toString())).attach();
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
         {
@@ -80,23 +78,37 @@ public class AudioFilePanel extends AppCompatActivity
         });
     }
 
-    private Map<String, List<Track>> listByTag()
+    private Map<String, List<String>> listByTag()
     {
-        TrackDao dao = new TrackDao(this);
-        return Stream
-            .of("music", "ambience", "effect", "unsorted")
-            .collect(Collectors.toMap(k -> k, dao::getTracksByTag));
+        Map<String, List<String>> result = new HashMap<>();
+        DirectoryDao dirDao = new DirectoryDao(getApplicationContext());
+        String[] categories = {"music", "ambience", "effect"};
+
+        for (String category : categories)
+        {
+            //            List<String> files = dirDao
+            //                .getDirectoriesForCategory(category)
+            //                .stream()
+            //                .map(Directory::getPath)
+            //                .collect(Collectors.toList());
+            result.put(category, getFiles(dirDao, category));
+        }
+        return result;
+        //        return Stream
+        //            .of("music", "ambience", "effect")
+        //            .collect(Collectors.toMap(k -> k, dao::getTracksByTag));
     }
 
-    private List<Directory> getFilesList(String tag)
+    private List<String> getFiles(DirectoryDao dao, String tag)
     {
-        List<Directory> directories =
-            new DirectoryDao(getApplicationContext()).getDirectoriesForCategory(tag);
+        List<String> result = new ArrayList<>();
+        List<Directory> directoriesForCategory = dao.getDirectoriesForCategory(tag);
+        for (int i = 0; i < directoriesForCategory.size(); i++)
+        {
+            result.add(directoriesForCategory.get(i).getPath());
+        }
 
-        FileBrowserService fbs = new FileBrowserService();
-        fbs.collectTracks(path);
-
-        return null;
+        return result;
     }
 
     @Override
@@ -112,15 +124,11 @@ public class AudioFilePanel extends AppCompatActivity
 
     private void storeDirectory(String path, boolean recursive, String tag)
     {
-        if (tag.isEmpty())
-        {
-            tag = "unsorted";
-        }
-        DirectoryDao dao = new DirectoryDao(getApplicationContext());
         Directory directory = new Directory();
         directory.setPath(path);
         directory.setTag(tag);
         directory.setRecursive(recursive);
-        dao.insert(directory);
+        DirectoryDao dao = new DirectoryDao(getApplicationContext());
+        directory.setId(dao.insert(directory));
     }
 }
