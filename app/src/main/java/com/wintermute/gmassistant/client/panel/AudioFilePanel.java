@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Manages audio files by tags.
@@ -27,6 +28,10 @@ public class AudioFilePanel extends AppCompatActivity
 {
     public static final int BROWSE_FILES = 1;
     private String currentTab;
+    private ViewPagerAdapter adapter;
+    private ViewPager2 viewPager;
+    private TabLayout tabLayout;
+    private Map<String, List<String>> content;
 
     private String path;
 
@@ -36,8 +41,8 @@ public class AudioFilePanel extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_file_panel);
 
-        ViewPager2 viewPager = findViewById(R.id.view_pager2);
-        TabLayout tabLayout = findViewById(R.id.tabs);
+        viewPager = findViewById(R.id.view_pager2);
+        tabLayout = findViewById(R.id.tabs);
         Button addFilesByTag = findViewById(R.id.add_files_with_tag);
 
         if (null == currentTab)
@@ -45,9 +50,10 @@ public class AudioFilePanel extends AppCompatActivity
             currentTab = "music";
         }
 
-        Map<String, List<String>> content = listByTag();
+        content = listByTag();
 
-        viewPager.setAdapter(new ViewPagerAdapter(getApplicationContext(), new ArrayList<>(content.values())));
+        adapter = new ViewPagerAdapter(getApplicationContext(), new ArrayList<>(content.values()));
+        viewPager.setAdapter(adapter);
         new TabLayoutMediator(tabLayout, viewPager,
             (tab, position) -> tab.setText(content.keySet().toArray()[position].toString())).attach();
 
@@ -68,7 +74,6 @@ public class AudioFilePanel extends AppCompatActivity
             @Override
             public void onTabReselected(TabLayout.Tab tab)
             {
-
             }
         });
         addFilesByTag.setOnClickListener(l ->
@@ -78,36 +83,24 @@ public class AudioFilePanel extends AppCompatActivity
         });
     }
 
+    private void updateViweData(){
+        content = listByTag();
+        adapter = new ViewPagerAdapter(getApplicationContext(), new ArrayList<>(content.values()));
+        viewPager.setAdapter(adapter);
+    }
+
     private Map<String, List<String>> listByTag()
     {
         Map<String, List<String>> result = new HashMap<>();
-        DirectoryDao dirDao = new DirectoryDao(getApplicationContext());
+        DirectoryDao dao = new DirectoryDao(getApplicationContext());
         String[] categories = {"music", "ambience", "effect"};
 
         for (String category : categories)
         {
-            //            List<String> files = dirDao
-            //                .getDirectoriesForCategory(category)
-            //                .stream()
-            //                .map(Directory::getPath)
-            //                .collect(Collectors.toList());
-            result.put(category, getFiles(dirDao, category));
+            List<String> directories =
+                dao.getDirectoriesForCategory(category).stream().map(Directory::getPath).collect(Collectors.toList());
+            result.put(category, directories);
         }
-        return result;
-        //        return Stream
-        //            .of("music", "ambience", "effect")
-        //            .collect(Collectors.toMap(k -> k, dao::getTracksByTag));
-    }
-
-    private List<String> getFiles(DirectoryDao dao, String tag)
-    {
-        List<String> result = new ArrayList<>();
-        List<Directory> directoriesForCategory = dao.getDirectoriesForCategory(tag);
-        for (int i = 0; i < directoriesForCategory.size(); i++)
-        {
-            result.add(directoriesForCategory.get(i).getPath());
-        }
-
         return result;
     }
 
@@ -119,6 +112,7 @@ public class AudioFilePanel extends AppCompatActivity
         {
             path = data.getStringExtra("path");
             storeDirectory(path, data.getBooleanExtra("includeSubdirs", true), currentTab);
+            updateViweData();
         }
     }
 
