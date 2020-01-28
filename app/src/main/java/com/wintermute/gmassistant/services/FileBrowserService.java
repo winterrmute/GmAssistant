@@ -1,15 +1,10 @@
 package com.wintermute.gmassistant.services;
 
-import org.json.JSONObject;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class FileBrowserService
 {
@@ -38,29 +33,33 @@ public class FileBrowserService
     }
 
     /**
-     * Scans directory for audio tracks.
+     * Scans directory for files and directories
      *
      * @param path to browse for files.
-     * @return list of found tracks.
+     * @return path of selected file.
      */
-    public List<String> collectTracks(String path)
+    private String browseFiles(String path)
     {
-        List<String> result = new ArrayList<>();
-        File[] fList = new File(path).listFiles();
-        if (fList != null)
+        if ("previous directory".equals(path))
         {
-            for (File file : fList)
-            {
-                if (file.isFile())
-                {
-                    result.add(file.getName());
-                } else if (file.isDirectory())
-                {
-                    collectTracks(file.getAbsolutePath());
-                }
-            }
+            //TODO: check permission here
+            return new File(path).getParent();
+        } else if (new File(path).isDirectory())
+        {
+            return new File(path).getPath();
+        } else
+        {
+            return path;
         }
-        return result;
+    }
+
+    public List<String> getFiles(String path)
+    {
+        return Arrays
+            .asList(new File(browseFiles(path)).listFiles())
+            .stream()
+            .map(File::getName)
+            .collect(Collectors.toList());
     }
 
     /**
@@ -72,9 +71,5 @@ public class FileBrowserService
     public boolean checkPermission(File path)
     {
         return path.getParent() != null && new File(path.getParent()).canRead();
-    }
-
-    public String getDirectoryTree(String path) {
-        return "";
     }
 }

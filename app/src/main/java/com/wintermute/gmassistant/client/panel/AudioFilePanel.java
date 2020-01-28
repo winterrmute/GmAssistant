@@ -68,7 +68,6 @@ public class AudioFilePanel extends AppCompatActivity
             @Override
             public void onTabUnselected(TabLayout.Tab tab)
             {
-
             }
 
             @Override
@@ -83,7 +82,8 @@ public class AudioFilePanel extends AppCompatActivity
         });
     }
 
-    private void updateViweData(){
+    private void updateViweData()
+    {
         content = listByTag();
         adapter = new ViewPagerAdapter(getApplicationContext(), new ArrayList<>(content.values()));
         viewPager.setAdapter(adapter);
@@ -99,6 +99,7 @@ public class AudioFilePanel extends AppCompatActivity
         {
             List<String> directories =
                 dao.getDirectoriesForCategory(category).stream().map(Directory::getPath).collect(Collectors.toList());
+
             result.put(category, directories);
         }
         return result;

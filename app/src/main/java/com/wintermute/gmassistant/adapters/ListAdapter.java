@@ -17,18 +17,18 @@ import java.util.List;
  *
  * @author wintermute
  */
-public class FileAdapter extends BaseAdapter
+public class ListAdapter extends BaseAdapter
 {
-    private List<File> browsedFiles;
+    private List<String> browsedFiles;
     private LayoutInflater inflater;
 
-    public FileAdapter(Context ctx, List<File> files)
+    public ListAdapter(Context ctx, List<String> files)
     {
         browsedFiles = files;
         inflater = LayoutInflater.from(ctx);
     }
 
-    public void updateDisplayedElements(List<File> files)
+    public void updateDisplayedElements(List<String> files)
     {
         browsedFiles = files;
         notifyDataSetChanged();
@@ -57,8 +57,8 @@ public class FileAdapter extends BaseAdapter
     {
         LinearLayout result = (LinearLayout) inflater.inflate(R.layout.file, parent, false);
         TextView fileName = result.findViewById(R.id.file_name);
-        File file = browsedFiles.get(position);
-        fileName.setText(file.getName());
+        String file = browsedFiles.get(position);
+        fileName.setText(file);
         result.setTag(position);
         return result;
     }
