@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.gmassistant.database.DbManager;
-import com.wintermute.gmassistant.database.dto.PlaylistContent;
+import com.wintermute.gmassistant.model.PlaylistContent;
 
 import java.util.ArrayList;
 import java.util.HashMap;

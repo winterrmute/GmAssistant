@@ -4,13 +4,12 @@ import android.content.Context;
 import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
 import com.wintermute.gmassistant.database.dao.PlaylistDao;
 import com.wintermute.gmassistant.database.dao.TrackDao;
-import com.wintermute.gmassistant.database.dto.Playlist;
-import com.wintermute.gmassistant.database.dto.PlaylistContent;
-import com.wintermute.gmassistant.database.dto.Track;
+import com.wintermute.gmassistant.model.Playlist;
+import com.wintermute.gmassistant.model.PlaylistContent;
+import com.wintermute.gmassistant.model.Track;
 import com.wintermute.gmassistant.services.FileBrowserService;
 
 import java.io.File;
-import java.util.List;
 
 public class ObjectHandler
 {

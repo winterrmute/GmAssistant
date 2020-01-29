@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.gmassistant.database.DbManager;
-import com.wintermute.gmassistant.database.dto.Light;
+import com.wintermute.gmassistant.model.Light;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

@@ -10,7 +10,7 @@ import com.wintermute.gmassistant.adapters.PlaylistAdapter;
 import com.wintermute.gmassistant.client.AddNewPlaylist;
 import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
 import com.wintermute.gmassistant.database.dao.PlaylistDao;
-import com.wintermute.gmassistant.database.dto.Playlist;
+import com.wintermute.gmassistant.model.Playlist;
 import com.wintermute.gmassistant.dialogs.ListDialog;
 
 import java.util.ArrayList;

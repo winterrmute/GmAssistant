@@ -10,7 +10,7 @@ import com.wintermute.gmassistant.adapters.SceneAdapter;
 import com.wintermute.gmassistant.config.SceneConfig;
 import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
 import com.wintermute.gmassistant.database.dao.SceneDao;
-import com.wintermute.gmassistant.database.dto.Scene;
+import com.wintermute.gmassistant.model.Scene;
 import com.wintermute.gmassistant.dialogs.ListDialog;
 import com.wintermute.gmassistant.handlers.PlayerHandler;
 

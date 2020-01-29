@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.database.dao.LightDao;
 import com.wintermute.gmassistant.database.dao.TrackDao;
-import com.wintermute.gmassistant.database.dto.Scene;
+import com.wintermute.gmassistant.model.Scene;
 
 import java.math.BigDecimal;
 import java.util.List;

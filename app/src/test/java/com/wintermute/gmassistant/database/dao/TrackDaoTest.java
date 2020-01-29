@@ -6,7 +6,7 @@ import static junit.framework.TestCase.assertTrue;
 
 import android.content.Context;
 import androidx.test.platform.app.InstrumentationRegistry;
-import com.wintermute.gmassistant.database.dto.Track;
+import com.wintermute.gmassistant.model.Track;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;

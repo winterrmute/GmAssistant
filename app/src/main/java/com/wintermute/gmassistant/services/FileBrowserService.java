@@ -1,9 +1,12 @@
 package com.wintermute.gmassistant.services;
 
+import com.wintermute.gmassistant.model.FileElement;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class FileBrowserService
@@ -53,13 +56,11 @@ public class FileBrowserService
         }
     }
 
-    public List<String> getFiles(String path)
+    public List<FileElement> getFiles(String path)
     {
-        return Arrays
-            .asList(new File(browseFiles(path)).listFiles())
-            .stream()
-            .map(File::getName)
-            .collect(Collectors.toList());
+        List<File> foundFiles = Arrays
+            .asList(Objects.requireNonNull(new File(browseFiles(path)).listFiles()));
+        return foundFiles.stream().map(f -> new FileElement(f.getName(), f.getPath())).collect(Collectors.toList());
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.database.dto;
+package com.wintermute.gmassistant.model;
 
 import lombok.Data;
 

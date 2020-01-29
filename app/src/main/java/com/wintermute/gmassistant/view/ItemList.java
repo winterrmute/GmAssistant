@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.wintermute.gmassistant.R;
+import com.wintermute.gmassistant.model.FileElement;
 
 /**
  * A fragment representing a list of Items.
@@ -84,7 +85,7 @@ public class ItemList extends Fragment
             {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new ItemListAdapter(getArguments().getStringArrayList("list"), mListener));
+            recyclerView.setAdapter(new ItemListAdapter(null, mListener));
         }
         return view;
     }
@@ -107,6 +108,6 @@ public class ItemList extends Fragment
     public interface OnListFragmentInteractionListener
     {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(String item);
+        void onListFragmentInteraction(FileElement item);
     }
 }

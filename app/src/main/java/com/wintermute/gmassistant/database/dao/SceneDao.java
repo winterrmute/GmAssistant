@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import com.wintermute.gmassistant.database.DbManager;
-import com.wintermute.gmassistant.database.dto.Scene;
+import com.wintermute.gmassistant.model.Scene;
 
 import java.util.ArrayList;
 import java.util.HashMap;

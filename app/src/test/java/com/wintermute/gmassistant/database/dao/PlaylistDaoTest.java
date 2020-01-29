@@ -5,7 +5,7 @@ import static junit.framework.TestCase.assertTrue;
 
 import android.content.Context;
 import androidx.test.platform.app.InstrumentationRegistry;
-import com.wintermute.gmassistant.database.dto.Playlist;
+import com.wintermute.gmassistant.model.Playlist;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

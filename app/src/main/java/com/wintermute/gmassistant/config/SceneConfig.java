@@ -20,9 +20,9 @@ import com.wintermute.gmassistant.database.dao.LightDao;
 import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
 import com.wintermute.gmassistant.database.dao.SceneDao;
 import com.wintermute.gmassistant.database.dao.TrackDao;
-import com.wintermute.gmassistant.database.dto.Light;
-import com.wintermute.gmassistant.database.dto.Scene;
-import com.wintermute.gmassistant.database.dto.Track;
+import com.wintermute.gmassistant.model.Light;
+import com.wintermute.gmassistant.model.Scene;
+import com.wintermute.gmassistant.model.Track;
 
 import java.io.File;
 import java.math.BigDecimal;

@@ -11,8 +11,10 @@ import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.ViewPagerAdapter;
 import com.wintermute.gmassistant.client.FileBrowser;
 import com.wintermute.gmassistant.database.dao.DirectoryDao;
-import com.wintermute.gmassistant.database.dto.Directory;
+import com.wintermute.gmassistant.model.Directory;
+import com.wintermute.gmassistant.model.FileElement;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +33,7 @@ public class AudioFilePanel extends AppCompatActivity
     private ViewPagerAdapter adapter;
     private ViewPager2 viewPager;
     private TabLayout tabLayout;
-    private Map<String, List<String>> content;
+    private Map<String, List<FileElement>> content;
 
     private String path;
 
@@ -89,17 +91,16 @@ public class AudioFilePanel extends AppCompatActivity
         viewPager.setAdapter(adapter);
     }
 
-    private Map<String, List<String>> listByTag()
+    private Map<String, List<FileElement>> listByTag()
     {
-        Map<String, List<String>> result = new HashMap<>();
+        Map<String, List<FileElement>> result = new HashMap<>();
         DirectoryDao dao = new DirectoryDao(getApplicationContext());
         String[] categories = {"music", "ambience", "effect"};
 
         for (String category : categories)
         {
-            List<String> directories =
-                dao.getDirectoriesForCategory(category).stream().map(Directory::getPath).collect(Collectors.toList());
-
+            List<FileElement> directories =
+                dao.getDirectoriesForCategory(category).stream().map(f -> new FileElement( new File(f.getPath()).getName(), f.getPath())).collect(Collectors.toList());
             result.put(category, directories);
         }
         return result;
