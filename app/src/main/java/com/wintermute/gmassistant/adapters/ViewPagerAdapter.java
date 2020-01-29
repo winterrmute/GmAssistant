@@ -13,8 +13,10 @@ import com.wintermute.gmassistant.services.FileBrowserService;
 import com.wintermute.gmassistant.view.ItemListAdapter;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.ViewHolder>
 {
@@ -47,21 +49,21 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
 
         adapter = new ItemListAdapter(categoryFiles, item ->
         {
-            String parent = new File(categoryFiles.get(1).getPath()).getParent();
-            if ("previos directory".equals(item.getName())) {
-                categoryFiles = fbs.getFiles(parent);
-            }
-            categoryFiles = fbs.getFiles(item.getPath());
-            categoryFiles.add(0, new FileElement("previos directory", ""));
-            updateListElements();
+            //TODO: check if parent browse parent is allowed
+            Map<String, List<FileElement>> files = fbs.getFiles(item.getPath());
+            String parent = files.keySet().toArray()[0].toString();
+            List<FileElement> newContent =
+                files.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
+            newContent.add(0, new FileElement("previos directory", parent));
+            updateListElements(newContent);
         });
         holder.myView.setAdapter(adapter);
     }
 
-    private void updateListElements()
+    private void updateListElements(List<FileElement> newContent)
     {
         adapter.updateData(null, "clearData");
-        adapter.updateData(categoryFiles, "updateData");
+        adapter.updateData(newContent, "updateData");
     }
 
     @Override

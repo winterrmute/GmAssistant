@@ -1,11 +1,14 @@
 package com.wintermute.gmassistant.services;
 
+import com.wintermute.gmassistant.client.FileBrowser;
 import com.wintermute.gmassistant.model.FileElement;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -56,11 +59,16 @@ public class FileBrowserService
         }
     }
 
-    public List<FileElement> getFiles(String path)
+    public Map<String, List<FileElement>> getFiles(String path)
     {
-        List<File> foundFiles = Arrays
-            .asList(Objects.requireNonNull(new File(browseFiles(path)).listFiles()));
-        return foundFiles.stream().map(f -> new FileElement(f.getName(), f.getPath())).collect(Collectors.toList());
+        List<FileElement> foundFiles = Arrays
+            .asList(Objects.requireNonNull(new File(browseFiles(path)).listFiles()))
+            .stream()
+            .map(f -> new FileElement(f.getName(), f.getPath()))
+            .collect(Collectors.toList());
+        Map<String, List<FileElement>> result = new HashMap<>();
+        result.put(new File(path).getParent(), foundFiles);
+        return result;
     }
 
     /**
