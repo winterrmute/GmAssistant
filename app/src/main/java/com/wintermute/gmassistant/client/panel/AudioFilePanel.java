@@ -32,10 +32,7 @@ public class AudioFilePanel extends AppCompatActivity
     private String currentTab;
     private ViewPagerAdapter adapter;
     private ViewPager2 viewPager;
-    private TabLayout tabLayout;
     private Map<String, List<FileElement>> content;
-
-    private String path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -44,7 +41,7 @@ public class AudioFilePanel extends AppCompatActivity
         setContentView(R.layout.activity_audio_file_panel);
 
         viewPager = findViewById(R.id.view_pager2);
-        tabLayout = findViewById(R.id.tabs);
+        TabLayout tabLayout = findViewById(R.id.tabs);
         Button addFilesByTag = findViewById(R.id.add_files_with_tag);
 
         if (null == currentTab)
@@ -100,7 +97,7 @@ public class AudioFilePanel extends AppCompatActivity
         for (String category : categories)
         {
             List<FileElement> directories =
-                dao.getDirectoriesForCategory(category).stream().map(f -> new FileElement( new File(f.getPath()).getName(), f.getPath())).collect(Collectors.toList());
+                dao.getDirectoriesForCategory(category).stream().map(f -> new FileElement( new File(f.getPath()).getName(), f.getPath(), true)).collect(Collectors.toList());
             result.put(category, directories);
         }
         return result;
@@ -112,7 +109,7 @@ public class AudioFilePanel extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == FILE_BROWSER_REQUEST_CODE)
         {
-            path = data.getStringExtra("path");
+            String path = data.getStringExtra("path");
             storeDirectory(path, data.getBooleanExtra("includeSubdirs", true), currentTab);
             updateViweData();
         }

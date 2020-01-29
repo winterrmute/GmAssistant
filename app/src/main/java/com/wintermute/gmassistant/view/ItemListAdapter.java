@@ -18,8 +18,8 @@ import java.util.List;
  */
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHolder>
 {
-    public static final String UPDATE_DATA_FLAG = "updateData";
-    public static final String CLEAR_DATA_FLAG = "clearData";
+    private static final String UPDATE_DATA_FLAG = "updateData";
+    private static final String CLEAR_DATA_FLAG = "clearData";
     private List<FileElement> files;
     private final OnListFragmentInteractionListener mListener;
 

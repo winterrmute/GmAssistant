@@ -12,4 +12,5 @@ public class FileElement
 {
     private String name;
     private String path;
+    private boolean isRoot;
 }

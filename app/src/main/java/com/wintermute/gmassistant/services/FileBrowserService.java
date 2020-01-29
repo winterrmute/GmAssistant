@@ -41,33 +41,32 @@ public class FileBrowserService
     /**
      * Scans directory for files and directories
      *
-     * @param path to browse for files.
+     * @param file to browse for files.
      * @return path of selected file.
      */
-    private String browseFiles(String path)
+    private String browseFiles(FileElement file)
     {
-        if ("previous directory".equals(path))
+        if ("previous directory".equals(file.getName()) && !file.isRoot())
         {
-            //TODO: check permission here
-            return new File(path).getParent();
-        } else if (new File(path).isDirectory())
+            return file.getPath();
+        } else if (new File(file.getPath()).isDirectory())
         {
-            return new File(path).getPath();
+            return file.getPath();
         } else
         {
-            return path;
+            return file.getName();
         }
     }
 
-    public Map<String, List<FileElement>> getFiles(String path)
+    public Map<String, List<FileElement>> getFiles(FileElement file)
     {
         List<FileElement> foundFiles = Arrays
-            .asList(Objects.requireNonNull(new File(browseFiles(path)).listFiles()))
+            .asList(Objects.requireNonNull(new File(browseFiles(file)).listFiles()))
             .stream()
-            .map(f -> new FileElement(f.getName(), f.getPath()))
+            .map(f -> new FileElement(f.getName(), f.getPath(), false))
             .collect(Collectors.toList());
         Map<String, List<FileElement>> result = new HashMap<>();
-        result.put(new File(path).getParent(), foundFiles);
+        result.put(new File(file.getPath()).getParent(), foundFiles);
         return result;
     }
 
