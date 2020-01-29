@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  */
 public class AudioFilePanel extends AppCompatActivity
 {
-    public static final int BROWSE_FILES = 1;
+    public static final int FILE_BROWSER_REQUEST_CODE = 1;
     private String currentTab;
     private ViewPagerAdapter adapter;
     private ViewPager2 viewPager;
@@ -109,7 +109,7 @@ public class AudioFilePanel extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == BROWSE_FILES)
+        if (resultCode == RESULT_OK && requestCode == FILE_BROWSER_REQUEST_CODE)
         {
             path = data.getStringExtra("path");
             storeDirectory(path, data.getBooleanExtra("includeSubdirs", true), currentTab);

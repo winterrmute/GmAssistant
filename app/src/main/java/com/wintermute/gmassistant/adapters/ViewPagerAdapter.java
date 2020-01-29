@@ -22,6 +22,7 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
     private LayoutInflater mInflater;
     private Context ctx;
     private ItemListAdapter adapter;
+    private List<String> categoryFiles;
 
     public ViewPagerAdapter(Context context, List<List<String>> data)
     {
@@ -41,18 +42,18 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
     public void onBindViewHolder(ViewHolder holder, int position)
     {
         FileBrowserService fbs = new FileBrowserService();
-        List<String> categoryFiles = filesListsByCategory.get(position);
+        categoryFiles = filesListsByCategory.get(position);
+
         adapter = new ItemListAdapter(categoryFiles, new ItemList.OnListFragmentInteractionListener()
         {
             @Override
             public void onListFragmentInteraction(String item)
             {
-                List<String> files = fbs.getFiles(categoryFiles.get(position));
-                files.add(0, "previous directory");
+                categoryFiles = fbs.getFiles(categoryFiles.get(position));
+                categoryFiles.add(0, "previous directory");
                 updateUi(adapter, holder);
             }
         });
-
         holder.myView.setAdapter(adapter);
     }
 

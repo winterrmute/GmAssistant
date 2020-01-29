@@ -45,6 +45,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
                 // Notify the active callbacks interface (the activity, if the
                 // fragment is attached to one) that an item has been selected.
                 mListener.onListFragmentInteraction(holder.file);
+
             }
         });
     }
@@ -63,7 +64,6 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
 
         private ViewHolder(View view)
         {
-            //TODO: refactor
             super(view);
             mView = view;
             mContentView = view.findViewById(R.id.content);
