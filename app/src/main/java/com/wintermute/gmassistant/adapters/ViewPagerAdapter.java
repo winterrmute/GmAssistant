@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.ViewHolder>
 {
 
+    public static final String PREVIOUS_DIRECTORY = "previous directory";
     private List<List<FileElement>> filesListsByCategory;
     private LayoutInflater mInflater;
     private Context ctx;
@@ -60,28 +61,35 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
     private void browseDirectory(FileBrowserService fbs, FileElement item)
     {
         Map<String, List<FileElement>> files = fbs.getFiles(item);
+        List<FileElement> newContent = files.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
+        String parent;
+        String path = item.getPath();
+
+
         if (item.isRoot())
         {
             rootPath = item.getPath();
         }
+        FileElement goToParent = new FileElement(PREVIOUS_DIRECTORY, item.getPath(), false);
 
-        List<FileElement> newContent = files.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
-        FileElement parentDirectory = new FileElement("previous directory", item.getPath(), false);
-        if (rootPath.equals(item.getPath())){
-
-            if ("previous directory".equals(item.getName())) {
-                newContent = new ArrayList<>(rootElements);
+        if (PREVIOUS_DIRECTORY.equals(item.getName())) {
+            if (item.getPath().equals(rootPath)) {
+                newContent = rootElements;
+                updateListElements(newContent);
             } else {
-                newContent.add(0, parentDirectory);
+                goToParent = new FileElement(PREVIOUS_DIRECTORY, item.getPath().substring(item.getPath().lastIndexOf(0, '/')) , false);
+                newContent.add(0, goToParent);
+                updateListElements(newContent);
             }
         } else {
-            parentDirectory =
-                new FileElement("previous directory", item.getPath().substring(0, item.getPath().lastIndexOf('/')),
-                    false);
-            newContent.add(0, parentDirectory);
-
+            newContent.add(0, goToParent);
+            updateListElements(newContent);
         }
-        updateListElements(newContent);
+
+    }
+
+    private void handlePath(){
+        
     }
 
     private void updateListElements(List<FileElement> newContent)
