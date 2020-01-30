@@ -13,6 +13,7 @@ import com.wintermute.gmassistant.services.FileBrowserService;
 import com.wintermute.gmassistant.view.ItemListAdapter;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,12 +27,14 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
     private ItemListAdapter adapter;
     private String rootPath;
     private List<FileElement> rootElements;
+    private String tag;
 
-    public ViewPagerAdapter(Context context, List<List<FileElement>> data)
+    public ViewPagerAdapter(Context context, List<List<FileElement>> data, String tag)
     {
         this.mInflater = LayoutInflater.from(context);
         this.filesListsByCategory = data;
         this.ctx = context;
+        this.tag = tag;
         rootElements = new ArrayList<>(filesListsByCategory.get(0));
     }
 
@@ -48,41 +51,43 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
         FileBrowserService fbs = new FileBrowserService();
         List<FileElement> categoryFiles = new ArrayList<>(filesListsByCategory.get(position));
 
-        adapter = new ItemListAdapter(categoryFiles, item ->
-        {
-            browseDirectory(fbs, item);
-        });
+        adapter = new ItemListAdapter(categoryFiles, item -> handleClickOnElement(fbs, item));
         holder.myView.setAdapter(adapter);
     }
 
-    private void browseDirectory(FileBrowserService fbs, FileElement item)
+    private void handleClickOnElement(FileBrowserService fbs, FileElement item)
     {
-        List<FileElement> newContent;
-        String newPath;
-
-        if (item.isRoot())
+        if (new File(item.getPath()).isDirectory())
         {
-            rootPath = item.getPath();
-        }
+            List<FileElement> newContent;
+            String newPath;
+            if (item.isRoot())
+            {
+                rootPath = item.getPath();
+            }
 
-        if (PREVIOUS_DIRECTORY.equals(item.getName()))
-        {
-            newPath = item.getPath().substring(0, item.getPath().lastIndexOf('/'));
+            if (PREVIOUS_DIRECTORY.equals(item.getName()))
+            {
+                newPath = item.getPath().substring(0, item.getPath().lastIndexOf('/'));
+            } else
+            {
+                newPath = item.getPath();
+            }
+            FileElement goToParent = new FileElement(PREVIOUS_DIRECTORY, newPath, false);
+
+            if (item.getPath().equals(rootPath) && !item.isRoot())
+            {
+                newContent = rootElements;
+            } else
+            {
+                newContent = fbs.getFiles(newPath);
+                newContent.add(0, goToParent);
+            }
+            updateListElements(newContent);
         } else
         {
-            newPath = item.getPath();
+            //TODO: play track
         }
-        FileElement goToParent = new FileElement(PREVIOUS_DIRECTORY, newPath, false);
-
-        if (item.getPath().equals(rootPath) && !item.isRoot())
-        {
-            newContent = rootElements;
-        } else
-        {
-            newContent = fbs.getFiles(newPath);
-            newContent.add(0, goToParent);
-        }
-        updateListElements(newContent);
     }
 
     private void updateListElements(List<FileElement> newContent)

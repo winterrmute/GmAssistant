@@ -1,11 +1,10 @@
 package com.wintermute.gmassistant.view;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
+import androidx.recyclerview.widget.RecyclerView;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.model.FileElement;
 import com.wintermute.gmassistant.view.ItemList.OnListFragmentInteractionListener;
@@ -52,13 +51,17 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
         });
     }
 
-    public void updateData(List<FileElement> filesList, String flag) {
-        if (UPDATE_DATA_FLAG.equals(flag)) { //append
-            for (int i = 0; i < filesList.size(); i++) {
+    public void updateData(List<FileElement> filesList, String flag)
+    {
+        if (UPDATE_DATA_FLAG.equals(flag))
+        { //append
+            for (int i = 0; i < filesList.size(); i++)
+            {
                 files.add(filesList.get(i));
                 notifyItemInserted(getItemCount());
             }
-        } else if (CLEAR_DATA_FLAG.equals(flag)) { //clear all
+        } else if (CLEAR_DATA_FLAG.equals(flag))
+        { //clear all
             files.clear();
             notifyDataSetChanged();
         }

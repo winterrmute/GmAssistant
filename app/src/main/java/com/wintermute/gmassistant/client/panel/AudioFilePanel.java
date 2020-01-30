@@ -51,7 +51,7 @@ public class AudioFilePanel extends AppCompatActivity
 
         content = listByTag();
 
-        adapter = new ViewPagerAdapter(getApplicationContext(), new ArrayList<>(content.values()));
+        adapter = new ViewPagerAdapter(getApplicationContext(), new ArrayList<>(content.values()), currentTab);
         viewPager.setAdapter(adapter);
         new TabLayoutMediator(tabLayout, viewPager,
             (tab, position) -> tab.setText(content.keySet().toArray()[position].toString())).attach();
@@ -84,7 +84,7 @@ public class AudioFilePanel extends AppCompatActivity
     private void updateViweData()
     {
         content = listByTag();
-        adapter = new ViewPagerAdapter(getApplicationContext(), new ArrayList<>(content.values()));
+        adapter = new ViewPagerAdapter(getApplicationContext(), new ArrayList<>(content.values()), currentTab);
         viewPager.setAdapter(adapter);
     }
 

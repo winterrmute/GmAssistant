@@ -1,14 +1,11 @@
 package com.wintermute.gmassistant.services;
 
-import com.wintermute.gmassistant.client.FileBrowser;
 import com.wintermute.gmassistant.model.FileElement;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -39,8 +36,6 @@ public class FileBrowserService
     }
 
     /**
-     *
-     *
      * @param path to scan directory
      * @return
      */
