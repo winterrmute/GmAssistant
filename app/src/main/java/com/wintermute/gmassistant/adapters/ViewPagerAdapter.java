@@ -14,9 +14,7 @@ import com.wintermute.gmassistant.view.ItemListAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.ViewHolder>
 {
@@ -60,22 +58,28 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
     private void browseDirectory(FileBrowserService fbs, FileElement item)
     {
         List<FileElement> newContent;
-        String newPath = item.getPath();
+        String newPath;
 
-        if (item.isRoot()) {
+        if (item.isRoot())
+        {
             rootPath = item.getPath();
         }
 
         if (PREVIOUS_DIRECTORY.equals(item.getName()))
         {
             newPath = item.getPath().substring(0, item.getPath().lastIndexOf('/'));
+        } else
+        {
+            newPath = item.getPath();
         }
         FileElement goToParent = new FileElement(PREVIOUS_DIRECTORY, newPath, false);
 
-        if (item.getPath().equals(rootPath.substring(0, rootPath.lastIndexOf('/')))) {
+        if (item.getPath().equals(rootPath) && !item.isRoot())
+        {
             newContent = rootElements;
-        } else {
-            newContent = fbs.getFiles(item).values().stream().flatMap(Collection::stream).collect(Collectors.toList());
+        } else
+        {
+            newContent = fbs.getFiles(newPath);
             newContent.add(0, goToParent);
         }
         updateListElements(newContent);
