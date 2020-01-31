@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.model.FileElement;
 
+import java.util.ArrayList;
+
 /**
  * A fragment representing a list of Items.
  * <p/>
@@ -85,7 +87,7 @@ public class ItemList extends Fragment
             {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new ItemListAdapter(null, mListener));
+            recyclerView.setAdapter(new ItemListAdapter(new ArrayList<>(), mListener));
         }
         return view;
     }

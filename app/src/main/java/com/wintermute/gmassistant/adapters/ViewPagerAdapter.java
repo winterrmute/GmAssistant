@@ -20,7 +20,7 @@ import java.util.List;
 public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.ViewHolder>
 {
 
-    public static final String PREVIOUS_DIRECTORY = "previous directory";
+    private static final String PREVIOUS_DIRECTORY = "previous directory";
     private List<List<FileElement>> filesListsByCategory;
     private LayoutInflater mInflater;
     private Context ctx;
