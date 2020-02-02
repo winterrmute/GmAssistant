@@ -28,6 +28,7 @@ public class CategoryList extends Fragment
     private List<LibraryElement> rootElements;
     private List<LibraryElement> listElements;
     private int tagId;
+    private ListAdapter adapter;
 
     public static CategoryList init(int position, ArrayList<LibraryElement> elements)
     {
@@ -53,7 +54,7 @@ public class CategoryList extends Fragment
     {
         View layoutView = inflater.inflate(R.layout.content_list, container, false);
         ListView lv = layoutView.findViewById(R.id.content_items);
-        ListAdapter adapter = new ListAdapter(getContext(), listElements);
+        adapter = new ListAdapter(getContext(), listElements);
         lv.setAdapter(adapter);
         rootElements = listElements;
         FileBrowserService fbs = new FileBrowserService();
@@ -61,7 +62,6 @@ public class CategoryList extends Fragment
         lv.setOnItemClickListener((parent, view, position, id) ->
         {
             handleClickOnElement(fbs, listElements.get(position));
-            adapter.updateDisplayedElements(listElements);
         });
         lv.setOnItemLongClickListener((parent, view, position, id) ->
         {
@@ -100,6 +100,7 @@ public class CategoryList extends Fragment
                 newContent.add(0, goToParent);
             }
             listElements = new ArrayList<>(newContent);
+            adapter.updateDisplayedElements(listElements);
         } else
         {
             PlayerHandler handler = new PlayerHandler(getContext());

@@ -38,7 +38,7 @@ public class PlayerHandler
         if  (tag == 0) {
             target = MusicPlayerService.class;
         } else if (tag == 1) {
-            target = AmbiencePlayerReceiver.class;
+            target = AmbiencePlayerService.class;
         } else {
             target = EffectPlayerService.class;
         }
