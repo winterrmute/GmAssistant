@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import com.wintermute.gmassistant.model.FileElement;
+import com.wintermute.gmassistant.model.LibraryElement;
 import com.wintermute.gmassistant.view.CategoryList;
 
 import java.util.ArrayList;
@@ -20,10 +20,10 @@ import java.util.Objects;
 public class CategoryListAdapter extends FragmentStatePagerAdapter
 {
     private int tabsCount;
-    private Map<Integer, List<FileElement>> audioByCategory;
+    private Map<Integer, List<LibraryElement>> audioByCategory;
 
     public CategoryListAdapter(@NonNull FragmentManager fm, int behavior, int tabsCount,
-                               Map<Integer, List<FileElement>> library)
+                               Map<Integer, List<LibraryElement>> library)
     {
         super(fm, behavior);
         this.tabsCount = tabsCount;

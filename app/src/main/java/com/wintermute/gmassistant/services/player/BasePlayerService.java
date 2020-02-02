@@ -25,6 +25,7 @@ public class BasePlayerService extends Service
     String sceneId;
     String trackId;
     String playlistId;
+    String trackPath;
 
     /**
      * Changes the light.
@@ -52,6 +53,7 @@ public class BasePlayerService extends Service
      */
     void getExtras(Intent intent)
     {
+        trackPath = intent.getStringExtra("track");
         sceneId = intent.getStringExtra("sceneId");
         playlistId = intent.getStringExtra("playlistId");
         trackId = intent.getStringExtra("trackId");

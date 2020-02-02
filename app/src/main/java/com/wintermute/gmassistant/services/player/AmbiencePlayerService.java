@@ -53,7 +53,7 @@ public class AmbiencePlayerService extends BasePlayerService
         getExtras(intent);
         mediaPlayer.stop();
         startForeground(1, createNotification(intent, "Ambience sound", CHANNEL_ID, AmbiencePlayerReceiver.class));
-        mediaPlayer = create(this, Uri.parse(getTrackPath(trackId)));
+        mediaPlayer = create(this, Uri.parse(trackPath));
         mediaPlayer.setVolume(0.03f, 0.03f);
         mediaPlayer.start();
         mediaPlayer.setLooping(true);

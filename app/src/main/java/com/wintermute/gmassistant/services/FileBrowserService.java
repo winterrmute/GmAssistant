@@ -1,6 +1,6 @@
 package com.wintermute.gmassistant.services;
 
-import com.wintermute.gmassistant.model.FileElement;
+import com.wintermute.gmassistant.model.LibraryElement;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -39,12 +39,12 @@ public class FileBrowserService
      * @param path to scan directory
      * @return
      */
-    public List<FileElement> getFiles(String path)
+    public List<LibraryElement> getFiles(String path)
     {
         return Arrays
             .asList(Objects.requireNonNull(new File(path).listFiles()))
             .stream()
-            .map(f -> new FileElement(f.getName(), f.getPath(), false))
+            .map(f -> new LibraryElement(f.getName(), f.getPath(), false))
             .collect(Collectors.toList());
     }
 

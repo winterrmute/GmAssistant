@@ -8,7 +8,8 @@ import android.widget.ListView;
 import androidx.fragment.app.Fragment;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.ListAdapter;
-import com.wintermute.gmassistant.model.FileElement;
+import com.wintermute.gmassistant.handlers.PlayerHandler;
+import com.wintermute.gmassistant.model.LibraryElement;
 import com.wintermute.gmassistant.services.FileBrowserService;
 
 import java.io.File;
@@ -24,14 +25,15 @@ public class CategoryList extends Fragment
 {
     private static final String PREVIOUS_DIRECTORY = "previous directory";
     private String rootPath;
-    private List<FileElement> rootElements;
-    private List<FileElement> listElements;
+    private List<LibraryElement> rootElements;
+    private List<LibraryElement> listElements;
+    private int tagId;
 
-    public static CategoryList init(int position, ArrayList<FileElement> elements)
+    public static CategoryList init(int position, ArrayList<LibraryElement> elements)
     {
         CategoryList result = new CategoryList();
         Bundle args = new Bundle();
-        args.putInt("val", position);
+        args.putInt("tag", position);
         args.putParcelableArrayList("elements", elements);
         result.setArguments(args);
         return result;
@@ -41,6 +43,7 @@ public class CategoryList extends Fragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        tagId = getArguments() != null ? getArguments().getInt("tag") : 1;
         listElements = getArguments() != null ? getArguments().getParcelableArrayList("elements") : new ArrayList<>();
         System.out.println();
     }
@@ -57,7 +60,7 @@ public class CategoryList extends Fragment
 
         lv.setOnItemClickListener((parent, view, position, id) ->
         {
-            listElements = handleClickOnElement(fbs, listElements.get(position));
+            handleClickOnElement(fbs, listElements.get(position));
             adapter.updateDisplayedElements(listElements);
         });
         lv.setOnItemLongClickListener((parent, view, position, id) ->
@@ -68,11 +71,11 @@ public class CategoryList extends Fragment
         return layoutView;
     }
 
-    private List<FileElement> handleClickOnElement(FileBrowserService fbs, FileElement item)
+    private void handleClickOnElement(FileBrowserService fbs, LibraryElement item)
     {
         if (new File(item.getPath()).isDirectory())
         {
-            List<FileElement> newContent;
+            List<LibraryElement> newContent;
             String newPath;
             if (item.isRoot())
             {
@@ -86,7 +89,7 @@ public class CategoryList extends Fragment
             {
                 newPath = item.getPath();
             }
-            FileElement goToParent = new FileElement(PREVIOUS_DIRECTORY, newPath, false);
+            LibraryElement goToParent = new LibraryElement(PREVIOUS_DIRECTORY, newPath, false);
 
             if (item.getPath().equals(rootPath) && !item.isRoot())
             {
@@ -96,11 +99,11 @@ public class CategoryList extends Fragment
                 newContent = fbs.getFiles(newPath);
                 newContent.add(0, goToParent);
             }
-            return newContent;
+            listElements = new ArrayList<>(newContent);
         } else
         {
-            //TODO: play track
-            return null;
+            PlayerHandler handler = new PlayerHandler(getContext());
+            handler.playSingleFile(item.getPath(), tagId);
         }
     }
 }

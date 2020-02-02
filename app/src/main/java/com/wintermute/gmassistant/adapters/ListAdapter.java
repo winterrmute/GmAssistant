@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.wintermute.gmassistant.R;
-import com.wintermute.gmassistant.model.FileElement;
+import com.wintermute.gmassistant.model.LibraryElement;
 
 import java.util.List;
 
@@ -19,16 +19,16 @@ import java.util.List;
  */
 public class ListAdapter extends BaseAdapter
 {
-    private List<FileElement> browsedFiles;
+    private List<LibraryElement> browsedFiles;
     private LayoutInflater inflater;
 
-    public ListAdapter(Context ctx, List<FileElement> files)
+    public ListAdapter(Context ctx, List<LibraryElement> files)
     {
         browsedFiles = files;
         inflater = LayoutInflater.from(ctx);
     }
 
-    public void updateDisplayedElements(List<FileElement> files)
+    public void updateDisplayedElements(List<LibraryElement> files)
     {
         browsedFiles = files;
         notifyDataSetChanged();

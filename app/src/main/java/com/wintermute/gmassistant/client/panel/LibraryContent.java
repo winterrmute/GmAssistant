@@ -13,7 +13,7 @@ import com.wintermute.gmassistant.adapters.CategoryListAdapter;
 import com.wintermute.gmassistant.client.FileBrowser;
 import com.wintermute.gmassistant.database.dao.DirectoryDao;
 import com.wintermute.gmassistant.model.Directory;
-import com.wintermute.gmassistant.model.FileElement;
+import com.wintermute.gmassistant.model.LibraryElement;
 
 import java.io.File;
 import java.util.HashMap;
@@ -35,7 +35,7 @@ public class LibraryContent extends FragmentActivity
 
     private void updateViewData()
     {
-        Map<Integer, List<FileElement>> libraryContent = listByTag();
+        Map<Integer, List<LibraryElement>> libraryContent = listByTag();
         CategoryListAdapter adapter =
             new CategoryListAdapter(getSupportFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, TABS_COUNT,
                 libraryContent);
@@ -48,9 +48,9 @@ public class LibraryContent extends FragmentActivity
         Objects.requireNonNull(tabLayout.getTabAt(2)).setText(categories[2]);
     }
 
-    private Map<Integer, List<FileElement>> listByTag()
+    private Map<Integer, List<LibraryElement>> listByTag()
     {
-        Map<Integer, List<FileElement>> result = new HashMap<>();
+        Map<Integer, List<LibraryElement>> result = new HashMap<>();
         DirectoryDao dao = new DirectoryDao(getApplicationContext());
 
         int categoryId;
@@ -67,10 +67,10 @@ public class LibraryContent extends FragmentActivity
                 categoryId = 2;
             }
 
-            List<FileElement> directories = dao
+            List<LibraryElement> directories = dao
                 .getDirectoriesForCategory(category)
                 .stream()
-                .map(f -> new FileElement(new File(f.getPath()).getName(), f.getPath(), true))
+                .map(f -> new LibraryElement(new File(f.getPath()).getName(), f.getPath(), true))
                 .collect(Collectors.toList());
 
             result.put(categoryId, directories);

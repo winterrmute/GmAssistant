@@ -56,7 +56,7 @@ public class MusicPlayerService extends BasePlayerService
         getExtras(intent);
         mediaPlayer.stop();
         startForeground(2, createNotification(intent, "Background Music", CHANNEL_ID, MusicPlayerReceiver.class));
-        mediaPlayer = create(this, Uri.parse(getTrackPath(trackId)));
+        mediaPlayer = create(this, Uri.parse(trackPath));
         mediaPlayer.setVolume(0.08f, 0.08f);
         mediaPlayer.start();
         mediaPlayer.setLooping(true);

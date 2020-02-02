@@ -45,7 +45,7 @@ public class EffectPlayerService extends BasePlayerService
     {
         getExtras(intent);
         mediaPlayer.stop();
-        mediaPlayer = create(this, Uri.parse(getTrackPath(trackId)));
+        mediaPlayer = create(this, Uri.parse(trackPath));
         mediaPlayer.setVolume(1f, 1f);
         mediaPlayer.start();
         if (sceneId != null)
