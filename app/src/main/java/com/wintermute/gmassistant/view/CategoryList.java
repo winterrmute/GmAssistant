@@ -43,7 +43,7 @@ public class CategoryList extends Fragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        tagId = getArguments() != null ? getArguments().getInt("tag") : 1;
+        tagId = getArguments() != null ? getArguments().getInt("tag") : 0;
         listElements = getArguments() != null ? getArguments().getParcelableArrayList("elements") : new ArrayList<>();
         System.out.println();
     }

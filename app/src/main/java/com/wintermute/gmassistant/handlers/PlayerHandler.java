@@ -27,6 +27,12 @@ public class PlayerHandler
         this.ctx = ctx;
     }
 
+    /**
+     * Plays single file from path by tagId.
+     *
+     * @param path on device to audio track.
+     * @param tag to specify player service.
+     */
     public void playSingleFile(String path, int tag){
         Class target;
         if  (tag == 0) {
