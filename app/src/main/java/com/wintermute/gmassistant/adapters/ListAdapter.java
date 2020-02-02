@@ -1,6 +1,5 @@
 package com.wintermute.gmassistant.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,10 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.wintermute.gmassistant.R;
-import com.wintermute.gmassistant.model.Directory;
 import com.wintermute.gmassistant.model.FileElement;
 
-import java.io.File;
 import java.util.List;
 
 /**

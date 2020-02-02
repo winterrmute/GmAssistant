@@ -19,7 +19,6 @@
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
         <activity android:name=".client.panel.LibraryContent"></activity>
-        <activity android:name=".client.panel.AudioFilePanel" />
         <activity
                 android:name=".dialogs.ListDialog"
                 android:theme="@android:style/Theme.Dialog" />

@@ -15,6 +15,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents each audio category elements as list. Allows to browse it.
+ *
+ * @author wintermute
+ */
 public class CategoryList extends Fragment
 {
     private static final String PREVIOUS_DIRECTORY = "previous directory";

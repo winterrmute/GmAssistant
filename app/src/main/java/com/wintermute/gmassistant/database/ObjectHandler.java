@@ -51,10 +51,10 @@ public class ObjectHandler
     public void fillPlaylist(Playlist playlist, String path)
     {
         FileBrowserService fs = new FileBrowserService();
-//        List<File> tracksFound = fs.collectTracks(path);
-//        for (File track : tracksFound)
-//        {
-//            createPlaylistContent(playlist, createTrack(track));
-//        }
+        //        List<File> tracksFound = fs.collectTracks(path);
+        //        for (File track : tracksFound)
+        //        {
+        //            createPlaylistContent(playlist, createTrack(track));
+        //        }
     }
 }

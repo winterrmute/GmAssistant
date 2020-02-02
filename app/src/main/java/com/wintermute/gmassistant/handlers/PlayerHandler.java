@@ -62,9 +62,11 @@ public class PlayerHandler
 
     /**
      * Starts player service.
+     *
      * @param track to start playing
      */
-    public void startPlaying(Track track){
+    public void startPlaying(Track track)
+    {
         Intent player = new Intent(ctx, specifyServicePlayer(track.getId()));
         player.putExtra("trackId", track.getId());
 
@@ -100,7 +102,6 @@ public class PlayerHandler
     /**
      * @param trackId to identify the right player.
      * @return player that should be triggered.
-     *
      * @deprecated will be removed in future
      */
     private Class specifyServicePlayer(String trackId)

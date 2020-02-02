@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
-import com.wintermute.gmassistant.client.panel.AudioFilePanel;
 import com.wintermute.gmassistant.client.panel.LibraryContent;
 import com.wintermute.gmassistant.client.panel.LightPanel;
 import com.wintermute.gmassistant.client.panel.PlaylistPanel;

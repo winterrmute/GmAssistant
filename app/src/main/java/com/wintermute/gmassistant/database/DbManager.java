@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.util.Arrays;
 import java.util.stream.Stream;
 
 public class DbManager extends SQLiteOpenHelper

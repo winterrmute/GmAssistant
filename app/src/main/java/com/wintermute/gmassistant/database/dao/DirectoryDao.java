@@ -71,11 +71,8 @@ public class DirectoryDao extends BaseDao
 
     public List<Directory> getDirectoriesForCategory(String tag)
     {
-        StringBuilder query = new StringBuilder("SELECT * FROM ")
-            .append(TABLE_NAME)
-            .append(" WHERE tag = '")
-            .append(tag)
-            .append("'");
+        StringBuilder query =
+            new StringBuilder("SELECT * FROM ").append(TABLE_NAME).append(" WHERE tag = '").append(tag).append("'");
         return mapObject(dbRead.rawQuery(query.toString(), null));
     }
 

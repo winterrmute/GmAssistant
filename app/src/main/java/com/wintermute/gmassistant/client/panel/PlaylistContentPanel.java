@@ -9,9 +9,9 @@ import com.wintermute.gmassistant.adapters.TrackAdapter;
 import com.wintermute.gmassistant.config.SceneConfig;
 import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
 import com.wintermute.gmassistant.database.dao.TrackDao;
-import com.wintermute.gmassistant.model.Track;
 import com.wintermute.gmassistant.dialogs.ListDialog;
 import com.wintermute.gmassistant.handlers.PlayerHandler;
+import com.wintermute.gmassistant.model.Track;
 
 import java.util.ArrayList;
 import java.util.Arrays;

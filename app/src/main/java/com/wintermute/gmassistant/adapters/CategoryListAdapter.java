@@ -22,7 +22,8 @@ public class CategoryListAdapter extends FragmentStatePagerAdapter
     private int tabsCount;
     private Map<Integer, List<FileElement>> audioByCategory;
 
-    public CategoryListAdapter(@NonNull FragmentManager fm, int behavior, int tabsCount, Map<Integer, List<FileElement>> library)
+    public CategoryListAdapter(@NonNull FragmentManager fm, int behavior, int tabsCount,
+                               Map<Integer, List<FileElement>> library)
     {
         super(fm, behavior);
         this.tabsCount = tabsCount;

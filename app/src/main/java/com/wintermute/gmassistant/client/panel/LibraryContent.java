@@ -22,36 +22,24 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * Allows to manage audio library by categories.
+ *
+ * @author wintermute
+ */
 public class LibraryContent extends FragmentActivity
 {
     private static final int TABS_COUNT = 3;
-    private CategoryListAdapter adapter;
-    private ViewPager viewPager;
     private TabLayout tabLayout;
     private String[] categories = {"music", "ambience", "category"};
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
+    private void updateViewData()
     {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_library_content);
-
-        updateViewData();
-
-        Button btn = findViewById(R.id.add_files_with_tag);
-        btn.setOnClickListener(l ->
-        {
-            Intent fileBrowser = new Intent(LibraryContent.this, FileBrowser.class);
-            startActivityForResult(fileBrowser, 1);
-        });
-    }
-
-    private void updateViewData(){
         Map<Integer, List<FileElement>> libraryContent = listByTag();
-        adapter =
+        CategoryListAdapter adapter =
             new CategoryListAdapter(getSupportFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, TABS_COUNT,
                 libraryContent);
-        viewPager = findViewById(R.id.category_pages);
+        ViewPager viewPager = findViewById(R.id.category_pages);
         viewPager.setAdapter(adapter);
         tabLayout = findViewById(R.id.category_tabs);
         tabLayout.setupWithViewPager(viewPager);
@@ -102,6 +90,22 @@ public class LibraryContent extends FragmentActivity
                 categories[tabLayout.getSelectedTabPosition()]);
             updateViewData();
         }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_library_content);
+
+        updateViewData();
+
+        Button btn = findViewById(R.id.add_files_with_tag);
+        btn.setOnClickListener(l ->
+        {
+            Intent fileBrowser = new Intent(LibraryContent.this, FileBrowser.class);
+            startActivityForResult(fileBrowser, 1);
+        });
     }
 
     private void storeDirectory(String path, boolean recursive, String tag)

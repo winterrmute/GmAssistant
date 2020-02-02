@@ -13,7 +13,6 @@ import com.wintermute.gmassistant.services.FileBrowserService;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * FileBrowser client selecting whole directories or single files to create playlists.

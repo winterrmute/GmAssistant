@@ -50,19 +50,21 @@ abstract class BaseDao
 
     /**
      * @param object to translate into values
-     * @return values to insert into database
-     * TODO: optimize check fo type especially for ids and exception handling
+     * @return values to insert into database TODO: optimize check fo type especially for ids and exception handling
      */
     ContentValues getContentValues(Map<String, Object> object)
     {
         ContentValues values = new ContentValues();
         for (Map.Entry<String, Object> entry : object.entrySet())
         {
-            if (entry.getValue() instanceof String) {
+            if (entry.getValue() instanceof String)
+            {
                 values.put(entry.getKey(), (String) entry.getValue());
-            } else if (entry.getValue() instanceof Long) {
+            } else if (entry.getValue() instanceof Long)
+            {
                 values.put(entry.getKey(), (Long) entry.getValue());
-            } else if (entry.getValue() instanceof Boolean) {
+            } else if (entry.getValue() instanceof Boolean)
+            {
                 values.put(entry.getKey(), (Boolean) entry.getValue());
             }
         }

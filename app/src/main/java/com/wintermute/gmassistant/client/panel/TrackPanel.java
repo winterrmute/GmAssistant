@@ -7,8 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.TrackAdapter;
 import com.wintermute.gmassistant.database.dao.TrackDao;
-import com.wintermute.gmassistant.model.Track;
 import com.wintermute.gmassistant.dialogs.ListDialog;
+import com.wintermute.gmassistant.model.Track;
 
 import java.util.ArrayList;
 import java.util.Arrays;

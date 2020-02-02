@@ -12,17 +12,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class FileElement implements Parcelable
 {
-    private String name;
-    private String path;
-    private boolean isRoot;
-
-    protected FileElement(Parcel in)
-    {
-        name = in.readString();
-        path = in.readString();
-        isRoot = in.readByte() != 0;
-    }
-
     public static final Creator<FileElement> CREATOR = new Creator<FileElement>()
     {
         @Override
@@ -37,6 +26,16 @@ public class FileElement implements Parcelable
             return new FileElement[size];
         }
     };
+    private String name;
+    private String path;
+    private boolean isRoot;
+
+    protected FileElement(Parcel in)
+    {
+        name = in.readString();
+        path = in.readString();
+        isRoot = in.readByte() != 0;
+    }
 
     @Override
     public int describeContents()
