@@ -1,5 +1,6 @@
 package com.wintermute.gmassistant.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,8 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.wintermute.gmassistant.R;
+import com.wintermute.gmassistant.model.Directory;
+import com.wintermute.gmassistant.model.FileElement;
 
 import java.io.File;
 import java.util.List;
@@ -57,6 +60,7 @@ public class ListAdapter extends BaseAdapter
     {
         LinearLayout result = (LinearLayout) inflater.inflate(R.layout.file, parent, false);
         TextView fileName = result.findViewById(R.id.file_name);
+//        String file = new File(browsedFiles.get(position).getPath()).getName();
         String file = browsedFiles.get(position);
         fileName.setText(file);
         result.setTag(position);

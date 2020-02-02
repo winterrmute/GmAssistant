@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.client.panel.AudioFilePanel;
+import com.wintermute.gmassistant.client.panel.LibraryContent;
 import com.wintermute.gmassistant.client.panel.LightPanel;
 import com.wintermute.gmassistant.client.panel.PlaylistPanel;
 import com.wintermute.gmassistant.client.panel.ScenePanel;
@@ -29,7 +30,7 @@ public class GmAssistant extends AppCompatActivity
         playlistPanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, PlaylistPanel.class)));
 
         Button trackPanel = findViewById(R.id.manage_tracks);
-        trackPanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, AudioFilePanel.class)));
+        trackPanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, LibraryContent.class)));
 
         Button scenePanel = findViewById(R.id.manage_scenes);
         scenePanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, ScenePanel.class)));
