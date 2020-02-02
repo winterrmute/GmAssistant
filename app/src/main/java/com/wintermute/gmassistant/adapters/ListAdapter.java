@@ -22,16 +22,16 @@ import java.util.List;
  */
 public class ListAdapter extends BaseAdapter
 {
-    private List<String> browsedFiles;
+    private List<FileElement> browsedFiles;
     private LayoutInflater inflater;
 
-    public ListAdapter(Context ctx, List<String> files)
+    public ListAdapter(Context ctx, List<FileElement> files)
     {
         browsedFiles = files;
         inflater = LayoutInflater.from(ctx);
     }
 
-    public void updateDisplayedElements(List<String> files)
+    public void updateDisplayedElements(List<FileElement> files)
     {
         browsedFiles = files;
         notifyDataSetChanged();
@@ -60,8 +60,7 @@ public class ListAdapter extends BaseAdapter
     {
         LinearLayout result = (LinearLayout) inflater.inflate(R.layout.file, parent, false);
         TextView fileName = result.findViewById(R.id.file_name);
-//        String file = new File(browsedFiles.get(position).getPath()).getName();
-        String file = browsedFiles.get(position);
+        String file = browsedFiles.get(position).getName();
         fileName.setText(file);
         result.setTag(position);
         return result;

@@ -2,36 +2,33 @@ package com.wintermute.gmassistant.client.panel;
 
 import static androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 
+import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
+import android.widget.Button;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.CategoryListAdapter;
+import com.wintermute.gmassistant.client.FileBrowser;
 import com.wintermute.gmassistant.database.dao.DirectoryDao;
+import com.wintermute.gmassistant.model.Directory;
 import com.wintermute.gmassistant.model.FileElement;
-import com.wintermute.gmassistant.view.CategoryList;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class LibraryContent extends FragmentActivity
 {
     private static final int TABS_COUNT = 3;
-    CategoryListAdapter adapter;
-    ViewPager viewPager;
-    TabLayout tabLayout;
-//    private static List<FileElement> categoryContent = new ArrayList<>();
-    private static List<String> categoryContent = new ArrayList<>();
-
+    private CategoryListAdapter adapter;
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
+    private String[] categories = {"music", "ambience", "category"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -39,58 +36,81 @@ public class LibraryContent extends FragmentActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_library_content);
 
-        Map<String, List<FileElement>> directoriesWithContent = listByTag();
+        updateViewData();
 
-//        categoryContent = directoriesWithContent.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
-        categoryContent.add("eins");
-        categoryContent.add("zwei");
+        Button btn = findViewById(R.id.add_files_with_tag);
+        btn.setOnClickListener(l ->
+        {
+            Intent fileBrowser = new Intent(LibraryContent.this, FileBrowser.class);
+            startActivityForResult(fileBrowser, 1);
+        });
+    }
 
-
-        adapter = new CategoryListAdapter(getSupportFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, TABS_COUNT, categoryContent);
+    private void updateViewData(){
+        Map<Integer, List<FileElement>> libraryContent = listByTag();
+        adapter =
+            new CategoryListAdapter(getSupportFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, TABS_COUNT,
+                libraryContent);
         viewPager = findViewById(R.id.category_pages);
         viewPager.setAdapter(adapter);
         tabLayout = findViewById(R.id.category_tabs);
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.getTabAt(0).setText("music");
-        tabLayout.getTabAt(1).setText("ambience");
-        tabLayout.getTabAt(2).setText("effect");
+        Objects.requireNonNull(tabLayout.getTabAt(0)).setText(categories[0]);
+        Objects.requireNonNull(tabLayout.getTabAt(1)).setText(categories[1]);
+        Objects.requireNonNull(tabLayout.getTabAt(2)).setText(categories[2]);
     }
 
-    private Map<String, List<FileElement>> listByTag()
+    private Map<Integer, List<FileElement>> listByTag()
     {
-        Map<String, List<FileElement>> result = new HashMap<>();
+        Map<Integer, List<FileElement>> result = new HashMap<>();
         DirectoryDao dao = new DirectoryDao(getApplicationContext());
-        String[] categories = {"music", "ambience", "effect"};
 
+        int categoryId;
         for (String category : categories)
         {
-            List<FileElement> directories =
-                dao.getDirectoriesForCategory(category).stream().map(f -> new FileElement( new File(f.getPath()).getName(), f.getPath(), true)).collect(
-                    Collectors.toList());
-            result.put(category, directories);
+            if (category.equals("music"))
+            {
+                categoryId = 0;
+            } else if (category.equals("ambience"))
+            {
+                categoryId = 1;
+            } else
+            {
+                categoryId = 2;
+            }
+
+            List<FileElement> directories = dao
+                .getDirectoriesForCategory(category)
+                .stream()
+                .map(f -> new FileElement(new File(f.getPath()).getName(), f.getPath(), true))
+                .collect(Collectors.toList());
+
+            result.put(categoryId, directories);
         }
         return result;
     }
 
-//    public static class CategoryListAdapter extends FragmentStatePagerAdapter
-//    {
-//
-//        public CategoryListAdapter(@NonNull FragmentManager fm, int behavior)
-//        {
-//            super(fm, behavior);
-//        }
-//
-//        @NonNull
-//        @Override
-//        public Fragment getItem(int position)
-//        {
-//            return CategoryList.init(position, new ArrayList<>(categoryContent));
-//        }
-//
-//        @Override
-//        public int getCount()
-//        {
-//            return TABS_COUNT;
-//        }
-//    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        int fileBrowserReqCode = 1;
+        if (resultCode == RESULT_OK && requestCode == fileBrowserReqCode)
+        {
+            String path = data.getStringExtra("path");
+            storeDirectory(path, data.getBooleanExtra("includeSubdirs", true),
+                categories[tabLayout.getSelectedTabPosition()]);
+            updateViewData();
+        }
+    }
+
+    private void storeDirectory(String path, boolean recursive, String tag)
+    {
+        Directory directory = new Directory();
+        directory.setPath(path);
+        directory.setTag(tag);
+        directory.setRecursive(recursive);
+        DirectoryDao dao = new DirectoryDao(getApplicationContext());
+        directory.setId(dao.insert(directory));
+    }
 }

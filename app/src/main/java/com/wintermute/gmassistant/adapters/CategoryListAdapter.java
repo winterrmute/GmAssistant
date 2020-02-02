@@ -9,25 +9,31 @@ import com.wintermute.gmassistant.view.CategoryList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
+/**
+ * Receives audio library for given category and displays it.
+ *
+ * @author wintermute
+ */
 public class CategoryListAdapter extends FragmentStatePagerAdapter
 {
     private int tabsCount;
-//    private List<FileElement> list;
-    private List<String> list;
+    private Map<Integer, List<FileElement>> audioByCategory;
 
-    public CategoryListAdapter(@NonNull FragmentManager fm, int behavior, int tabsCount, List<String> list)
+    public CategoryListAdapter(@NonNull FragmentManager fm, int behavior, int tabsCount, Map<Integer, List<FileElement>> library)
     {
         super(fm, behavior);
         this.tabsCount = tabsCount;
-        this.list = list;
+        this.audioByCategory = library;
     }
 
     @NonNull
     @Override
     public Fragment getItem(int position)
     {
-        return CategoryList.init(position, new ArrayList<>(list));
+        return CategoryList.init(position, new ArrayList<>(Objects.requireNonNull(audioByCategory.get(position))));
     }
 
     @Override

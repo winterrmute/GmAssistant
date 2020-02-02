@@ -1,7 +1,6 @@
 package com.wintermute.gmassistant.view;
 
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,23 +9,25 @@ import androidx.fragment.app.Fragment;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.ListAdapter;
 import com.wintermute.gmassistant.model.FileElement;
+import com.wintermute.gmassistant.services.FileBrowserService;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryList extends Fragment
 {
-    private int fragmentNumber;
-//    private List<FileElement> listElements;
-    private List<String> listElements;
+    private static final String PREVIOUS_DIRECTORY = "previous directory";
+    private String rootPath;
+    private List<FileElement> rootElements;
+    private List<FileElement> listElements;
 
-    public static CategoryList init(int position, ArrayList<String> elements)
+    public static CategoryList init(int position, ArrayList<FileElement> elements)
     {
         CategoryList result = new CategoryList();
         Bundle args = new Bundle();
         args.putInt("val", position);
-//        args.putParcelableArrayList("elements", elements);
-        args.putStringArrayList("elements", elements);
+        args.putParcelableArrayList("elements", elements);
         result.setArguments(args);
         return result;
     }
@@ -35,9 +36,7 @@ public class CategoryList extends Fragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        fragmentNumber = getArguments() != null ? getArguments().getInt("val") : 1;
-        listElements = getArguments().getStringArrayList("elements");
-//        listElements = listElements != null ? getArguments().getParcelable("elements") : new ArrayList<>();
+        listElements = getArguments() != null ? getArguments().getParcelableArrayList("elements") : new ArrayList<>();
         System.out.println();
     }
 
@@ -46,10 +45,15 @@ public class CategoryList extends Fragment
     {
         View layoutView = inflater.inflate(R.layout.content_list, container, false);
         ListView lv = layoutView.findViewById(R.id.content_items);
-        lv.setAdapter(new ListAdapter(getContext(), listElements));
+        ListAdapter adapter = new ListAdapter(getContext(), listElements);
+        lv.setAdapter(adapter);
+        rootElements = listElements;
+        FileBrowserService fbs = new FileBrowserService();
+
         lv.setOnItemClickListener((parent, view, position, id) ->
         {
-            //do stuff
+            listElements = handleClickOnElement(fbs, listElements.get(position));
+            adapter.updateDisplayedElements(listElements);
         });
         lv.setOnItemLongClickListener((parent, view, position, id) ->
         {
@@ -57,5 +61,41 @@ public class CategoryList extends Fragment
             return false;
         });
         return layoutView;
+    }
+
+    private List<FileElement> handleClickOnElement(FileBrowserService fbs, FileElement item)
+    {
+        if (new File(item.getPath()).isDirectory())
+        {
+            List<FileElement> newContent;
+            String newPath;
+            if (item.isRoot())
+            {
+                rootPath = item.getPath();
+            }
+
+            if (PREVIOUS_DIRECTORY.equals(item.getName()))
+            {
+                newPath = item.getPath().substring(0, item.getPath().lastIndexOf('/'));
+            } else
+            {
+                newPath = item.getPath();
+            }
+            FileElement goToParent = new FileElement(PREVIOUS_DIRECTORY, newPath, false);
+
+            if (item.getPath().equals(rootPath) && !item.isRoot())
+            {
+                newContent = rootElements;
+            } else
+            {
+                newContent = fbs.getFiles(newPath);
+                newContent.add(0, goToParent);
+            }
+            return newContent;
+        } else
+        {
+            //TODO: play track
+            return null;
+        }
     }
 }
