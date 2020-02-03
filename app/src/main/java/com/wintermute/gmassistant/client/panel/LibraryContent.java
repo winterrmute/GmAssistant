@@ -31,7 +31,7 @@ public class LibraryContent extends FragmentActivity
 {
     private static final int TABS_COUNT = 3;
     private TabLayout tabLayout;
-    private String[] categories = {"music", "ambience", "category"};
+    private String[] categories = {"music", "ambience", "effect"};
 
     private void updateViewData()
     {
