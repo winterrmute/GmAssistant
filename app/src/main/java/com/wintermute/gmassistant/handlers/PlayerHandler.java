@@ -7,7 +7,6 @@ import com.wintermute.gmassistant.database.dao.SceneDao;
 import com.wintermute.gmassistant.database.dao.TrackDao;
 import com.wintermute.gmassistant.model.Scene;
 import com.wintermute.gmassistant.model.Track;
-import com.wintermute.gmassistant.services.notifications.AmbiencePlayerReceiver;
 import com.wintermute.gmassistant.services.player.AmbiencePlayerService;
 import com.wintermute.gmassistant.services.player.EffectPlayerService;
 import com.wintermute.gmassistant.services.player.MusicPlayerService;
@@ -33,19 +32,22 @@ public class PlayerHandler
      * @param path on device to audio track.
      * @param tag to specify player service.
      */
-    public void playSingleFile(String path, int tag){
+    public void playSingleFile(String path, int tag)
+    {
         Class target;
-        if  (tag == 0) {
+        if (tag == 0)
+        {
             target = MusicPlayerService.class;
-        } else if (tag == 1) {
+        } else if (tag == 1)
+        {
             target = AmbiencePlayerService.class;
-        } else {
+        } else
+        {
             target = EffectPlayerService.class;
         }
         Intent player = new Intent(ctx, target);
         player.putExtra("track", path);
         ctx.startService(player);
-
     }
 
     /**

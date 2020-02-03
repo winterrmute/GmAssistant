@@ -17,12 +17,12 @@ import java.util.List;
  *
  * @author wintermute
  */
-public class ListAdapter extends BaseAdapter
+public class LibraryItemAdapter extends BaseAdapter
 {
     private List<LibraryElement> browsedFiles;
     private LayoutInflater inflater;
 
-    public ListAdapter(Context ctx, List<LibraryElement> files)
+    public LibraryItemAdapter(Context ctx, List<LibraryElement> files)
     {
         browsedFiles = files;
         inflater = LayoutInflater.from(ctx);

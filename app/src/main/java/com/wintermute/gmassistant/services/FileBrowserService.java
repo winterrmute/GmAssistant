@@ -5,12 +5,16 @@ import com.wintermute.gmassistant.model.LibraryElement;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class FileBrowserService
 {
+    private final static String PREVIOUS_DIRECTORY = "previous directory";
+    private String rootPath;
+
     /**
      * Scans directory for files.
      *
@@ -37,15 +41,48 @@ public class FileBrowserService
 
     /**
      * @param path to scan directory
-     * @return
+     * @return list of files for element from library
      */
-    public List<LibraryElement> getFiles(String path)
+    private List<LibraryElement> getFiles(String path)
     {
         return Arrays
-            .asList(Objects.requireNonNull(new File(path).listFiles()))
-            .stream()
+            .stream(Objects.requireNonNull(new File(path).listFiles()))
             .map(f -> new LibraryElement(f.getName(), f.getPath(), false))
             .collect(Collectors.toList());
+    }
+
+    public List<LibraryElement> browseLibrary(LibraryElement target, List<LibraryElement> rootElements)
+    {
+        if (new File(target.getPath()).isDirectory())
+        {
+            List<LibraryElement> newContent;
+            String newPath;
+            if (target.isRoot())
+            {
+                rootPath = target.getPath();
+            }
+
+            if (PREVIOUS_DIRECTORY.equals(target.getName()))
+            {
+                newPath = target.getPath().substring(0, target.getPath().lastIndexOf('/'));
+            } else
+            {
+                newPath = target.getPath();
+            }
+            LibraryElement goToParent = new LibraryElement(PREVIOUS_DIRECTORY, newPath, false);
+
+            if (target.getPath().equals(rootPath) && !target.isRoot())
+            {
+                newContent = rootElements;
+            } else
+            {
+                newContent = getFiles(newPath);
+                newContent.add(0, goToParent);
+                return newContent;
+            }
+            return new ArrayList<>(newContent);
+        }
+        return Collections.singletonList(target);
     }
 
     /**

@@ -12,10 +12,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class LibraryElement implements Parcelable
 {
-    private String name;
-    private String path;
-    private boolean isRoot;
-
     public static final Creator<LibraryElement> CREATOR = new Creator<LibraryElement>()
     {
         @Override
@@ -30,8 +26,11 @@ public class LibraryElement implements Parcelable
             return new LibraryElement[size];
         }
     };
+    private String name;
+    private String path;
+    private boolean isRoot;
 
-    private LibraryElement(Parcel in)
+    public LibraryElement(Parcel in)
     {
         name = in.readString();
         path = in.readString();

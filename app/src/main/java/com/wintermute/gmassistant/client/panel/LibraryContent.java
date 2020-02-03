@@ -2,6 +2,7 @@ package com.wintermute.gmassistant.client.panel;
 
 import static androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -12,6 +13,7 @@ import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.CategoryListAdapter;
 import com.wintermute.gmassistant.client.FileBrowser;
 import com.wintermute.gmassistant.database.dao.DirectoryDao;
+import com.wintermute.gmassistant.helper.Categories;
 import com.wintermute.gmassistant.model.Directory;
 import com.wintermute.gmassistant.model.LibraryElement;
 
@@ -31,7 +33,7 @@ public class LibraryContent extends FragmentActivity
 {
     private static final int TABS_COUNT = 3;
     private TabLayout tabLayout;
-    private String[] categories = {"music", "ambience", "effect"};
+    private String[] categories = {Categories.MUSIC.name(), Categories.AMBIENCE.name(), Categories.EFFECT.name()};
 
     private void updateViewData()
     {
@@ -53,27 +55,15 @@ public class LibraryContent extends FragmentActivity
         Map<Integer, List<LibraryElement>> result = new HashMap<>();
         DirectoryDao dao = new DirectoryDao(getApplicationContext());
 
-        int categoryId;
         for (String category : categories)
         {
-            if (category.equals("music"))
-            {
-                categoryId = 0;
-            } else if (category.equals("ambience"))
-            {
-                categoryId = 1;
-            } else
-            {
-                categoryId = 2;
-            }
-
             List<LibraryElement> directories = dao
                 .getDirectoriesForCategory(category)
                 .stream()
                 .map(f -> new LibraryElement(new File(f.getPath()).getName(), f.getPath(), true))
                 .collect(Collectors.toList());
 
-            result.put(categoryId, directories);
+            result.put(Categories.valueOf(category).ordinal(), directories);
         }
         return result;
     }
@@ -90,6 +80,14 @@ public class LibraryContent extends FragmentActivity
                 categories[tabLayout.getSelectedTabPosition()]);
             updateViewData();
         }
+        if (resultCode == Categories.MUSIC.ordinal() || resultCode == Categories.AMBIENCE.ordinal()
+            || resultCode == Categories.EFFECT.ordinal())
+        {
+            String path = data.getStringExtra("path");
+            Intent intent = new Intent().putExtra("path", path);
+            setResult(Activity.RESULT_OK, intent);
+            finish();
+        }
     }
 
     @Override
@@ -99,6 +97,12 @@ public class LibraryContent extends FragmentActivity
         setContentView(R.layout.activity_library_content);
 
         updateViewData();
+
+        if (null != getIntent().getExtras())
+        {
+            tabLayout.selectTab(
+                tabLayout.getTabAt(Categories.valueOf(getIntent().getExtras().getString("tag")).ordinal()));
+        }
 
         Button btn = findViewById(R.id.add_files_with_tag);
         btn.setOnClickListener(l ->

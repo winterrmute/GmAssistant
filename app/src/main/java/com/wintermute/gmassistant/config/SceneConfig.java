@@ -12,17 +12,21 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.client.FileBrowser;
+import com.wintermute.gmassistant.client.panel.LibraryContent;
 import com.wintermute.gmassistant.database.ObjectHandler;
 import com.wintermute.gmassistant.database.dao.LightDao;
 import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
 import com.wintermute.gmassistant.database.dao.SceneDao;
 import com.wintermute.gmassistant.database.dao.TrackDao;
+import com.wintermute.gmassistant.helper.Categories;
 import com.wintermute.gmassistant.model.Light;
 import com.wintermute.gmassistant.model.Scene;
 import com.wintermute.gmassistant.model.Track;
+import com.wintermute.gmassistant.services.FileBrowserService;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -48,6 +52,9 @@ public class SceneConfig extends AppCompatActivity
     private TextView selectedAmbience;
     private ImageView selectedColor;
 
+    private String tag;
+    private FileBrowserService fbs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -63,6 +70,8 @@ public class SceneConfig extends AppCompatActivity
         editScene = getIntent().getBooleanExtra("edit", false);
         nameField = findViewById(R.id.scene_name);
 
+        fbs = new FileBrowserService();
+
         SceneDao sceneDao = new SceneDao(this);
         TrackDao trackDao = new TrackDao(this);
 
@@ -70,13 +79,25 @@ public class SceneConfig extends AppCompatActivity
         lightEffects.setOnClickListener(v -> setLights());
 
         Button setStartEffect = findViewById(R.id.set_start_effect);
-        setStartEffect.setOnClickListener(v -> browseFilesForTrack(1));
+        setStartEffect.setOnClickListener(v ->
+        {
+            browseFilesForTrack(Categories.EFFECT.ordinal());
+            tag = Categories.EFFECT.name();
+        });
 
         Button setMusic = findViewById(R.id.set_music);
-        setMusic.setOnClickListener(v -> browseFilesForTrack(2));
+        setMusic.setOnClickListener(v ->
+        {
+            browseFilesForTrack(Categories.MUSIC.ordinal());
+            tag = Categories.MUSIC.name();
+        });
 
         Button setAmbience = findViewById(R.id.set_ambience);
-        setAmbience.setOnClickListener(v -> browseFilesForTrack(3));
+        setAmbience.setOnClickListener(v ->
+        {
+            browseFilesForTrack(Categories.AMBIENCE.ordinal());
+            tag = Categories.AMBIENCE.name();
+        });
 
         Button sceneSubmit = findViewById(R.id.scene_submit);
         sceneSubmit.setOnClickListener(v -> createOrUpdateScene(sceneDao));
@@ -98,9 +119,29 @@ public class SceneConfig extends AppCompatActivity
      */
     void browseFilesForTrack(int requestCode)
     {
-        Intent fileBrowser = new Intent(SceneConfig.this, FileBrowser.class);
-        fileBrowser.putExtra("selectTrack", true);
-        startActivityForResult(fileBrowser, requestCode);
+        String[] choices = {"library", "internal storage"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select audio file from:");
+        builder.setSingleChoiceItems(choices, -1, (dialog, item) ->
+        {
+            dialog.dismiss();
+            if (choices[item].equals("library"))
+            {
+                Intent fileBrowser = new Intent(SceneConfig.this, LibraryContent.class);
+                fileBrowser.putExtra("tag", tag);
+                fileBrowser.putExtra("selectTrack", true);
+                startActivityForResult(fileBrowser, requestCode);
+            } else
+            {
+                Intent fileBrowser = new Intent(SceneConfig.this, FileBrowser.class);
+                fileBrowser.putExtra("selectTrack", true);
+                startActivityForResult(fileBrowser, requestCode);
+            }
+        });
+        builder.setNegativeButton(R.string.cancel_result, (dialog, id) -> dialog.cancel());
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     /**
@@ -269,25 +310,25 @@ public class SceneConfig extends AppCompatActivity
             path = data.getStringExtra("path");
             TrackDao trackDao = new TrackDao(this);
             Track toUpdate;
-            if (requestCode == 1)
+            if (requestCode == Categories.EFFECT.ordinal())
             {
                 startEffect = createTrackIfNotExist();
                 toUpdate = trackDao.getById(startEffect.getId());
-                toUpdate.setTag("effect");
+                toUpdate.setTag(Categories.EFFECT.name());
                 trackDao.update(toUpdate);
                 selectedEffect.setText(startEffect.getName());
-            } else if (requestCode == 2)
+            } else if (requestCode == Categories.MUSIC.ordinal())
             {
                 music = createTrackIfNotExist();
                 toUpdate = trackDao.getById(music.getId());
-                toUpdate.setTag("music");
+                toUpdate.setTag(Categories.MUSIC.name());
                 trackDao.update(toUpdate);
                 selectedMusic.setText(music.getName());
-            } else if (requestCode == 3)
+            } else if (requestCode == Categories.AMBIENCE.ordinal())
             {
                 ambience = createTrackIfNotExist();
                 toUpdate = trackDao.getById(ambience.getId());
-                toUpdate.setTag("ambience");
+                toUpdate.setTag(Categories.AMBIENCE.name());
                 trackDao.update(toUpdate);
                 selectedAmbience.setText(ambience.getName());
             } else if (requestCode == 4)

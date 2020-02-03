@@ -6,6 +6,7 @@
         android:layout_height="match_parent"
         tools:context=".config.SceneConfig">
 
+    <include layout="@layout/content_list"/>
 
     <Button
             android:id="@+id/set_music"
