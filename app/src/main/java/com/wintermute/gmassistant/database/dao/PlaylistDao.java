@@ -143,7 +143,7 @@ public class PlaylistDao extends BaseDao
     /**
      * Deletes row by id.
      *
-     * @param id of playlist to deleteById.
+     * @param id of playlist to delete.
      */
     public void deleteById(String id)
     {

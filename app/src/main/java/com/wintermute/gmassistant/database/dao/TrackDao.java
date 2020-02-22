@@ -109,7 +109,8 @@ public class TrackDao extends BaseDao
             .append("  =  '")
             .append(value)
             .append("'");
-        return mapObject(dbRead.rawQuery(query.toString(), null)).get(0);
+        ArrayList<Track> result = mapObject(dbRead.rawQuery(query.toString(), null));
+        return result.size() > 0 ? result.get(0) : null;
     }
 
     public Track getById(String id)

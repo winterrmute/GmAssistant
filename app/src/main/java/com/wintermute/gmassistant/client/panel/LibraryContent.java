@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.wintermute.gmassistant.R;
@@ -15,9 +16,11 @@ import com.wintermute.gmassistant.client.FileBrowser;
 import com.wintermute.gmassistant.database.dao.DirectoryDao;
 import com.wintermute.gmassistant.helper.Categories;
 import com.wintermute.gmassistant.model.Directory;
-import com.wintermute.gmassistant.model.LibraryElement;
+import com.wintermute.gmassistant.model.LibraryFile;
+import com.wintermute.gmassistant.view.model.AudioLibrary;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,37 +38,61 @@ public class LibraryContent extends FragmentActivity
     private TabLayout tabLayout;
     private String[] categories = {Categories.MUSIC.name(), Categories.AMBIENCE.name(), Categories.EFFECT.name()};
 
-    private void updateViewData()
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
     {
-        Map<Integer, List<LibraryElement>> libraryContent = listByTag();
-        CategoryListAdapter adapter =
-            new CategoryListAdapter(getSupportFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, TABS_COUNT,
-                libraryContent);
-        ViewPager viewPager = findViewById(R.id.category_pages);
-        viewPager.setAdapter(adapter);
-        tabLayout = findViewById(R.id.category_tabs);
-        tabLayout.setupWithViewPager(viewPager);
-        Objects.requireNonNull(tabLayout.getTabAt(0)).setText(categories[0]);
-        Objects.requireNonNull(tabLayout.getTabAt(1)).setText(categories[1]);
-        Objects.requireNonNull(tabLayout.getTabAt(2)).setText(categories[2]);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_library_content);
+        updateViewData();
+
+        if (null != getIntent().getExtras())
+        {
+            tabLayout.selectTab(
+                tabLayout.getTabAt(Categories.valueOf(getIntent().getExtras().getString("tag")).ordinal()));
+        }
+
+        Button btn = findViewById(R.id.add_files_with_tag);
+        btn.setOnClickListener(l ->
+        {
+            Intent fileBrowser = new Intent(LibraryContent.this, FileBrowser.class);
+            startActivityForResult(fileBrowser, 1);
+        });
     }
 
-    private Map<Integer, List<LibraryElement>> listByTag()
+    private void updateViewData()
     {
-        Map<Integer, List<LibraryElement>> result = new HashMap<>();
+        loadAudioLibrary();
+        CategoryListAdapter adapter =
+            new CategoryListAdapter(getSupportFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, TABS_COUNT,
+                getIntent().getBooleanExtra("singleTrackSelection", false));
+
+        ViewPager viewPager = findViewById(R.id.category_pages);
+        viewPager.setOffscreenPageLimit(TABS_COUNT);
+        viewPager.setAdapter(adapter);
+
+        tabLayout = findViewById(R.id.category_tabs);
+        tabLayout.setupWithViewPager(viewPager);
+        Arrays
+            .stream(categories)
+            .forEach(c -> Objects.requireNonNull(tabLayout.getTabAt(Arrays.asList(categories).indexOf(c))).setText(c));
+    }
+
+    private void loadAudioLibrary()
+    {
+        Map<Integer, List<LibraryFile>> result = new HashMap<>();
         DirectoryDao dao = new DirectoryDao(getApplicationContext());
+        AudioLibrary sharedModel = new ViewModelProvider(this).get(AudioLibrary.class);
 
         for (String category : categories)
         {
-            List<LibraryElement> directories = dao
+            List<LibraryFile> directories = dao
                 .getDirectoriesForCategory(category)
                 .stream()
-                .map(f -> new LibraryElement(new File(f.getPath()).getName(), f.getPath(), true))
+                .map(f -> new LibraryFile(new File(f.getPath()).getName(), f.getPath(), true))
                 .collect(Collectors.toList());
-
             result.put(Categories.valueOf(category).ordinal(), directories);
         }
-        return result;
+        sharedModel.setAudioLibrary(result);
     }
 
     @Override
@@ -88,28 +115,6 @@ public class LibraryContent extends FragmentActivity
             setResult(Activity.RESULT_OK, intent);
             finish();
         }
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_library_content);
-
-        updateViewData();
-
-        if (null != getIntent().getExtras())
-        {
-            tabLayout.selectTab(
-                tabLayout.getTabAt(Categories.valueOf(getIntent().getExtras().getString("tag")).ordinal()));
-        }
-
-        Button btn = findViewById(R.id.add_files_with_tag);
-        btn.setOnClickListener(l ->
-        {
-            Intent fileBrowser = new Intent(LibraryContent.this, FileBrowser.class);
-            startActivityForResult(fileBrowser, 1);
-        });
     }
 
     private void storeDirectory(String path, boolean recursive, String tag)

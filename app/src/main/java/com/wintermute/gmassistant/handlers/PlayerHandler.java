@@ -5,6 +5,7 @@ import android.content.Intent;
 import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
 import com.wintermute.gmassistant.database.dao.SceneDao;
 import com.wintermute.gmassistant.database.dao.TrackDao;
+import com.wintermute.gmassistant.helper.Categories;
 import com.wintermute.gmassistant.model.Scene;
 import com.wintermute.gmassistant.model.Track;
 import com.wintermute.gmassistant.services.player.AmbiencePlayerService;
@@ -32,13 +33,13 @@ public class PlayerHandler
      * @param path on device to audio track.
      * @param tag to specify player service.
      */
-    public void playSingleFile(String path, int tag)
+    public void play(String path, int tag)
     {
         Class target;
-        if (tag == 0)
+        if (tag == Categories.MUSIC.ordinal())
         {
             target = MusicPlayerService.class;
-        } else if (tag == 1)
+        } else if (tag == Categories.AMBIENCE.ordinal())
         {
             target = AmbiencePlayerService.class;
         } else
@@ -57,17 +58,16 @@ public class PlayerHandler
     {
         SceneDao dao = new SceneDao(ctx);
         Scene scene = dao.getById(sceneId);
-        String trackId;
-        if (null != scene.getStartEffect() || null != scene.getBackgroundMusic())
+        String trackId = null;
+        if (null != scene.getEffect() || null != scene.getMusic())
         {
-            if (scene.getStartEffect() == null)
+            if (scene.getEffect() == null)
             {
-                trackId = scene.getBackgroundMusic();
+                play(scene.getMusic().getPath(), Categories.valueOf(scene.getMusic().getTag()).ordinal());
             } else
             {
-                trackId = scene.getStartEffect();
+                play(scene.getMusic().getPath(), Categories.valueOf(scene.getMusic().getTag()).ordinal());
             }
-
             Intent player = prepareIntent(trackId, sceneId);
             ctx.startService(player);
         }
@@ -132,12 +132,12 @@ public class PlayerHandler
     {
         TrackDao dao = new TrackDao(ctx);
         String tag =
-            dao.computeTrackIfAbsent(trackId).getTag() == null ? "music" : dao.computeTrackIfAbsent(trackId).getTag();
+            dao.computeTrackIfAbsent(trackId).getTag() == null ? Categories.MUSIC.name() : dao.computeTrackIfAbsent(trackId).getTag();
 
-        if (tag.equals("ambience"))
+        if (tag.equals(Categories.AMBIENCE.name()))
         {
             return AmbiencePlayerService.class;
-        } else if (tag.equals("effect"))
+        } else if (tag.equals(Categories.EFFECT.name()))
         {
             return EffectPlayerService.class;
         } else

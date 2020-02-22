@@ -1,21 +1,25 @@
 package com.wintermute.gmassistant.view;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.LibraryItemAdapter;
 import com.wintermute.gmassistant.handlers.PlayerHandler;
 import com.wintermute.gmassistant.helper.Categories;
-import com.wintermute.gmassistant.model.LibraryElement;
+import com.wintermute.gmassistant.model.LibraryFile;
 import com.wintermute.gmassistant.services.FileBrowserService;
+import com.wintermute.gmassistant.view.model.AudioLibrary;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents each audio category elements as list. Allows to browse it.
@@ -24,17 +28,18 @@ import java.util.List;
  */
 public class CategoryList extends Fragment
 {
-    private List<LibraryElement> rootElements;
-    private List<LibraryElement> listElements;
+
+    private List<LibraryFile> filesInLibrary;
     private int tagId;
+    private boolean singleTrackSelection;
     private LibraryItemAdapter adapter;
 
-    public static CategoryList init(int position, ArrayList<LibraryElement> elements)
+    public static CategoryList init(int position, boolean singleTrackSelection)
     {
         CategoryList result = new CategoryList();
         Bundle args = new Bundle();
         args.putInt("tag", position);
-        args.putParcelableArrayList("elements", elements);
+        args.putBoolean("singleTrackSelection", singleTrackSelection);
         result.setArguments(args);
         return result;
     }
@@ -43,9 +48,11 @@ public class CategoryList extends Fragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        tagId = getArguments() != null ? getArguments().getInt("tag") : Categories.MUSIC.ordinal();
-        listElements = getArguments() != null ? getArguments().getParcelableArrayList("elements") : new ArrayList<>();
-        System.out.println();
+        if (savedInstanceState == null)
+        {
+            tagId = getArguments() != null ? getArguments().getInt("tag") : Categories.MUSIC.ordinal();
+            singleTrackSelection = getArguments() != null && getArguments().getBoolean("singleTrackSelection");
+        }
     }
 
     @Override
@@ -53,23 +60,34 @@ public class CategoryList extends Fragment
     {
         View layoutView = inflater.inflate(R.layout.content_list, container, false);
         ListView lv = layoutView.findViewById(R.id.content_items);
-        adapter = new LibraryItemAdapter(getContext(), listElements);
+
+        AudioLibrary sharedModel = new ViewModelProvider(requireActivity()).get(AudioLibrary.class);
+        filesInLibrary = sharedModel.getAudioLibrary().get(tagId);
+
+        adapter = new LibraryItemAdapter(getContext(), filesInLibrary);
         lv.setAdapter(adapter);
-        rootElements = listElements;
         FileBrowserService fbs = new FileBrowserService();
 
         lv.setOnItemClickListener((parent, view, position, id) ->
         {
-            List<LibraryElement> libraryElements = fbs.browseLibrary(listElements.get(position), rootElements);
+            List<LibraryFile> libraryElements = fbs.browseLibrary(
+                filesInLibrary.get(position), sharedModel.getAudioLibrary().get(tagId));
 
-            if (libraryElements.size() == 1 && !new File(libraryElements.get(0).getPath()).isDirectory())
+            if ((libraryElements.size() == 1) && !new File(libraryElements.get(0).getPath()).isDirectory())
             {
-                PlayerHandler handler = new PlayerHandler(getContext());
-                handler.playSingleFile(libraryElements.get(0).getPath(), tagId);
+                if (singleTrackSelection) {
+                    Intent returnSingleTrack = new Intent();
+                    returnSingleTrack.putExtra("path", libraryElements.get(0).getPath());
+                    Objects.requireNonNull(getActivity()).setResult(Activity.RESULT_OK, returnSingleTrack);
+                    Objects.requireNonNull(getActivity()).finish();
+                } else {
+                    PlayerHandler handler = new PlayerHandler(getContext());
+                    handler.play(libraryElements.get(0).getPath(), tagId);
+                }
             } else
             {
-                listElements = libraryElements;
-                adapter.updateDisplayedElements(listElements);
+                filesInLibrary = libraryElements;
+                adapter.updateDisplayedElements(filesInLibrary);
             }
         });
         lv.setOnItemLongClickListener((parent, view, position, id) ->

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import com.wintermute.gmassistant.database.DbManager;
 import com.wintermute.gmassistant.model.Scene;
+import com.wintermute.gmassistant.model.Track;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,11 +26,14 @@ public class SceneDao extends BaseDao
     private static final String NAME_KEY = "name";
     private static final String LIGHT_KEY = "light";
 
+    private Context ctx;
+
     public SceneDao(Context ctx)
     {
         DbManager dbManager = new DbManager(ctx);
         dbRead = dbManager.getReadableDatabase();
         dbWrite = dbManager.getWritableDatabase();
+        this.ctx = ctx;
     }
 
     /**
@@ -90,9 +94,9 @@ public class SceneDao extends BaseDao
         obj.put(ID_KEY, scene.getId());
         obj.put(NAME_KEY, scene.getName());
         obj.put(LIGHT_KEY, scene.getLight());
-        obj.put(START_EFFECT, scene.getStartEffect());
-        obj.put(MUSIC, scene.getBackgroundMusic());
-        obj.put(AMBIENCE, scene.getBackgroundAmbience());
+        obj.put(START_EFFECT, scene.getEffect());
+        obj.put(MUSIC, scene.getMusic());
+        obj.put(AMBIENCE, scene.getAmbience());
         return removeEmptyValues(obj);
     }
 
@@ -111,9 +115,16 @@ public class SceneDao extends BaseDao
             scene.setId(getKeyValue(cursor, ID_KEY));
             scene.setName(getKeyValue(cursor, NAME_KEY));
             scene.setLight(getKeyValue(cursor, LIGHT_KEY));
-            scene.setStartEffect(getKeyValue(cursor, START_EFFECT));
-            scene.setBackgroundMusic(getKeyValue(cursor, MUSIC));
-            scene.setBackgroundAmbience(getKeyValue(cursor, AMBIENCE));
+
+            TrackDao tdao = new TrackDao(ctx);
+            Track effect = tdao.getById(getKeyValue(cursor, START_EFFECT));
+            scene.setEffect(effect);
+
+            Track music = tdao.getById(getKeyValue(cursor, MUSIC));
+            scene.setMusic(music);
+
+            Track ambience = tdao.getById(getKeyValue(cursor, AMBIENCE));
+            scene.setAmbience(ambience);
             result.add(scene);
         }
         return result;
@@ -138,16 +149,16 @@ public class SceneDao extends BaseDao
     /**
      * Deletes row from database by id.
      *
-     * @param id of track to remove.
+     * @param target scene to remove.
      */
-    public void deleteById(String id)
+    public void delete(Scene target)
     {
         StringBuilder query = new StringBuilder("DELETE FROM ")
             .append(TABLE_NAME)
             .append(" WHERE ")
             .append(ID_KEY)
             .append(" = '")
-            .append(id)
+            .append(target.getId())
             .append("'");
         dbWrite.execSQL(query.toString());
     }

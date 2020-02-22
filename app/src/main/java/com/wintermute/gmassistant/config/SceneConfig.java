@@ -125,19 +125,19 @@ public class SceneConfig extends AppCompatActivity
         builder.setTitle("Select audio file from:");
         builder.setSingleChoiceItems(choices, -1, (dialog, item) ->
         {
+            Intent browseFiles;
             dialog.dismiss();
             if (choices[item].equals("library"))
             {
-                Intent fileBrowser = new Intent(SceneConfig.this, LibraryContent.class);
-                fileBrowser.putExtra("tag", tag);
-                fileBrowser.putExtra("selectTrack", true);
-                startActivityForResult(fileBrowser, requestCode);
+                browseFiles = new Intent(SceneConfig.this, LibraryContent.class);
+                browseFiles.putExtra("tag", tag);
+                browseFiles.putExtra("singleTrackSelection", true);
             } else
             {
-                Intent fileBrowser = new Intent(SceneConfig.this, FileBrowser.class);
-                fileBrowser.putExtra("selectTrack", true);
-                startActivityForResult(fileBrowser, requestCode);
+                browseFiles = new Intent(SceneConfig.this, FileBrowser.class);
             }
+            browseFiles.putExtra("selectTrack", true);
+            startActivityForResult(browseFiles, requestCode);
         });
         builder.setNegativeButton(R.string.cancel_result, (dialog, id) -> dialog.cancel());
         AlertDialog dialog = builder.create();
@@ -196,19 +196,19 @@ public class SceneConfig extends AppCompatActivity
                 selectedColor.setImageBitmap(extractColor(dao.getById(scene.getLight()).getColor()));
                 dao.close();
             }
-            if (null != scene.getStartEffect())
+            if (null != scene.getEffect())
             {
-                startEffect = trackDao.getById(scene.getStartEffect());
+                startEffect = trackDao.getById(scene.getEffect().getName());
                 selectedEffect.setText(startEffect.getName());
             }
-            if (null != scene.getBackgroundMusic())
+            if (null != scene.getMusic())
             {
-                music = trackDao.getById(scene.getBackgroundMusic());
+                music = trackDao.getById(scene.getMusic().getName());
                 selectedMusic.setText(music.getName());
             }
-            if (null != scene.getBackgroundAmbience())
+            if (null != scene.getAmbience())
             {
-                ambience = trackDao.getById(scene.getBackgroundAmbience());
+                ambience = trackDao.getById(scene.getAmbience().getName());
                 selectedAmbience.setText(ambience.getName());
             }
         } else
@@ -235,7 +235,7 @@ public class SceneConfig extends AppCompatActivity
     }
 
     /**
-     * Creates light effect for given backgroundMusic.
+     * Creates light effect for given music.
      */
     private void setLights()
     {
@@ -275,15 +275,15 @@ public class SceneConfig extends AppCompatActivity
         }
         if (startEffect != null)
         {
-            result.setStartEffect(startEffect.getId());
+            result.setEffect(startEffect);
         }
         if (music != null)
         {
-            result.setBackgroundMusic(music.getId());
+            result.setMusic(music);
         }
         if (ambience != null)
         {
-            result.setBackgroundAmbience(ambience.getId());
+            result.setAmbience(ambience);
         }
         return result;
     }

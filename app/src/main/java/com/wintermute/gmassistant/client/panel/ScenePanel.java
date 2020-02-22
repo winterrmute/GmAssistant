@@ -9,10 +9,9 @@ import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.SceneAdapter;
 import com.wintermute.gmassistant.config.SceneConfig;
 import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
-import com.wintermute.gmassistant.database.dao.SceneDao;
 import com.wintermute.gmassistant.dialogs.ListDialog;
-import com.wintermute.gmassistant.handlers.PlayerHandler;
 import com.wintermute.gmassistant.model.Scene;
+import com.wintermute.gmassistant.operator.SceneOperations;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,8 +25,8 @@ public class ScenePanel extends AppCompatActivity
 {
 
     private ListView sceneView;
-    private ArrayList<Scene> allScenes;
-    private String sceneId;
+    private Scene scene;
+    private SceneOperations operations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -35,17 +34,16 @@ public class ScenePanel extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scene_panel);
 
+        operations = new SceneOperations(getApplicationContext());
+        ArrayList<Scene> allScenes = operations.loadViewElements();
         showScenes();
 
-        sceneView.setOnItemClickListener((parent, view, position, id) ->
-        {
-            PlayerHandler handler = new PlayerHandler(getBaseContext());
-            handler.startPlayerByScene(allScenes.get(position).getId());
-        });
+        sceneView.setOnItemClickListener(
+            (parent, view, position, id) -> operations.startScene(allScenes.get(position).getId()));
 
         sceneView.setOnItemLongClickListener((parent, view, position, id) ->
         {
-            sceneId = allScenes.get(position).getId();
+            scene = allScenes.get(position);
             Intent dialog = new Intent(ScenePanel.this, ListDialog.class);
             dialog.putStringArrayListExtra("opts", new ArrayList<>(Arrays.asList("edit", "delete")));
             startActivityForResult(dialog, 1);
@@ -65,7 +63,7 @@ public class ScenePanel extends AppCompatActivity
     {
         Intent sceneConfig = new Intent(ScenePanel.this, SceneConfig.class);
         sceneConfig.putExtra("edit", edit);
-        sceneConfig.putExtra("sceneId", sceneId);
+        sceneConfig.putExtra("sceneId", scene.getId());
         startActivityForResult(sceneConfig, 1);
     }
 
@@ -82,10 +80,10 @@ public class ScenePanel extends AppCompatActivity
                 startSceneConfiguration(true);
             } else if ("delete".equals(selected))
             {
-                SceneDao dao = new SceneDao(this);
-                dao.deleteById(sceneId);
+                operations.deleteElement(scene);
+                //TODO: refactor so that the scene is independent
                 PlaylistContentDao playlistContentDao = new PlaylistContentDao(this);
-                playlistContentDao.deleteScene(sceneId);
+                playlistContentDao.deleteScene(scene.getId());
             }
         }
         showScenes();
@@ -96,9 +94,7 @@ public class ScenePanel extends AppCompatActivity
      */
     private void showScenes()
     {
-        SceneDao dao = new SceneDao(this);
-        allScenes = dao.getAll();
-        SceneAdapter sceneAdapter = new SceneAdapter(this, allScenes);
+        SceneAdapter sceneAdapter = new SceneAdapter(this, operations.loadViewElements());
         sceneView = findViewById(R.id.scene_view);
         sceneView.setAdapter(sceneAdapter);
     }

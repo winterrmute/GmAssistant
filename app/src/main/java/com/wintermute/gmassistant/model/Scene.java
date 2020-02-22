@@ -14,7 +14,7 @@ public class Scene
     private String id;
     private String name;
     private String light;
-    private String startEffect;
-    private String backgroundMusic;
-    private String backgroundAmbience;
+    private Track effect;
+    private Track music;
+    private Track ambience;
 }

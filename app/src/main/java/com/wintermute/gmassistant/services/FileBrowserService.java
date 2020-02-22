@@ -1,6 +1,6 @@
 package com.wintermute.gmassistant.services;
 
-import com.wintermute.gmassistant.model.LibraryElement;
+import com.wintermute.gmassistant.model.LibraryFile;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -43,19 +43,19 @@ public class FileBrowserService
      * @param path to scan directory
      * @return list of files for element from library
      */
-    private List<LibraryElement> getFiles(String path)
+    private List<LibraryFile> getFiles(String path)
     {
         return Arrays
             .stream(Objects.requireNonNull(new File(path).listFiles()))
-            .map(f -> new LibraryElement(f.getName(), f.getPath(), false))
+            .map(f -> new LibraryFile(f.getName(), f.getPath(), false))
             .collect(Collectors.toList());
     }
 
-    public List<LibraryElement> browseLibrary(LibraryElement target, List<LibraryElement> rootElements)
+    public List<LibraryFile> browseLibrary(LibraryFile target, List<LibraryFile> rootElements)
     {
         if (new File(target.getPath()).isDirectory())
         {
-            List<LibraryElement> newContent;
+            List<LibraryFile> newContent;
             String newPath;
             if (target.isRoot())
             {
@@ -69,7 +69,7 @@ public class FileBrowserService
             {
                 newPath = target.getPath();
             }
-            LibraryElement goToParent = new LibraryElement(PREVIOUS_DIRECTORY, newPath, false);
+            LibraryFile goToParent = new LibraryFile(PREVIOUS_DIRECTORY, newPath, false);
 
             if (target.getPath().equals(rootPath) && !target.isRoot())
             {

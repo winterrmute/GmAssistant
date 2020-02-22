@@ -202,7 +202,7 @@ public class PlaylistContentDao extends BaseDao
     }
 
     /**
-     * removes deleted scene from playlsit content.
+     * removes deleted scene from playlist content.
      */
     public void deleteScene(String sceneId)
     {
