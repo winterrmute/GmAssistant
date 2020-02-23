@@ -103,7 +103,7 @@ public class SceneDao extends BaseDao
      * @param key containing value
      * @return value stored in db if possible, otherwise "-1"
      */
-    public String getKeyValue(Cursor cursor, String key)
+    private String getKeyValue(Cursor cursor, String key)
     {
         if (cursor.getColumnIndex(key) != -1)
         {

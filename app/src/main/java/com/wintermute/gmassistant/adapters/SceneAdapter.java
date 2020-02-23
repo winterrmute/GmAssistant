@@ -72,7 +72,7 @@ public class SceneAdapter extends BaseAdapter
         }
         name.setText(target.getName());
 
-        startEffect.setText("Start: " + target.getEffectPath());
+        startEffect.setText("Effect: " + target.getEffectPath());
         music.setText("Music: " + target.getMusicPath());
         ambience.setText("Ambience: " + target.getAmbiencePath());
         result.setTag(position);

@@ -27,6 +27,7 @@ public class ScenePanel extends AppCompatActivity
     private ListView sceneView;
     private Scene scene;
     private SceneOperations operations;
+    private List<Scene> allScenes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -34,8 +35,9 @@ public class ScenePanel extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scene_panel);
 
+        allScenes = new ArrayList<>();
         operations = new SceneOperations(getApplicationContext());
-        List<Scene> allScenes = showScenes();
+        showScenes();
 
         sceneView.setOnItemClickListener(
             (parent, view, position, id) -> operations.startScene(allScenes.get(position).getId()));
@@ -44,7 +46,7 @@ public class ScenePanel extends AppCompatActivity
         {
             scene = allScenes.get(position);
             Intent dialog = new Intent(ScenePanel.this, ListDialog.class);
-            dialog.putStringArrayListExtra("opts", new ArrayList<>(Arrays.asList("edit", "delete")));
+            dialog.putStringArrayListExtra("opts", new ArrayList<>(Arrays.asList("delete")));
             startActivityForResult(dialog, 1);
             return true;
         });
@@ -72,15 +74,9 @@ public class ScenePanel extends AppCompatActivity
         if (resultCode == RESULT_OK && requestCode == 1)
         {
             String selected = data.getStringExtra("selected");
-
-            if ("edit".equals(selected))
-            {
-                startSceneConfiguration(true);
-            } else if ("delete".equals(selected))
+            if ("delete".equals(selected))
             {
                 operations.deleteElement(scene);
-//                showScenes();
-                //TODO: refactor so that the scene is independent
             }
         }
         showScenes();
@@ -88,14 +84,12 @@ public class ScenePanel extends AppCompatActivity
 
     /**
      * Show all scenes as listView
-     * @return
      */
-    private List<Scene> showScenes()
+    private void showScenes()
     {
-        List<Scene> scenes = operations.loadViewElements();
-        SceneAdapter sceneAdapter = new SceneAdapter(this, scenes);
+        allScenes = operations.loadViewElements();
+        SceneAdapter sceneAdapter = new SceneAdapter(this, allScenes);
         sceneView = findViewById(R.id.scene_view);
         sceneView.setAdapter(sceneAdapter);
-        return scenes;
     }
 }

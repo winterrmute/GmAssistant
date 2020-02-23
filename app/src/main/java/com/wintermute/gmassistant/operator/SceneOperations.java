@@ -36,7 +36,8 @@ public class SceneOperations
     {
         dao = new SceneDao(sceneAppContext);
         List<Map<String, Object>> actualElements = dao.getAll();
-        if (actualElements.size() > 0) {
+        if (actualElements.size() > 0)
+        {
             Scene scene;
             for (Map<String, Object> sceneContent : actualElements)
             {
@@ -54,6 +55,12 @@ public class SceneOperations
         return getModel(dao.getById(scene.getId()));
     }
 
+    public Scene getScene(Long sceneId)
+    {
+        dao = new SceneDao(sceneAppContext);
+        return getModel(dao.getById(sceneId));
+    }
+
     public void createInstance(Map<String, Object> content)
     {
         scene = new Scene();
@@ -67,48 +74,41 @@ public class SceneOperations
         allScenes = loadViewElements();
     }
 
-    public Scene notifyChangedView()
-    {
-        return scene;
-    }
-
-    public void updateModelValues(Map<String, Object> content)
-    {
-        storeScene(content);
-        //        storeScene(getModel(content));
-    }
-
     private Scene getModel(Map<String, Object> content)
     {
-        if (scene == null) {
+        if (scene == null)
+        {
             scene = new Scene();
         }
         for (Map.Entry<String, Object> entry : content.entrySet())
         {
-            if (entry.getKey().equals(SceneDb.ID.value()))
+            if (null != entry.getValue())
             {
-                scene.setId(Long.parseLong(entry.getValue().toString()));
-            }
-            if (entry.getKey().equals(SceneDb.LIGHT.value()))
-            {
-                Light light = (Light) entry.getValue();
-                scene.setLight(light);
-            }
-            if (entry.getKey().equals(SceneDb.NAME.value()))
-            {
-                scene.setName(entry.getValue().toString());
-            }
-            if (entry.getKey().equals(SceneDb.EFFECT.value()))
-            {
-                scene.setEffectPath(entry.getValue().toString());
-            }
-            if (entry.getKey().equals(SceneDb.MUSIC.value()))
-            {
-                scene.setMusicPath(entry.getValue().toString());
-            }
-            if (entry.getKey().equals(SceneDb.AMBIENCE.value()))
-            {
-                scene.setAmbiencePath(entry.getValue().toString());
+                if (entry.getKey().equals(SceneDb.ID.value()))
+                {
+                    scene.setId(Long.parseLong(entry.getValue().toString()));
+                }
+                if (entry.getKey().equals(SceneDb.LIGHT.value()))
+                {
+                    Light light = (Light) entry.getValue();
+                    scene.setLight(light);
+                }
+                if (entry.getKey().equals(SceneDb.NAME.value()))
+                {
+                    scene.setName(entry.getValue().toString());
+                }
+                if (entry.getKey().equals(SceneDb.EFFECT.value()))
+                {
+                    scene.setEffectPath(entry.getValue().toString());
+                }
+                if (entry.getKey().equals(SceneDb.MUSIC.value()))
+                {
+                    scene.setMusicPath(entry.getValue().toString());
+                }
+                if (entry.getKey().equals(SceneDb.AMBIENCE.value()))
+                {
+                    scene.setAmbiencePath(entry.getValue().toString());
+                }
             }
         }
         return scene;
@@ -123,18 +123,19 @@ public class SceneOperations
     private void storeScene(Map<String, Object> sceneContent)
     {
         ContentValues result = new ContentValues();
-        for (Map.Entry<String, Object> sceneDetail : sceneContent.entrySet())
+        for (Map.Entry<String, Object> entry : sceneContent.entrySet())
         {
-            if (sceneDetail.getKey().equals(SceneDb.LIGHT.value()))
+            if (null != entry.getValue())
+            if (entry.getKey().equals(SceneDb.LIGHT.value()))
             {
-                Light light = (Light) sceneDetail.getValue();
+                Light light = (Light) entry.getValue();
                 Long value = light.getId();
-                result.put(sceneDetail.getKey(), value);
+                result.put(entry.getKey(), value);
             } else
             {
-                String value = sceneDetail.getValue().toString();
-                result.put(sceneDetail.getKey(), value);
-                result.put(sceneDetail.getKey(), value);
+                String value = entry.getValue().toString();
+                result.put(entry.getKey(), value);
+                result.put(entry.getKey(), value);
             }
         }
         SceneDao dao = new SceneDao(sceneAppContext);
