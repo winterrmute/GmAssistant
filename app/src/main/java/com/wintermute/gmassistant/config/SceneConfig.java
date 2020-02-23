@@ -17,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.client.FileBrowser;
 import com.wintermute.gmassistant.client.panel.LibraryContent;
-import com.wintermute.gmassistant.database.ObjectHandler;
 import com.wintermute.gmassistant.database.dao.LightDao;
 import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
 import com.wintermute.gmassistant.database.dao.SceneDao;
@@ -26,10 +25,13 @@ import com.wintermute.gmassistant.helper.Categories;
 import com.wintermute.gmassistant.model.Light;
 import com.wintermute.gmassistant.model.Scene;
 import com.wintermute.gmassistant.model.Track;
+import com.wintermute.gmassistant.operator.SceneOperations;
 import com.wintermute.gmassistant.services.FileBrowserService;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Handles creating or editing new scenes and updating it on playlist content if related.
@@ -40,20 +42,22 @@ public class SceneConfig extends AppCompatActivity
 {
 
     private Light light;
-    private Track startEffect;
+    private Track effect;
     private Track music;
     private Track ambience;
-    private String path;
     private EditText nameField;
     private boolean editScene;
 
-    private TextView selectedEffect;
-    private TextView selectedMusic;
-    private TextView selectedAmbience;
-    private ImageView selectedColor;
+    private TextView effectView;
+    private TextView musicView;
+    private TextView ambienceView;
+    private ImageView colorView;
 
     private String tag;
     private FileBrowserService fbs;
+
+    private SceneOperations operations;
+    private Map<String, Object> content = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -61,12 +65,13 @@ public class SceneConfig extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scene_configuration);
 
-        selectedEffect = findViewById(R.id.selected_effect);
-        selectedMusic = findViewById(R.id.selected_music);
-        selectedAmbience = findViewById(R.id.selected_ambience);
-        selectedColor = findViewById(R.id.selected_color);
+        operations = new SceneOperations(getApplicationContext());
 
-        boolean addSceneToTrack = getIntent().getBooleanExtra("addSceneToTrack", false);
+        effectView = findViewById(R.id.selected_effect);
+        musicView = findViewById(R.id.selected_music);
+        ambienceView = findViewById(R.id.selected_ambience);
+        colorView = findViewById(R.id.selected_color);
+
         editScene = getIntent().getBooleanExtra("edit", false);
         nameField = findViewById(R.id.scene_name);
 
@@ -100,16 +105,32 @@ public class SceneConfig extends AppCompatActivity
         });
 
         Button sceneSubmit = findViewById(R.id.scene_submit);
-        sceneSubmit.setOnClickListener(v -> createOrUpdateScene(sceneDao));
+//        sceneSubmit.setOnClickListener(v -> createOrUpdateScene(sceneDao));
+        sceneSubmit.setOnClickListener(v -> submitScene());
 
-        if (addSceneToTrack)
-        {
-            setStartEffect.setVisibility(View.GONE);
-        }
         if (editScene || getIntent().getStringExtra("playlistId") != null)
         {
             getDetailsOnEdit(sceneDao, trackDao);
         }
+    }
+
+    private void submitScene(){
+        content.put("name", nameField.getText());
+        content.put("light", light != null ? light : new Light());
+        content.put("effect", effect != null ? effect.getPath() : "");
+        content.put("music", music != null ? music.getPath() : "");
+        content.put("ambience", ambience != null ? ambience.getPath() : "");
+        if (mandatoryFieldsFilled()){
+            operations.createInstance(content);
+            finish();
+        } else {
+            Toast.makeText(this, "Please set scene name!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean mandatoryFieldsFilled()
+    {
+        return !nameField.getText().toString().equals("");
     }
 
     /**
@@ -131,7 +152,6 @@ public class SceneConfig extends AppCompatActivity
             {
                 browseFiles = new Intent(SceneConfig.this, LibraryContent.class);
                 browseFiles.putExtra("tag", tag);
-                browseFiles.putExtra("singleTrackSelection", true);
             } else
             {
                 browseFiles = new Intent(SceneConfig.this, FileBrowser.class);
@@ -151,7 +171,7 @@ public class SceneConfig extends AppCompatActivity
      */
     private void createOrUpdateScene(SceneDao sceneDao)
     {
-        if (!(startEffect == null && music == null))
+        if (!(effect == null && music == null))
         {
             if (nameField.getVisibility() == View.VISIBLE && "".equals(nameField.getText().toString()))
             {
@@ -165,9 +185,9 @@ public class SceneConfig extends AppCompatActivity
                 } else
                 {
                     sceneId = getIntent().getStringExtra("sceneId");
-                    updateScene(sceneDao.getById(sceneId));
+//                    updateScene(sceneDao.getById(sceneId));
                 }
-                updatePlaylistContent(sceneId);
+//                updatePlaylistContent(sceneId);
                 finish();
             }
         } else
@@ -186,61 +206,63 @@ public class SceneConfig extends AppCompatActivity
      */
     public void getDetailsOnEdit(SceneDao sceneDao, TrackDao trackDao)
     {
-        Scene scene = sceneDao.getById(getIntent().getStringExtra("sceneId"));
+//        Scene scene = sceneDao.getById(getIntent().getStringExtra("sceneId"));
+        Scene scene = new Scene();
         if (null != scene)
         {
             nameField.setText(scene.getName());
             if (null != scene.getLight())
             {
                 LightDao dao = new LightDao(this);
-                selectedColor.setImageBitmap(extractColor(dao.getById(scene.getLight()).getColor()));
+                colorView.setImageBitmap(extractColor(dao.getById(scene.getLight().getId()).getColor()));
                 dao.close();
             }
-            if (null != scene.getEffect())
+            //TODO: set names
+            if (null != scene.getEffectPath())
             {
-                startEffect = trackDao.getById(scene.getEffect().getName());
-                selectedEffect.setText(startEffect.getName());
+                effect = trackDao.getById(scene.getEffectPath());
+                effectView.setText(effect.getName());
             }
-            if (null != scene.getMusic())
+            if (null != scene.getMusicPath())
             {
-                music = trackDao.getById(scene.getMusic().getName());
-                selectedMusic.setText(music.getName());
+                music = trackDao.getById(scene.getMusicPath());
+                musicView.setText(music.getName());
             }
-            if (null != scene.getAmbience())
+            if (null != scene.getAmbiencePath())
             {
-                ambience = trackDao.getById(scene.getAmbience().getName());
-                selectedAmbience.setText(ambience.getName());
+                ambience = trackDao.getById(scene.getAmbiencePath());
+                ambienceView.setText(ambience.getName());
             }
         } else
         {
-            startEffect = trackDao.getById((getIntent().getStringExtra("trackId")));
+            effect = trackDao.getById((getIntent().getStringExtra("trackId")));
         }
     }
 
     /**
      * @return new created track if the requested one did not exist in the database.
      */
-    private Track createTrackIfNotExist()
-    {
-        if (path != null)
-        {
-            ObjectHandler objectHandler = new ObjectHandler(this);
-            objectHandler.createTrack(new File(path));
-            return objectHandler.createTrack(new File(path));
-        } else
-        {
-            Toast.makeText(SceneConfig.this, "Next track not set!", Toast.LENGTH_SHORT).show();
-        }
-        return null;
-    }
+//    private Track createTrackIfNotExist()
+//    {
+//        if (path != null)
+//        {
+//            ObjectHandler objectHandler = new ObjectHandler(this);
+//            objectHandler.createTrack(new File(path));
+//            return objectHandler.createTrack(new File(path));
+//        } else
+//        {
+//            Toast.makeText(SceneConfig.this, "Next track not set!", Toast.LENGTH_SHORT).show();
+//        }
+//        return null;
+//    }
 
     /**
      * Creates light effect for given music.
      */
     private void setLights()
     {
-        Intent fileBrowser = new Intent(SceneConfig.this, LightConfig.class);
-        startActivityForResult(fileBrowser, 4);
+        Intent lightConfigurator = new Intent(SceneConfig.this, LightConfig.class);
+        startActivityForResult(lightConfigurator, 4);
     }
 
     /**
@@ -248,16 +270,18 @@ public class SceneConfig extends AppCompatActivity
      */
     private String createScene(Scene scene)
     {
+
         SceneDao sceneDao = new SceneDao(this);
         Scene result = prepareScene(scene);
-        return String.valueOf(sceneDao.insert(result));
+        return null;
+//        return String.valueOf(sceneDao.insert(result));
     }
 
-    private void updateScene(Scene scene)
-    {
-        SceneDao dao = new SceneDao(this);
-        dao.updateScene(prepareScene(scene));
-    }
+//    private void updateScene(Scene scene)
+//    {
+//        SceneDao dao = new SceneDao(this);
+//        dao.updateScene(prepareScene(scene));
+//    }
 
     /**
      * @param result scene to return.
@@ -265,25 +289,25 @@ public class SceneConfig extends AppCompatActivity
      */
     private Scene prepareScene(Scene result)
     {
-        if (!"".equals(nameField.getText().toString()))
+        if (!nameField.getText().toString().equals(""))
         {
             result.setName(nameField.getText().toString());
         }
-        if (light != null)
+        if (null != light)
         {
-            result.setLight(light.getId());
+            result.setLight(light);
         }
-        if (startEffect != null)
+        if (null != effect)
         {
-            result.setEffect(startEffect);
+            result.setEffectPath(effect.getPath());
         }
-        if (music != null)
+        if (null != music)
         {
-            result.setMusic(music);
+            result.setMusicPath(music.getPath());
         }
-        if (ambience != null)
+        if (null != ambience)
         {
-            result.setAmbience(ambience);
+            result.setAmbiencePath(ambience.getPath());
         }
         return result;
     }
@@ -297,7 +321,7 @@ public class SceneConfig extends AppCompatActivity
         if (null != playlistId)
         {
             PlaylistContentDao dao = new PlaylistContentDao(this);
-            dao.updateScene(sceneId, playlistId, startEffect.getId());
+            dao.updateScene(sceneId, playlistId, effect.getId());
         }
     }
 
@@ -307,40 +331,37 @@ public class SceneConfig extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK)
         {
-            path = data.getStringExtra("path");
+            String path = data.getStringExtra("path");
+            String fileName = path == null ? "" : new File(path).getName();
+
             TrackDao trackDao = new TrackDao(this);
             Track toUpdate;
             if (requestCode == Categories.EFFECT.ordinal())
             {
-                startEffect = createTrackIfNotExist();
-                toUpdate = trackDao.getById(startEffect.getId());
-                toUpdate.setTag(Categories.EFFECT.name());
-                trackDao.update(toUpdate);
-                selectedEffect.setText(startEffect.getName());
+                content.put(Categories.EFFECT.value(), path);
+                effectView.setText(fileName);
             } else if (requestCode == Categories.MUSIC.ordinal())
             {
-                music = createTrackIfNotExist();
-                toUpdate = trackDao.getById(music.getId());
-                toUpdate.setTag(Categories.MUSIC.name());
-                trackDao.update(toUpdate);
-                selectedMusic.setText(music.getName());
+                content.put(Categories.MUSIC.value(), path);
+                musicView.setText(fileName);
             } else if (requestCode == Categories.AMBIENCE.ordinal())
             {
-                ambience = createTrackIfNotExist();
-                toUpdate = trackDao.getById(ambience.getId());
-                toUpdate.setTag(Categories.AMBIENCE.name());
-                trackDao.update(toUpdate);
-                selectedAmbience.setText(ambience.getName());
+                content.put(Categories.AMBIENCE.value(), path);
+                ambienceView.setText(fileName);
             } else if (requestCode == 4)
             {
-                Light dto = new Light();
+                //TODO: extract to light operations
+                Light light = new Light();
                 String color = String.valueOf(data.getIntExtra("color", 0));
-                dto.setColor(color);
-                dto.setBrightness(String.valueOf(data.getIntExtra("brightness", 0)));
+                light.setColor(color);
+                light.setBrightness(String.valueOf(data.getIntExtra("brightness", 0)));
+
                 LightDao dao = new LightDao(this);
-                dto.setId(String.valueOf(dao.insert(dto)));
-                light = dao.getById(dto.getId());
-                selectedColor.setImageBitmap(extractColor(color));
+                light.setId(dao.insert(light));
+
+                content.put("light", dao.getById(light.getId()));
+
+                colorView.setImageBitmap(extractColor(color));
             }
         }
     }

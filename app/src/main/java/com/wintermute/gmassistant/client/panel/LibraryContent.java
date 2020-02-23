@@ -64,7 +64,7 @@ public class LibraryContent extends FragmentActivity
         loadAudioLibrary();
         CategoryListAdapter adapter =
             new CategoryListAdapter(getSupportFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, TABS_COUNT,
-                getIntent().getBooleanExtra("singleTrackSelection", false));
+                getIntent().getBooleanExtra("selectTrack", false));
 
         ViewPager viewPager = findViewById(R.id.category_pages);
         viewPager.setOffscreenPageLimit(TABS_COUNT);

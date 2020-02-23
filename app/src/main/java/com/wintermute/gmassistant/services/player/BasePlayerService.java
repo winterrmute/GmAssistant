@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 
 public class BasePlayerService extends Service
 {
-    String sceneId;
+    Long sceneId;
     String trackId;
     String playlistId;
     String trackPath;
@@ -32,10 +32,11 @@ public class BasePlayerService extends Service
      *
      * @param sceneId
      */
-    void changeLight(String sceneId)
+    void changeLight(Long sceneId)
     {
         SceneDao sceneDao = new SceneDao(this);
-        String lightId = sceneDao.getById(sceneId).getLight();
+//        Long lightId = sceneDao.getById(sceneId).getLight();
+        Long lightId = 0L;
         if (!"null".equals(lightId) && null != lightId)
         {
             LightDao dao = new LightDao(getBaseContext());
@@ -54,7 +55,7 @@ public class BasePlayerService extends Service
     void getExtras(Intent intent)
     {
         trackPath = intent.getStringExtra("track");
-        sceneId = intent.getStringExtra("sceneId");
+        sceneId = intent.getLongExtra("sceneId", 0L);
         playlistId = intent.getStringExtra("playlistId");
         trackId = intent.getStringExtra("trackId");
     }
@@ -62,23 +63,25 @@ public class BasePlayerService extends Service
     /**
      * @return next track to play.
      */
-    String getMusic(String sceneId)
+    String getMusic(Long sceneId)
     {
         SceneDao dao = new SceneDao(getBaseContext());
-        return dao.getById(sceneId).getMusic().getId();
+//        return dao.getById(sceneId).getMusic().getId();
+        return null;
     }
 
-    String getAmbience(String sceneId)
+    String getAmbience(Long sceneId)
     {
         SceneDao dao = new SceneDao(getBaseContext());
-        return dao.getById(sceneId).getAmbience().getId();
+//        return dao.getById(sceneId).getAmbience().getId();
+        return null;
     }
 
     /**
      * @param trackId to extract the path.
      * @return path of track
      */
-    String getTrackPath(String trackId)
+    String getTrackPath(Long trackId)
     {
         TrackDao dao = new TrackDao(getBaseContext());
         return dao.computeTrackIfAbsent(trackId).getPath();

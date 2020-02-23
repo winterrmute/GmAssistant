@@ -31,15 +31,15 @@ public class CategoryList extends Fragment
 
     private List<LibraryFile> filesInLibrary;
     private int tagId;
-    private boolean singleTrackSelection;
+    private boolean selectTrack;
     private LibraryItemAdapter adapter;
 
-    public static CategoryList init(int position, boolean singleTrackSelection)
+    public static CategoryList init(int position, boolean selectTrack)
     {
         CategoryList result = new CategoryList();
         Bundle args = new Bundle();
         args.putInt("tag", position);
-        args.putBoolean("singleTrackSelection", singleTrackSelection);
+        args.putBoolean("selectTrack", selectTrack);
         result.setArguments(args);
         return result;
     }
@@ -51,7 +51,7 @@ public class CategoryList extends Fragment
         if (savedInstanceState == null)
         {
             tagId = getArguments() != null ? getArguments().getInt("tag") : Categories.MUSIC.ordinal();
-            singleTrackSelection = getArguments() != null && getArguments().getBoolean("singleTrackSelection");
+            selectTrack = getArguments() != null && getArguments().getBoolean("selectTrack");
         }
     }
 
@@ -75,7 +75,7 @@ public class CategoryList extends Fragment
 
             if ((libraryElements.size() == 1) && !new File(libraryElements.get(0).getPath()).isDirectory())
             {
-                if (singleTrackSelection) {
+                if (selectTrack) {
                     Intent returnSingleTrack = new Intent();
                     returnSingleTrack.putExtra("path", libraryElements.get(0).getPath());
                     Objects.requireNonNull(getActivity()).setResult(Activity.RESULT_OK, returnSingleTrack);

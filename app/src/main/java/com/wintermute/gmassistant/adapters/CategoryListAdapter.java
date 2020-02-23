@@ -14,20 +14,20 @@ import com.wintermute.gmassistant.view.CategoryList;
 public class CategoryListAdapter extends FragmentStatePagerAdapter
 {
     private int tabsCount;
-    private boolean singleTrackSelection;
+    private boolean selectTrack;
 
-    public CategoryListAdapter(@NonNull FragmentManager fm, int behavior, int tabsCount, boolean singleTrackSelection)
+    public CategoryListAdapter(@NonNull FragmentManager fm, int behavior, int tabsCount, boolean selectTrack)
     {
         super(fm, behavior);
         this.tabsCount = tabsCount;
-        this.singleTrackSelection = singleTrackSelection;
+        this.selectTrack = selectTrack;
     }
 
     @NonNull
     @Override
     public Fragment getItem(int position)
     {
-        return CategoryList.init(position, singleTrackSelection);
+        return CategoryList.init(position, selectTrack);
     }
 
     @Override

@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class Light
 {
-    private String id;
+    private Long id;
     private String color;
     private String brightness;
 }

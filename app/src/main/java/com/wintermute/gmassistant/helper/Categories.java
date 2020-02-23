@@ -12,4 +12,8 @@ public enum Categories
     {
         this.category = category;
     }
+
+    public String value(){
+        return category;
+    }
 }

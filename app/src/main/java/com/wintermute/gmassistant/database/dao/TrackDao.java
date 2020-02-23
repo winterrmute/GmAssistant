@@ -153,17 +153,18 @@ public class TrackDao extends BaseDao
      * @param id of track to find.
      * @return queried track if present, empty track if id was null.
      */
-    public Track computeTrackIfAbsent(String id)
+    public Track computeTrackIfAbsent(Long id)
     {
-        if (id != null)
-        {
-            return getTrack(ID_KEY, id);
-        } else
-        {
-            Track result = new Track();
-            result.setName(null);
-            return result;
-        }
+//        if (id != null)
+//        {
+//            return getTrack(ID_KEY, id);
+//        } else
+//        {
+//            Track result = new Track();
+//            result.setName(null);
+//            return result;
+//        }
+        return null;
     }
 
     /**

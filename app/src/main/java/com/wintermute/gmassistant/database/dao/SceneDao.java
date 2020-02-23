@@ -4,11 +4,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import com.wintermute.gmassistant.database.DbManager;
+import com.wintermute.gmassistant.helper.SceneDb;
 import com.wintermute.gmassistant.model.Scene;
-import com.wintermute.gmassistant.model.Track;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,22 +19,12 @@ import java.util.Map;
  */
 public class SceneDao extends BaseDao
 {
-    private static final String TABLE_NAME = "scene";
-    private static final String ID_KEY = "id";
-    private static final String START_EFFECT = "start_effect";
-    private static final String MUSIC = "music";
-    private static final String AMBIENCE = "ambience";
-    private static final String NAME_KEY = "name";
-    private static final String LIGHT_KEY = "light";
-
-    private Context ctx;
 
     public SceneDao(Context ctx)
     {
         DbManager dbManager = new DbManager(ctx);
         dbRead = dbManager.getReadableDatabase();
         dbWrite = dbManager.getWritableDatabase();
-        this.ctx = ctx;
     }
 
     /**
@@ -41,63 +32,41 @@ public class SceneDao extends BaseDao
      *
      * @return id of inserted element.
      */
-    public long insert(Scene scene)
+    public Long insert(ContentValues scene)
     {
-        Map<String, Object> object = createObject(scene);
-        ContentValues values = getContentValues(object);
-        return dbWrite.insert(TABLE_NAME, null, values);
+        Long id = null;
+        try
+        {
+            id = dbWrite.insert(SceneDb.TABLE_NAME.value(), null, scene);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return id == null ? -1L : id;
     }
 
     /**
      * @return list of scenes.
      */
-    public ArrayList<Scene> getAll()
+    public List<Map<String, Object>> getAll()
     {
-        String query = "SELECT * FROM " + TABLE_NAME;
-        return mapObject(dbRead.rawQuery(query, null));
+        String query = "SELECT * FROM " + SceneDb.TABLE_NAME.value();
+        return createSceneModel(dbRead.rawQuery(query, null));
     }
 
     /**
-     * TODO: Refactor this shit.
+     * TODO: getById() should move to get()
      *
      * @param sceneId to get next track.
      * @return
      */
-    public Scene getById(String sceneId)
+    public Map<String, Object> getById(Long sceneId)
     {
-        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + ID_KEY + " = '" + sceneId + "'";
-        ArrayList<Scene> scenes = mapObject(dbRead.rawQuery(query, null));
+        String query =
+            "SELECT * FROM " + SceneDb.TABLE_NAME.value() + " WHERE " + SceneDb.ID.value() + " = '" + sceneId + "'";
+        List<Map<String, Object>> scenes = createSceneModel(dbRead.rawQuery(query, null));
         return scenes.size() != 0 ? scenes.get(0) : null;
-    }
-
-    public void updateScene(Scene scene)
-    {
-        StringBuilder query = new StringBuilder("UPDATE ")
-            .append(TABLE_NAME)
-            .append(" SET ")
-            .append(updateQueryBuilder(createObject(scene)))
-            .append(" WHERE ")
-            .append(ID_KEY)
-            .append(" = '")
-            .append(scene.getId())
-            .append("'");
-        dbWrite.execSQL(query.toString());
-    }
-
-    /**
-     * @param scene to create dao.
-     * @return map containing non null values.
-     */
-    private Map<String, Object> createObject(Scene scene)
-    {
-        HashMap<String, Object> obj = new HashMap<>();
-        obj.put(ID_KEY, scene.getId());
-        obj.put(NAME_KEY, scene.getName());
-        obj.put(LIGHT_KEY, scene.getLight());
-        obj.put(START_EFFECT, scene.getEffect());
-        obj.put(MUSIC, scene.getMusic());
-        obj.put(AMBIENCE, scene.getAmbience());
-        return removeEmptyValues(obj);
     }
 
     /**
@@ -106,28 +75,25 @@ public class SceneDao extends BaseDao
      * @param cursor to iterate over database rows.
      * @return list of track objects.
      */
-    private ArrayList<Scene> mapObject(Cursor cursor)
+    private List<Map<String, Object>> createSceneModel(Cursor cursor)
     {
-        ArrayList<Scene> result = new ArrayList<>();
+        ArrayList<Map<String, Object>> result = new ArrayList<>();
+
         while (cursor.moveToNext())
         {
-            Scene scene = new Scene();
-            scene.setId(getKeyValue(cursor, ID_KEY));
-            scene.setName(getKeyValue(cursor, NAME_KEY));
-            scene.setLight(getKeyValue(cursor, LIGHT_KEY));
-
-            TrackDao tdao = new TrackDao(ctx);
-            Track effect = tdao.getById(getKeyValue(cursor, START_EFFECT));
-            scene.setEffect(effect);
-
-            Track music = tdao.getById(getKeyValue(cursor, MUSIC));
-            scene.setMusic(music);
-
-            Track ambience = tdao.getById(getKeyValue(cursor, AMBIENCE));
-            scene.setAmbience(ambience);
-            result.add(scene);
+            Map<String, Object> content = new HashMap<>();
+            for (SceneDb element : SceneDb.values())
+            {
+                content.put(element.name().toLowerCase(), getKeyValue(cursor, element.value()));
+            }
+            result.add(content);
         }
         return result;
+    }
+
+    public void updateScene(Scene scene)
+    {
+        dbWrite.update(SceneDb.TABLE_NAME.value(), null, SceneDb.ID.value() + " = " + scene.getId(), new String[] {});
     }
 
     /**
@@ -137,7 +103,7 @@ public class SceneDao extends BaseDao
      * @param key containing value
      * @return value stored in db if possible, otherwise "-1"
      */
-    private String getKeyValue(Cursor cursor, String key)
+    public String getKeyValue(Cursor cursor, String key)
     {
         if (cursor.getColumnIndex(key) != -1)
         {
@@ -153,13 +119,6 @@ public class SceneDao extends BaseDao
      */
     public void delete(Scene target)
     {
-        StringBuilder query = new StringBuilder("DELETE FROM ")
-            .append(TABLE_NAME)
-            .append(" WHERE ")
-            .append(ID_KEY)
-            .append(" = '")
-            .append(target.getId())
-            .append("'");
-        dbWrite.execSQL(query.toString());
+        dbWrite.delete(SceneDb.TABLE_NAME.value(), SceneDb.ID.value() + " = " + target.getId(), new String[] {});
     }
 }

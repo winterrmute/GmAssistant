@@ -54,23 +54,25 @@ public class PlayerHandler
     /**
      * Start proper music player by tag.
      */
-    public void startPlayerByScene(String sceneId)
+    public void startPlayerByScene(Long sceneId)
     {
-        SceneDao dao = new SceneDao(ctx);
-        Scene scene = dao.getById(sceneId);
-        String trackId = null;
-        if (null != scene.getEffect() || null != scene.getMusic())
-        {
-            if (scene.getEffect() == null)
-            {
-                play(scene.getMusic().getPath(), Categories.valueOf(scene.getMusic().getTag()).ordinal());
-            } else
-            {
-                play(scene.getMusic().getPath(), Categories.valueOf(scene.getMusic().getTag()).ordinal());
-            }
-            Intent player = prepareIntent(trackId, sceneId);
-            ctx.startService(player);
-        }
+//        SceneDao dao = new SceneDao(ctx);
+//        Scene scene = dao.getById(sceneId);
+//        String trackId = null;
+//        if (null != scene.getEffectPath() || null != scene.getMusicPath())
+//        {
+//            if (scene.getEffectPath() == null)
+//            {
+//                play(scene.getMusicPath(), Categories.valueOf(scene.getMusic().getTag()).ordinal());
+//                play(scene.getMusicPath(), 0);
+//            } else
+//            {
+//                play(scene.getMusic().getPath(), Categories.valueOf(scene.getMusic().getTag()).ordinal());
+//                play(scene.getMusicPath(), 1);
+//            }
+//            Intent player = prepareIntent(trackId, sceneId);
+//            ctx.startService(player);
+//        }
     }
 
     /**
@@ -130,19 +132,20 @@ public class PlayerHandler
      */
     private Class specifyServicePlayer(String trackId)
     {
-        TrackDao dao = new TrackDao(ctx);
-        String tag =
-            dao.computeTrackIfAbsent(trackId).getTag() == null ? Categories.MUSIC.name() : dao.computeTrackIfAbsent(trackId).getTag();
-
-        if (tag.equals(Categories.AMBIENCE.name()))
-        {
-            return AmbiencePlayerService.class;
-        } else if (tag.equals(Categories.EFFECT.name()))
-        {
-            return EffectPlayerService.class;
-        } else
-        {
-            return MusicPlayerService.class;
-        }
+//        TrackDao dao = new TrackDao(ctx);
+//        String tag =
+//            dao.computeTrackIfAbsent(trackId).getTag() == null ? Categories.MUSIC.name() : dao.computeTrackIfAbsent(trackId).getTag();
+//
+//        if (tag.equals(Categories.AMBIENCE.name()))
+//        {
+//            return AmbiencePlayerService.class;
+//        } else if (tag.equals(Categories.EFFECT.name()))
+//        {
+//            return EffectPlayerService.class;
+//        } else
+//        {
+//            return MusicPlayerService.class;
+//        }
+        return MusicPlayerService.class;
     }
 }

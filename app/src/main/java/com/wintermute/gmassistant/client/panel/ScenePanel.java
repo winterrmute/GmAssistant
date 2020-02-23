@@ -8,13 +8,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.SceneAdapter;
 import com.wintermute.gmassistant.config.SceneConfig;
-import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
 import com.wintermute.gmassistant.dialogs.ListDialog;
 import com.wintermute.gmassistant.model.Scene;
 import com.wintermute.gmassistant.operator.SceneOperations;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Allows the user to manage all scenes.
@@ -35,8 +35,7 @@ public class ScenePanel extends AppCompatActivity
         setContentView(R.layout.activity_scene_panel);
 
         operations = new SceneOperations(getApplicationContext());
-        ArrayList<Scene> allScenes = operations.loadViewElements();
-        showScenes();
+        List<Scene> allScenes = showScenes();
 
         sceneView.setOnItemClickListener(
             (parent, view, position, id) -> operations.startScene(allScenes.get(position).getId()));
@@ -63,7 +62,6 @@ public class ScenePanel extends AppCompatActivity
     {
         Intent sceneConfig = new Intent(ScenePanel.this, SceneConfig.class);
         sceneConfig.putExtra("edit", edit);
-        sceneConfig.putExtra("sceneId", scene.getId());
         startActivityForResult(sceneConfig, 1);
     }
 
@@ -81,9 +79,8 @@ public class ScenePanel extends AppCompatActivity
             } else if ("delete".equals(selected))
             {
                 operations.deleteElement(scene);
+//                showScenes();
                 //TODO: refactor so that the scene is independent
-                PlaylistContentDao playlistContentDao = new PlaylistContentDao(this);
-                playlistContentDao.deleteScene(scene.getId());
             }
         }
         showScenes();
@@ -91,11 +88,14 @@ public class ScenePanel extends AppCompatActivity
 
     /**
      * Show all scenes as listView
+     * @return
      */
-    private void showScenes()
+    private List<Scene> showScenes()
     {
-        SceneAdapter sceneAdapter = new SceneAdapter(this, operations.loadViewElements());
+        List<Scene> scenes = operations.loadViewElements();
+        SceneAdapter sceneAdapter = new SceneAdapter(this, scenes);
         sceneView = findViewById(R.id.scene_view);
         sceneView.setAdapter(sceneAdapter);
+        return scenes;
     }
 }

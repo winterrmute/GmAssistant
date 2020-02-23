@@ -24,7 +24,7 @@ public class DbManager extends SQLiteOpenHelper
             + "(scene) REFERENCES scene (id) )";
 
     private static final String SCENE =
-        "CREATE TABLE scene ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, light INTEGER, start_effect INTEGER, "
+        "CREATE TABLE scene ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, light INTEGER, effect INTEGER, "
             + "music INTEGER, ambience INTEGER)";
 
     private static final String LIGHT =

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.gmassistant.database.DbManager;
+import com.wintermute.gmassistant.helper.SceneDb;
 import com.wintermute.gmassistant.model.PlaylistContent;
 
 import java.util.ArrayList;
@@ -204,17 +205,19 @@ public class PlaylistContentDao extends BaseDao
     /**
      * removes deleted scene from playlist content.
      */
-    public void deleteScene(String sceneId)
+    public void deleteScene(Long sceneId)
     {
-        StringBuilder query = new StringBuilder("UPDATE ")
-            .append(TABLE_NAME)
-            .append(" SET ")
-            .append(SCENE_KEY)
-            .append(" = NULL WHERE ")
-            .append(SCENE_KEY)
-            .append(" = '")
-            .append(sceneId)
-            .append("'");
-        dbWrite.execSQL(query.toString());
+//        StringBuilder query = new StringBuilder("UPDATE ")
+//            .append(TABLE_NAME)
+//            .append(" SET ")
+//            .append(SCENE_KEY)
+//            .append(" = NULL WHERE ")
+//            .append(SCENE_KEY)
+//            .append(" = '")
+//            .append(sceneId)
+//            .append("'");
+//        dbWrite.execSQL(query.toString());
+        dbWrite.delete(SceneDb.TABLE_NAME.value(), SceneDb.ID.value() + " = " + sceneId,
+            new String[] {});
     }
 }

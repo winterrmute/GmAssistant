@@ -50,7 +50,7 @@ public class LightDao extends BaseDao
         return dbWrite.insert(TABLE_NAME, null, values);
     }
 
-    public Light getById(String lightId)
+    public Light getById(Long lightId)
     {
         StringBuilder query =
             new StringBuilder("SELECT * FROM ").append(TABLE_NAME).append(" WHERE id = '").append(lightId).append("'");
@@ -69,7 +69,7 @@ public class LightDao extends BaseDao
         while (cursor.moveToNext())
         {
             Light light = new Light();
-            light.setId(getKeyValue(cursor, ID_KEY));
+//            light.setId(getKeyValue(cursor, ID_KEY));
             light.setColor(getKeyValue(cursor, COLOR_KEY));
             light.setColor(getKeyValue(cursor, COLOR_KEY));
             light.setBrightness(getKeyValue(cursor, BRIGHTNESS_KEY));

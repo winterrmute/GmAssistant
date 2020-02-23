@@ -65,33 +65,18 @@ public class SceneAdapter extends BaseAdapter
         TextView ambience = result.findViewById(R.id.ambience);
 
         Scene target = scenes.get(position);
-        String light = target.getLight();
-        if (null != light)
+        Long light = target.getLight() != null ? target.getLight().getId() : 0L;
+        if (light != 0L)
         {
             image.setImageBitmap(extractColor(light));
         }
         name.setText(target.getName());
 
-        String trackName = target.getEffect() != null ? getTrackName(target.getEffect().getName()) : "";
-        startEffect.setText("Start: " + trackName);
-        trackName = target.getEffect() != null ? getTrackName(target.getMusic().getName()) : "";
-        music.setText("Music: " + trackName);
-        trackName = target.getEffect() != null ? getTrackName(target.getAmbience().getName()) : "";
-        ambience.setText("Ambience: " + trackName);
+        startEffect.setText("Start: " + target.getEffectPath());
+        music.setText("Music: " + target.getMusicPath());
+        ambience.setText("Ambience: " + target.getAmbiencePath());
         result.setTag(position);
         return result;
-    }
-
-    /**
-     * @param trackId that should be added.
-     * @return display name if track exists or not set.
-     */
-    //TODO: refactor me
-    private String getTrackName(String trackId)
-    {
-        TrackDao dao = new TrackDao(ctx);
-        String trackname = dao.computeTrackIfAbsent(trackId).getName();
-        return trackname != null ? trackname : "not set";
     }
 
     /**
@@ -100,7 +85,7 @@ public class SceneAdapter extends BaseAdapter
      * @param lightId to get its color
      * @return
      */
-    private Bitmap extractColor(String lightId)
+    private Bitmap extractColor(Long lightId)
     {
         LightDao dao = new LightDao(ctx);
         Rect rect = new Rect(0, 0, 1, 1);
