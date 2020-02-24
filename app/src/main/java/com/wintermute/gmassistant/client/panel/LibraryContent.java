@@ -14,7 +14,7 @@ import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.CategoryListAdapter;
 import com.wintermute.gmassistant.client.FileBrowser;
 import com.wintermute.gmassistant.database.dao.DirectoryDao;
-import com.wintermute.gmassistant.helper.Categories;
+import com.wintermute.gmassistant.helper.Tags;
 import com.wintermute.gmassistant.model.Directory;
 import com.wintermute.gmassistant.model.LibraryFile;
 import com.wintermute.gmassistant.view.model.AudioLibrary;
@@ -36,7 +36,7 @@ public class LibraryContent extends FragmentActivity
 {
     private static final int TABS_COUNT = 3;
     private TabLayout tabLayout;
-    private String[] categories = {Categories.MUSIC.name(), Categories.AMBIENCE.name(), Categories.EFFECT.name()};
+    private String[] categories = {Tags.MUSIC.name(), Tags.AMBIENCE.name(), Tags.EFFECT.name()};
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -48,7 +48,7 @@ public class LibraryContent extends FragmentActivity
         if (null != getIntent().getExtras())
         {
             tabLayout.selectTab(
-                tabLayout.getTabAt(Categories.valueOf(getIntent().getExtras().getString("tag")).ordinal()));
+                tabLayout.getTabAt(Tags.valueOf(getIntent().getExtras().getString("tag")).ordinal()));
         }
 
         Button btn = findViewById(R.id.add_files_with_tag);
@@ -90,7 +90,7 @@ public class LibraryContent extends FragmentActivity
                 .stream()
                 .map(f -> new LibraryFile(new File(f.getPath()).getName(), f.getPath(), true))
                 .collect(Collectors.toList());
-            result.put(Categories.valueOf(category).ordinal(), directories);
+            result.put(Tags.valueOf(category).ordinal(), directories);
         }
         sharedModel.setAudioLibrary(result);
     }
@@ -107,9 +107,10 @@ public class LibraryContent extends FragmentActivity
                 categories[tabLayout.getSelectedTabPosition()]);
             updateViewData();
         }
-        if (resultCode == Categories.MUSIC.ordinal() || resultCode == Categories.AMBIENCE.ordinal()
-            || resultCode == Categories.EFFECT.ordinal())
+        if (resultCode == Tags.MUSIC.ordinal() || resultCode == Tags.AMBIENCE.ordinal()
+            || resultCode == Tags.EFFECT.ordinal())
         {
+            //TODO: java.lang.String android.content.Intent.getStringExtra(java.lang.String)
             String path = data.getStringExtra("path");
             Intent intent = new Intent().putExtra("path", path);
             setResult(Activity.RESULT_OK, intent);

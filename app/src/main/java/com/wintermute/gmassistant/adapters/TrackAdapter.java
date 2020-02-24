@@ -50,7 +50,7 @@ public class TrackAdapter extends BaseAdapter
     @Override
     public long getItemId(int position)
     {
-        return Long.parseLong(tracks.get(position).getId());
+        return Long.parseLong(String.valueOf(tracks.get(position).getId()));
     }
 
     @Override

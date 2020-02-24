@@ -1,10 +1,10 @@
 package com.wintermute.gmassistant.helper;
 
-public enum SceneDb
+public enum SceneDbModel
 {
     TABLE_NAME("scene"),
     ID("id"),
-    EFFECT("start_effect"),
+    EFFECT("effect"),
     MUSIC("music"),
     AMBIENCE("ambience"),
     NAME("name"),
@@ -12,7 +12,7 @@ public enum SceneDb
 
     private String column;
 
-    SceneDb(String column)
+    SceneDbModel(String column)
     {
         this.column= column;
     }

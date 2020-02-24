@@ -17,12 +17,12 @@ import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.client.FileBrowser;
 import com.wintermute.gmassistant.client.panel.LibraryContent;
 import com.wintermute.gmassistant.database.dao.LightDao;
-import com.wintermute.gmassistant.database.dao.SceneDao;
-import com.wintermute.gmassistant.database.dao.TrackDao;
-import com.wintermute.gmassistant.helper.Categories;
-import com.wintermute.gmassistant.helper.SceneDb;
+import com.wintermute.gmassistant.helper.Tags;
+import com.wintermute.gmassistant.helper.SceneDbModel;
 import com.wintermute.gmassistant.model.Light;
-import com.wintermute.gmassistant.operator.SceneOperations;
+import com.wintermute.gmassistant.model.Track;
+import com.wintermute.gmassistant.operations.SceneOperations;
+import com.wintermute.gmassistant.operations.TrackOperations;
 import com.wintermute.gmassistant.services.FileBrowserService;
 
 import java.io.File;
@@ -74,22 +74,22 @@ public class SceneConfig extends AppCompatActivity
         Button setStartEffect = findViewById(R.id.set_start_effect);
         setStartEffect.setOnClickListener(v ->
         {
-            browseFilesForTrack(Categories.EFFECT.ordinal());
-            tag = Categories.EFFECT.name();
+            browseFilesForTrack(Tags.EFFECT.ordinal());
+            tag = Tags.EFFECT.name();
         });
 
         Button setMusic = findViewById(R.id.set_music);
         setMusic.setOnClickListener(v ->
         {
-            browseFilesForTrack(Categories.MUSIC.ordinal());
-            tag = Categories.MUSIC.name();
+            browseFilesForTrack(Tags.MUSIC.ordinal());
+            tag = Tags.MUSIC.name();
         });
 
         Button setAmbience = findViewById(R.id.set_ambience);
         setAmbience.setOnClickListener(v ->
         {
-            browseFilesForTrack(Categories.AMBIENCE.ordinal());
-            tag = Categories.AMBIENCE.name();
+            browseFilesForTrack(Tags.AMBIENCE.ordinal());
+            tag = Tags.AMBIENCE.name();
         });
 
         Button sceneSubmit = findViewById(R.id.scene_submit);
@@ -98,15 +98,15 @@ public class SceneConfig extends AppCompatActivity
 
     private void submitScene()
     {
-        content.put(SceneDb.NAME.value(), nameField.getText());
-        content.put(SceneDb.LIGHT.value(),
-            content.get(SceneDb.LIGHT.value()) != null ? content.get(SceneDb.LIGHT.value()) : new Light());
-        content.put(Categories.EFFECT.value(), content.get(Categories.EFFECT.value()));
-        content.put(Categories.MUSIC.value(), content.get(Categories.AMBIENCE.value()));
-        content.put(Categories.AMBIENCE.value(), content.get(Categories.AMBIENCE.value()));
+        content.put(SceneDbModel.NAME.value(), nameField.getText());
+        content.put(SceneDbModel.LIGHT.value(),
+            content.get(SceneDbModel.LIGHT.value()) != null ? content.get(SceneDbModel.LIGHT.value()) : new Light());
+        content.put(Tags.EFFECT.value(), content.get(Tags.EFFECT.value()));
+        content.put(Tags.MUSIC.value(), content.get(Tags.AMBIENCE.value()));
+        content.put(Tags.AMBIENCE.value(), content.get(Tags.AMBIENCE.value()));
         if (!nameField.getText().toString().equals(""))
         {
-            operations.createInstance(content);
+            operations.createScene(content);
             finish();
         } else
         {
@@ -160,20 +160,22 @@ public class SceneConfig extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK)
         {
+            TrackOperations trackOperations = new TrackOperations(getApplicationContext());
+
             String path = data.getStringExtra("path");
             String fileName = path == null ? "" : new File(path).getName();
-
-            if (requestCode == Categories.EFFECT.ordinal())
+            Track track = trackOperations.getTrackOrCreateIfNotExist(path);
+            if (requestCode == Tags.EFFECT.ordinal())
             {
-                content.put(Categories.EFFECT.value(), path);
+                content.put(Tags.EFFECT.value(), track.getId());
                 effectView.setText(fileName);
-            } else if (requestCode == Categories.MUSIC.ordinal())
+            } else if (requestCode == Tags.MUSIC.ordinal())
             {
-                content.put(Categories.MUSIC.value(), path);
+                content.put(Tags.MUSIC.value(), track.getId());
                 musicView.setText(fileName);
-            } else if (requestCode == Categories.AMBIENCE.ordinal())
+            } else if (requestCode == Tags.AMBIENCE.ordinal())
             {
-                content.put(Categories.AMBIENCE.value(), path);
+                content.put(Tags.AMBIENCE.value(), track.getId());
                 ambienceView.setText(fileName);
             } else if (requestCode == 4)
             {
@@ -186,7 +188,7 @@ public class SceneConfig extends AppCompatActivity
                 LightDao dao = new LightDao(this);
                 light.setId(dao.insert(light));
 
-                content.put("light", dao.getById(light.getId()));
+                content.put(SceneDbModel.LIGHT.value(), dao.getById(light.getId()));
 
                 colorView.setImageBitmap(extractColor(color));
             }

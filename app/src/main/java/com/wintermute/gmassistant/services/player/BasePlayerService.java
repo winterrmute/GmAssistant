@@ -78,16 +78,6 @@ public class BasePlayerService extends Service
     }
 
     /**
-     * @param trackId to extract the path.
-     * @return path of track
-     */
-    String getTrackPath(Long trackId)
-    {
-        TrackDao dao = new TrackDao(getBaseContext());
-        return dao.computeTrackIfAbsent(trackId).getPath();
-    }
-
-    /**
      * Creates notification for started service.
      *
      * @param intent

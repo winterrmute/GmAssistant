@@ -14,8 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.database.dao.LightDao;
-import com.wintermute.gmassistant.database.dao.TrackDao;
 import com.wintermute.gmassistant.model.Scene;
+import com.wintermute.gmassistant.operations.SceneOperations;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class SceneAdapter extends BaseAdapter
 {
-    Context ctx;
+    private Context ctx;
     private List<Scene> scenes;
     private LayoutInflater inflater;
 
@@ -64,7 +64,9 @@ public class SceneAdapter extends BaseAdapter
         TextView music = result.findViewById(R.id.music);
         TextView ambience = result.findViewById(R.id.ambience);
 
-        Scene target = scenes.get(position);
+        SceneOperations operations = new SceneOperations(ctx);
+        Scene target = operations.getScene(scenes.get(position));
+
         Long light = target.getLight() != null ? target.getLight().getId() : 0L;
         if (light != 0L)
         {
@@ -72,9 +74,9 @@ public class SceneAdapter extends BaseAdapter
         }
         name.setText(target.getName());
 
-        startEffect.setText("Effect: " + target.getEffectPath());
-        music.setText("Music: " + target.getMusicPath());
-        ambience.setText("Ambience: " + target.getAmbiencePath());
+        startEffect.setText("Effect: " + target.getEffect().getName());
+        music.setText("Music: " + target.getMusic().getName());
+        ambience.setText("Ambience: " + target.getAmbience().getName());
         result.setTag(position);
         return result;
     }

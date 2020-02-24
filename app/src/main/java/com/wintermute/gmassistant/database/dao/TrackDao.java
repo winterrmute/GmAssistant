@@ -5,11 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.gmassistant.database.DbManager;
+import com.wintermute.gmassistant.helper.SceneDbModel;
+import com.wintermute.gmassistant.helper.TrackDbModel;
 import com.wintermute.gmassistant.model.Track;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,13 +20,6 @@ import java.util.Map;
  */
 public class TrackDao extends BaseDao
 {
-    private static final String TABLE_NAME = "track";
-    private static final String ID_KEY = "id";
-    private static final String NAME_KEY = "name";
-    private static final String ARTIST_KEY = "artist";
-    private static final String TAG_KEY = "tag";
-    private static final String PATH_KEY = "path";
-
     private SQLiteDatabase dbRead;
     private SQLiteDatabase dbWrite;
 
@@ -37,60 +31,13 @@ public class TrackDao extends BaseDao
     }
 
     /**
-     * Insert row into playlist table. TODO: refactor me
+     * Insert row into playlist table.
      *
      * @return id of inserted element.
      */
-    public String insert(Track track)
+    public Long insert(ContentValues values)
     {
-        if (computeIdIfAbsent(track.getName()) != null)
-        {
-            return computeIdIfAbsent(track.getName());
-        } else
-        {
-            Map<String, Object> object = createObject(track);
-            ContentValues values = getContentValues(object);
-            dbWrite.insert(TABLE_NAME, null, values);
-            return computeIdIfAbsent(track.getName());
-        }
-    }
-
-    /**
-     * Select item by name.
-     *
-     * @param title to identify database entry.
-     * @return selected track.
-     */
-    private String computeIdIfAbsent(String title)
-    {
-        StringBuilder query = new StringBuilder("SELECT id FROM ")
-            .append(TABLE_NAME)
-            .append("  WHERE ")
-            .append(NAME_KEY)
-            .append("  =  '")
-            .append(title)
-            .append("'");
-        try
-        {
-            return mapObject(dbRead.rawQuery(query.toString(), null)).get(0).getId();
-        } catch (IndexOutOfBoundsException e)
-        {
-            return null;
-        }
-    }
-
-    /**
-     * @param track to create dao.
-     * @return map containing non null values.
-     */
-    private Map<String, Object> createObject(Track track)
-    {
-        HashMap<String, Object> obj = new HashMap<>();
-        obj.put(NAME_KEY, track.getName());
-        obj.put(ARTIST_KEY, track.getArtist());
-        obj.put(TAG_KEY, track.getTag());
-        obj.put(PATH_KEY, track.getPath());
-        return removeEmptyValues(obj);
+        return dbWrite.insert(TrackDbModel.TABLE_NAME.value(), null, values);
     }
 
     /**
@@ -100,71 +47,17 @@ public class TrackDao extends BaseDao
      * @param value column.
      * @return selected track.
      */
-    Track getTrack(String key, String value)
+    public Map<String, Object> get(String key, String value)
     {
         StringBuilder query = new StringBuilder("SELECT * FROM ")
-            .append(TABLE_NAME)
+            .append(TrackDbModel.TABLE_NAME.value())
             .append("  WHERE ")
             .append(key)
             .append("  =  '")
             .append(value)
             .append("'");
-        ArrayList<Track> result = mapObject(dbRead.rawQuery(query.toString(), null));
-        return result.size() > 0 ? result.get(0) : null;
-    }
-
-    public Track getById(String id)
-    {
-        return getTrack(ID_KEY, id);
-    }
-
-    /**
-     * Get track by path.
-     *
-     * @param path of track to find.
-     * @return selected track.
-     */
-    public Track getTrackByPath(String path)
-    {
-        return getTrack(PATH_KEY, path);
-    }
-
-    /**
-     * Get track by set tag.
-     *
-     * @param tag of track to find.
-     * @return selected track.
-     */
-    public List<Track> getTracksByTag(String tag)
-    {
-        StringBuilder query = new StringBuilder("SELECT * FROM ")
-            .append(TABLE_NAME)
-            .append(" WHERE ")
-            .append(TAG_KEY)
-            .append("='")
-            .append(tag)
-            .append("'");
-        return mapObject(dbRead.rawQuery(query.toString(), null));
-    }
-
-    /**
-     * Get track by id if present or new object.
-     *
-     * @param id of track to find.
-     * @return queried track if present, empty track if id was null.
-     */
-    public Track computeTrackIfAbsent(Long id)
-    {
-//        if (id != null)
-//        {
-//            return getTrack(ID_KEY, id);
-//        } else
-//        {
-//            Track result = new Track();
-//            result.setName(null);
-//            return result;
-//        }
-        return null;
+        ArrayList<Map<String, Object>> trackData = getTrackData(dbRead.rawQuery(query.toString(), null));
+        return trackData.isEmpty() ? null : trackData.get(0);
     }
 
     /**
@@ -173,12 +66,12 @@ public class TrackDao extends BaseDao
      * @param id of playlist containing tracks.
      * @return List of Tracks
      */
-    public ArrayList<Track> getReferencedTracks(String id)
+    public ArrayList<Map<String, Object>> getReferencedTracks(String id)
     {
         StringBuilder query = new StringBuilder(
             "SELECT * FROM playlist pl, playlist_content ct, track tk WHERE tk.id = ct.track AND pl.id = ct.playlist "
                 + "AND pl.id").append(" = '").append(id).append("'");
-        return mapObject(dbRead.rawQuery(query.toString(), null));
+        return getTrackData(dbRead.rawQuery(query.toString(), null));
     }
 
     /**
@@ -186,30 +79,23 @@ public class TrackDao extends BaseDao
      *
      * @return list of track names.
      */
-    public ArrayList<Track> getAll()
+    public ArrayList<Map<String, Object>> getAll()
     {
-        StringBuilder query = new StringBuilder("SELECT * FROM " + TABLE_NAME);
-        return mapObject(dbRead.rawQuery(query.toString(), null));
+        StringBuilder query = new StringBuilder("SELECT * FROM " + TrackDbModel.TABLE_NAME.value());
+        return getTrackData(dbRead.rawQuery(query.toString(), null));
     }
 
-    /**
-     * Translates the data from database to java objects.
-     *
-     * @param cursor to iterate over database rows.
-     * @return list of track objects.
-     */
-    private ArrayList<Track> mapObject(Cursor cursor)
+    private ArrayList<Map<String, Object>> getTrackData(Cursor cursor)
     {
-        ArrayList<Track> result = new ArrayList<>();
+        ArrayList<Map<String, Object>> result = new ArrayList<>();
         while (cursor.moveToNext())
         {
-            Track track = new Track();
-            track.setId(getKeyValue(cursor, ID_KEY));
-            track.setName(getKeyValue(cursor, NAME_KEY));
-            track.setArtist(getKeyValue(cursor, ARTIST_KEY));
-            track.setTag(getKeyValue(cursor, TAG_KEY));
-            track.setPath(getKeyValue(cursor, PATH_KEY));
-            result.add(track);
+            Map<String, Object> content = new HashMap<>();
+            for (SceneDbModel element : SceneDbModel.values())
+            {
+                content.put(element.name().toLowerCase(), getKeyValue(cursor, element.value()));
+            }
+            result.add(content);
         }
         return result;
     }
@@ -235,14 +121,14 @@ public class TrackDao extends BaseDao
      */
     public void update(Track track)
     {
-        StringBuilder query = new StringBuilder("UPDATE ")
-            .append(TABLE_NAME)
-            .append(" SET ")
-            .append(updateQueryBuilder(createObject(track)))
-            .append(" WHERE id = '")
-            .append(track.getId())
-            .append("'");
-        dbWrite.execSQL(query.toString());
+//        StringBuilder query = new StringBuilder("UPDATE ")
+//            .append(TrackDbModel.TABLE_NAME.value())
+//            .append(" SET ")
+//            .append(updateQueryBuilder(createObject(track)))
+//            .append(" WHERE id = '")
+//            .append(track.getId())
+//            .append("'");
+//        dbWrite.execSQL(query.toString());
     }
 
     /**
@@ -252,6 +138,6 @@ public class TrackDao extends BaseDao
      */
     public void deleteById(String id)
     {
-        dbWrite.execSQL(getDeleteQuery(TABLE_NAME, ID_KEY, id));
+        dbWrite.delete(TrackDbModel.TABLE_NAME.value(), TrackDbModel.ID.value() + " = " + id, new String[] {});
     }
 }

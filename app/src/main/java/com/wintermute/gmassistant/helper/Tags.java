@@ -1,6 +1,6 @@
 package com.wintermute.gmassistant.helper;
 
-public enum Categories
+public enum Tags
 {
     MUSIC("music"),
     AMBIENCE("ambience"),
@@ -8,7 +8,7 @@ public enum Categories
 
     private String category;
 
-    Categories(String category)
+    Tags(String category)
     {
         this.category = category;
     }

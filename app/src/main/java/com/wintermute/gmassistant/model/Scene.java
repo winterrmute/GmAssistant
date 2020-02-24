@@ -14,26 +14,7 @@ public class Scene
     private Long id;
     private String name;
     private Light light;
-    private String effectPath;
-    private String musicPath;
-    private String ambiencePath;
-
-    public void setEffectPath(String effectPath)
-    {
-        this.effectPath = computeNameIfAbsent(effectPath);
-    }
-
-    public void setMusicPath(String musicPath)
-    {
-        this.musicPath = computeNameIfAbsent(musicPath);
-    }
-
-    public void setAmbiencePath(String ambiencePath)
-    {
-        this.ambiencePath = computeNameIfAbsent(ambiencePath);
-    }
-
-    private String computeNameIfAbsent(String path){
-        return null == path ? "" : path;
-    }
+    private Track effect;
+    private Track music;
+    private Track ambience;
 }

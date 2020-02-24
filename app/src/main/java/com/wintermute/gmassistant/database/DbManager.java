@@ -16,7 +16,7 @@ public class DbManager extends SQLiteOpenHelper
         "CREATE TABLE playlist ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL)";
 
     private static final String TRACK =
-        "CREATE TABLE track ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, artist TEXT, tag TEXT, " + "path TEXT )";
+        "CREATE TABLE track ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, path TEXT UNIQUE, duration INT, artist TEXT)";
 
     private static final String PLAYLIST_CONTENT =
         "CREATE TABLE playlist_content ( playlist INTEGER, track INTEGER, scene INTEGER, FOREIGN KEY (playlist) "
@@ -24,12 +24,8 @@ public class DbManager extends SQLiteOpenHelper
             + "(scene) REFERENCES scene (id) )";
 
     private static final String SCENE =
-        "CREATE TABLE scene ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, light INTEGER, effect TEXT, "
-            + "music TEXT, ambience TEXT)";
-
-//    private static final String SCENE =
-//        "CREATE TABLE scene ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, light INTEGER, effect INTEGER, "
-//            + "music INTEGER, ambience INTEGER)";
+        "CREATE TABLE scene ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, light INTEGER, effect INTEGER, "
+            + "music INTEGER, ambience INTEGER)";
 
     private static final String LIGHT =
         "CREATE TABLE light ( id INTEGER PRIMARY KEY AUTOINCREMENT, color REAL, " + "brightness REAL)";

@@ -10,7 +10,7 @@ import com.wintermute.gmassistant.adapters.SceneAdapter;
 import com.wintermute.gmassistant.config.SceneConfig;
 import com.wintermute.gmassistant.dialogs.ListDialog;
 import com.wintermute.gmassistant.model.Scene;
-import com.wintermute.gmassistant.operator.SceneOperations;
+import com.wintermute.gmassistant.operations.SceneOperations;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,7 +40,7 @@ public class ScenePanel extends AppCompatActivity
         showScenes();
 
         sceneView.setOnItemClickListener(
-            (parent, view, position, id) -> operations.startScene(allScenes.get(position).getId()));
+            (parent, view, position, id) -> operations.startScene(allScenes.get(position)));
 
         sceneView.setOnItemLongClickListener((parent, view, position, id) ->
         {

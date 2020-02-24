@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import com.wintermute.gmassistant.database.DbManager;
-import com.wintermute.gmassistant.helper.SceneDb;
+import com.wintermute.gmassistant.helper.SceneDbModel;
 import com.wintermute.gmassistant.model.Scene;
 
 import java.util.ArrayList;
@@ -32,18 +32,10 @@ public class SceneDao extends BaseDao
      *
      * @return id of inserted element.
      */
-    public Long insert(ContentValues scene)
+    public Long insert(ContentValues values)
     {
-        Long id = null;
-        try
-        {
-            id = dbWrite.insert(SceneDb.TABLE_NAME.value(), null, scene);
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        return dbWrite.insert(SceneDbModel.TABLE_NAME.value(), null, values);
 
-        return id == null ? -1L : id;
     }
 
     /**
@@ -51,8 +43,8 @@ public class SceneDao extends BaseDao
      */
     public List<Map<String, Object>> getAll()
     {
-        String query = "SELECT * FROM " + SceneDb.TABLE_NAME.value();
-        return createSceneModel(dbRead.rawQuery(query, null));
+        String query = "SELECT * FROM " + SceneDbModel.TABLE_NAME.value();
+        return getSceneData(dbRead.rawQuery(query, null));
     }
 
     /**
@@ -64,8 +56,8 @@ public class SceneDao extends BaseDao
     public Map<String, Object> getById(Long sceneId)
     {
         String query =
-            "SELECT * FROM " + SceneDb.TABLE_NAME.value() + " WHERE " + SceneDb.ID.value() + " = '" + sceneId + "'";
-        List<Map<String, Object>> scenes = createSceneModel(dbRead.rawQuery(query, null));
+            "SELECT * FROM " + SceneDbModel.TABLE_NAME.value() + " WHERE " + SceneDbModel.ID.value() + " = '" + sceneId + "'";
+        List<Map<String, Object>> scenes = getSceneData(dbRead.rawQuery(query, null));
         return scenes.size() != 0 ? scenes.get(0) : null;
     }
 
@@ -75,14 +67,13 @@ public class SceneDao extends BaseDao
      * @param cursor to iterate over database rows.
      * @return list of track objects.
      */
-    private List<Map<String, Object>> createSceneModel(Cursor cursor)
+    private List<Map<String, Object>> getSceneData(Cursor cursor)
     {
         ArrayList<Map<String, Object>> result = new ArrayList<>();
-
         while (cursor.moveToNext())
         {
             Map<String, Object> content = new HashMap<>();
-            for (SceneDb element : SceneDb.values())
+            for (SceneDbModel element : SceneDbModel.values())
             {
                 content.put(element.name().toLowerCase(), getKeyValue(cursor, element.value()));
             }
@@ -93,7 +84,7 @@ public class SceneDao extends BaseDao
 
     public void updateScene(Scene scene)
     {
-        dbWrite.update(SceneDb.TABLE_NAME.value(), null, SceneDb.ID.value() + " = " + scene.getId(), new String[] {});
+        dbWrite.update(SceneDbModel.TABLE_NAME.value(), null, SceneDbModel.ID.value() + " = " + scene.getId(), new String[] {});
     }
 
     /**
@@ -119,6 +110,6 @@ public class SceneDao extends BaseDao
      */
     public void delete(Scene target)
     {
-        dbWrite.delete(SceneDb.TABLE_NAME.value(), SceneDb.ID.value() + " = " + target.getId(), new String[] {});
+        dbWrite.delete(SceneDbModel.TABLE_NAME.value(), SceneDbModel.ID.value() + " = " + target.getId(), new String[] {});
     }
 }

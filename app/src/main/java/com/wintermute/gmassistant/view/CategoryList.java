@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.LibraryItemAdapter;
 import com.wintermute.gmassistant.handlers.PlayerHandler;
-import com.wintermute.gmassistant.helper.Categories;
+import com.wintermute.gmassistant.helper.Tags;
 import com.wintermute.gmassistant.model.LibraryFile;
 import com.wintermute.gmassistant.services.FileBrowserService;
 import com.wintermute.gmassistant.view.model.AudioLibrary;
@@ -50,7 +50,7 @@ public class CategoryList extends Fragment
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null)
         {
-            tagId = getArguments() != null ? getArguments().getInt("tag") : Categories.MUSIC.ordinal();
+            tagId = getArguments() != null ? getArguments().getInt("tag") : Tags.MUSIC.ordinal();
             selectTrack = getArguments() != null && getArguments().getBoolean("selectTrack");
         }
     }

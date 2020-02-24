@@ -1,12 +1,14 @@
-package com.wintermute.gmassistant.operator;
+package com.wintermute.gmassistant.operations;
 
 import android.content.ContentValues;
 import android.content.Context;
 import com.wintermute.gmassistant.database.dao.SceneDao;
 import com.wintermute.gmassistant.handlers.PlayerHandler;
-import com.wintermute.gmassistant.helper.SceneDb;
+import com.wintermute.gmassistant.helper.Tags;
+import com.wintermute.gmassistant.helper.SceneDbModel;
 import com.wintermute.gmassistant.model.Light;
 import com.wintermute.gmassistant.model.Scene;
+import com.wintermute.gmassistant.model.Track;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,21 +22,29 @@ import java.util.Map;
  */
 public class SceneOperations
 {
-    private Context sceneAppContext;
+    private Context ctx;
     private SceneDao dao;
 
-    //TODO: Tmp
     private Scene scene;
     private List<Scene> allScenes = new ArrayList<>();
 
+    /**
+     * Creates an instance
+     * @param ctx application context
+     */
     public SceneOperations(Context ctx)
     {
-        this.sceneAppContext = ctx;
+        this.ctx = ctx;
     }
 
+    /**
+     * Gets all scenes stored in database
+     *
+     * @return list of scenes
+     */
     public List<Scene> loadViewElements()
     {
-        dao = new SceneDao(sceneAppContext);
+        dao = new SceneDao(ctx);
         List<Map<String, Object>> actualElements = dao.getAll();
         if (actualElements.size() > 0)
         {
@@ -49,31 +59,57 @@ public class SceneOperations
         return new ArrayList<>();
     }
 
+    /**
+     * @param scene to load from database
+     *
+     * @return scene
+     */
     public Scene getScene(Scene scene)
     {
-        dao = new SceneDao(sceneAppContext);
+        dao = new SceneDao(ctx);
         return getModel(dao.getById(scene.getId()));
     }
 
+    /**
+     * @param sceneId to load from database
+     *
+     * @return scene by id
+     */
     public Scene getScene(Long sceneId)
     {
-        dao = new SceneDao(sceneAppContext);
+        dao = new SceneDao(ctx);
         return getModel(dao.getById(sceneId));
     }
 
-    public void createInstance(Map<String, Object> content)
+    /**
+     * Creates new scene
+     *
+     * @param content all scene information
+     */
+    public void createScene(Map<String, Object> content)
     {
         scene = new Scene();
         storeScene(content);
     }
 
+    /**
+     * Triggers deleting scene
+     *
+     * @param scene to remove from database
+     */
     public void deleteElement(Scene scene)
     {
-        dao = new SceneDao(sceneAppContext);
+        dao = new SceneDao(ctx);
         dao.delete(scene);
         allScenes = loadViewElements();
     }
 
+    /**
+     * Gets the scene model with all information
+     *
+     * @param content model data
+     * @return composed model
+     */
     private Scene getModel(Map<String, Object> content)
     {
         if (scene == null)
@@ -84,40 +120,50 @@ public class SceneOperations
         {
             if (null != entry.getValue())
             {
-                if (entry.getKey().equals(SceneDb.ID.value()))
+                if (entry.getKey().equals(SceneDbModel.ID.value()))
                 {
                     scene.setId(Long.parseLong(entry.getValue().toString()));
                 }
-                if (entry.getKey().equals(SceneDb.LIGHT.value()))
+                if (entry.getKey().equals(SceneDbModel.LIGHT.value()))
                 {
-                    Light light = (Light) entry.getValue();
-                    scene.setLight(light);
+                    scene.setLight((Light) entry.getValue());
                 }
-                if (entry.getKey().equals(SceneDb.NAME.value()))
+                if (entry.getKey().equals(SceneDbModel.NAME.value()))
                 {
                     scene.setName(entry.getValue().toString());
                 }
-                if (entry.getKey().equals(SceneDb.EFFECT.value()))
+                if (entry.getKey().equals(SceneDbModel.EFFECT.value()))
                 {
-                    scene.setEffectPath(entry.getValue().toString());
+                    scene.setEffect(addTrackToScene(entry.getValue().toString(), Tags.EFFECT.value()));
                 }
-                if (entry.getKey().equals(SceneDb.MUSIC.value()))
+                if (entry.getKey().equals(SceneDbModel.MUSIC.value()))
                 {
-                    scene.setMusicPath(entry.getValue().toString());
+                    scene.setMusic(addTrackToScene(entry.getValue().toString(), Tags.MUSIC.value()));
                 }
-                if (entry.getKey().equals(SceneDb.AMBIENCE.value()))
+                if (entry.getKey().equals(SceneDbModel.AMBIENCE.value()))
                 {
-                    scene.setAmbiencePath(entry.getValue().toString());
+                    scene.setAmbience(addTrackToScene(entry.getValue().toString(), Tags.AMBIENCE.value()));
                 }
             }
         }
         return scene;
     }
 
-    public void startScene(Long id)
+    private Track addTrackToScene(String id, String tag){
+        TrackOperations trackOperations = new TrackOperations(ctx);
+        Track track =
+            trackOperations.get(id);
+        track.setTag(tag);
+        return track;
+    }
+
+    /**
+     * Triggers playing the scene
+     */
+    public void startScene(Scene scene)
     {
-        PlayerHandler handler = new PlayerHandler(sceneAppContext);
-        handler.startPlayerByScene(id);
+        PlayerHandler handler = new PlayerHandler(ctx);
+        handler.startPlayerByScene(scene);
     }
 
     private void storeScene(Map<String, Object> sceneContent)
@@ -126,7 +172,7 @@ public class SceneOperations
         for (Map.Entry<String, Object> entry : sceneContent.entrySet())
         {
             if (null != entry.getValue())
-            if (entry.getKey().equals(SceneDb.LIGHT.value()))
+            if (entry.getKey().equals(SceneDbModel.LIGHT.value()))
             {
                 Light light = (Light) entry.getValue();
                 Long value = light.getId();
@@ -135,10 +181,9 @@ public class SceneOperations
             {
                 String value = entry.getValue().toString();
                 result.put(entry.getKey(), value);
-                result.put(entry.getKey(), value);
             }
         }
-        SceneDao dao = new SceneDao(sceneAppContext);
+        SceneDao dao = new SceneDao(ctx);
         Long insert = dao.insert(result);
         scene.setId(insert);
     }

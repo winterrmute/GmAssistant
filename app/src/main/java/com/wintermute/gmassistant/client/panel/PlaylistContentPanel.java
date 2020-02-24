@@ -45,7 +45,7 @@ public class PlaylistContentPanel extends AppCompatActivity
         songView.setOnItemClickListener((parent, view, position, id) ->
         {
             PlayerHandler handler = new PlayerHandler(PlaylistContentPanel.this);
-            handler.startPlayerByTrack(playlistId, allTracks.get(position).getId());
+//            handler.startPlayerByTrack(playlistId, allTracks.get(position).getId());
         });
 
         songView.setOnItemLongClickListener((parent, view, position, id) ->
@@ -86,11 +86,11 @@ public class PlaylistContentPanel extends AppCompatActivity
                     openDialog(prepareSceneConfigDialog());
                     break;
                 case "edit":
-                    String sceneId = dao.getSceneIdForTrackInPlaylist(playlistId, allTracks.get(position).getId());
+//                    String sceneId = dao.getSceneIdForTrackInPlaylist(playlistId, allTracks.get(position).getId());
                     Intent sceneConfig = new Intent(PlaylistContentPanel.this, SceneConfig.class);
                     sceneConfig
                         .putExtra("edit", true)
-                        .putExtra("sceneId", sceneId)
+//                        .putExtra("sceneId", sceneId)
                         .putExtra("trackId", allTracks.get(position).getId())
                         .putExtra("playlistId", playlistId);
                     startActivityForResult(sceneConfig, 1);
@@ -105,7 +105,7 @@ public class PlaylistContentPanel extends AppCompatActivity
                     break;
                 case "DELETE":
                     dao = new PlaylistContentDao(PlaylistContentPanel.this);
-                    dao.deleteTrackFromPlaylist(playlistId, allTracks.get(position).getId());
+//                    dao.deleteTrackFromPlaylist(playlistId, allTracks.get(position).getId());
                     renderFilesAsList();
                     break;
             }
@@ -115,7 +115,8 @@ public class PlaylistContentPanel extends AppCompatActivity
     private String[] prepareSceneConfigDialog()
     {
         PlaylistContentDao dao = new PlaylistContentDao(this);
-        String sceneId = dao.getSceneIdForTrackInPlaylist(playlistId, allTracks.get(position).getId());
+//        String sceneId = dao.getSceneIdForTrackInPlaylist(playlistId, allTracks.get(position).getId());
+        String sceneId = "";
         if (null != sceneId)
         {
             return new String[] {"edit", "add new"};
@@ -143,7 +144,7 @@ public class PlaylistContentPanel extends AppCompatActivity
      */
     void renderFilesAsList()
     {
-        allTracks = trackDao.getReferencedTracks(this.getIntent().getStringExtra("playlistId"));
+//        allTracks = trackDao.getReferencedTracks(this.getIntent().getStringExtra("playlistId"));
         TrackAdapter songAdapter = new TrackAdapter(this, allTracks);
         songView = findViewById(R.id.track_list);
         songView.setAdapter(songAdapter);
