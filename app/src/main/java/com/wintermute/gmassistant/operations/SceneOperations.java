@@ -30,6 +30,7 @@ public class SceneOperations
 
     /**
      * Creates an instance
+     *
      * @param ctx application context
      */
     public SceneOperations(Context ctx)
@@ -61,7 +62,6 @@ public class SceneOperations
 
     /**
      * @param scene to load from database
-     *
      * @return scene
      */
     public Scene getScene(Scene scene)
@@ -72,7 +72,6 @@ public class SceneOperations
 
     /**
      * @param sceneId to load from database
-     *
      * @return scene by id
      */
     public Scene getScene(Long sceneId)
@@ -149,10 +148,10 @@ public class SceneOperations
         return scene;
     }
 
-    private Track addTrackToScene(String id, String tag){
+    private Track addTrackToScene(String id, String tag)
+    {
         TrackOperations trackOperations = new TrackOperations(ctx);
-        Track track =
-            trackOperations.get(id);
+        Track track = trackOperations.get(id);
         track.setTag(tag);
         return track;
     }
@@ -172,15 +171,22 @@ public class SceneOperations
         for (Map.Entry<String, Object> entry : sceneContent.entrySet())
         {
             if (null != entry.getValue())
-            if (entry.getKey().equals(SceneDbModel.LIGHT.value()))
             {
-                Light light = (Light) entry.getValue();
-                Long value = light.getId();
-                result.put(entry.getKey(), value);
-            } else
-            {
-                String value = entry.getValue().toString();
-                result.put(entry.getKey(), value);
+                if (entry.getKey().equals(SceneDbModel.LIGHT.value()))
+                {
+                    Light light = (Light) entry.getValue();
+                    Long value = light.getId();
+                    result.put(entry.getKey(), value);
+                } else if (entry.getKey().equals(Tags.EFFECT.value()) || entry.getKey().equals(Tags.MUSIC.value())
+                    || entry.getKey().equals(Tags.AMBIENCE.value()))
+                {
+                    Track track = (Track) entry.getValue();
+                    Long value = track.getId();
+                    result.put(entry.getKey(), value);
+                } else {
+                    String value = entry.getValue().toString();
+                    result.put(entry.getKey(), value);
+                }
             }
         }
         SceneDao dao = new SceneDao(ctx);

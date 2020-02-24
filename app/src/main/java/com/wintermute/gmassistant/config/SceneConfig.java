@@ -167,15 +167,15 @@ public class SceneConfig extends AppCompatActivity
             Track track = trackOperations.getTrackOrCreateIfNotExist(path);
             if (requestCode == Tags.EFFECT.ordinal())
             {
-                content.put(Tags.EFFECT.value(), track.getId());
+                content.put(Tags.EFFECT.value(), track);
                 effectView.setText(fileName);
             } else if (requestCode == Tags.MUSIC.ordinal())
             {
-                content.put(Tags.MUSIC.value(), track.getId());
+                content.put(Tags.MUSIC.value(), track);
                 musicView.setText(fileName);
             } else if (requestCode == Tags.AMBIENCE.ordinal())
             {
-                content.put(Tags.AMBIENCE.value(), track.getId());
+                content.put(Tags.AMBIENCE.value(), track);
                 ambienceView.setText(fileName);
             } else if (requestCode == 4)
             {

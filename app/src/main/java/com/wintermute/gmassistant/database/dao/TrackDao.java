@@ -6,11 +6,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.gmassistant.database.DbManager;
 import com.wintermute.gmassistant.helper.SceneDbModel;
+import com.wintermute.gmassistant.helper.Tags;
 import com.wintermute.gmassistant.helper.TrackDbModel;
 import com.wintermute.gmassistant.model.Track;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -87,17 +90,41 @@ public class TrackDao extends BaseDao
 
     private ArrayList<Map<String, Object>> getTrackData(Cursor cursor)
     {
+
+        List<String> numericalValues =
+            Arrays.asList(Tags.AMBIENCE.value(), Tags.MUSIC.value(), Tags.EFFECT.value(), TrackDbModel.DURATION.value(),
+                TrackDbModel.ID.value());
+
         ArrayList<Map<String, Object>> result = new ArrayList<>();
         while (cursor.moveToNext())
         {
             Map<String, Object> content = new HashMap<>();
-            for (SceneDbModel element : SceneDbModel.values())
+            for (String value : SceneDbModel.getValues())
             {
-                content.put(element.name().toLowerCase(), getKeyValue(cursor, element.value()));
+                if (!value.equals(SceneDbModel.TABLE_NAME.value()))
+                {
+                    if (numericalValues.contains(value))
+                    {
+                        content.put(value, getNumericalValue(cursor, value));
+                    } else
+                    {
+                        content.put(value, getStringValue(cursor, value));
+                    }
+                }
             }
             result.add(content);
         }
         return result;
+    }
+
+    private Long getNumericalValue(Cursor cursor, String column)
+    {
+
+        if (cursor.getColumnIndex(column) != -1)
+        {
+            return cursor.getLong(cursor.getColumnIndex(column));
+        }
+        return -1L;
     }
 
     /**
@@ -107,7 +134,7 @@ public class TrackDao extends BaseDao
      * @param column containing value
      * @return value stored in db if possible, otherwise "-1"
      */
-    private String getKeyValue(Cursor cursor, String column)
+    private String getStringValue(Cursor cursor, String column)
     {
         if (cursor.getColumnIndex(column) != -1)
         {
@@ -121,14 +148,14 @@ public class TrackDao extends BaseDao
      */
     public void update(Track track)
     {
-//        StringBuilder query = new StringBuilder("UPDATE ")
-//            .append(TrackDbModel.TABLE_NAME.value())
-//            .append(" SET ")
-//            .append(updateQueryBuilder(createObject(track)))
-//            .append(" WHERE id = '")
-//            .append(track.getId())
-//            .append("'");
-//        dbWrite.execSQL(query.toString());
+        //        StringBuilder query = new StringBuilder("UPDATE ")
+        //            .append(TrackDbModel.TABLE_NAME.value())
+        //            .append(" SET ")
+        //            .append(updateQueryBuilder(createObject(track)))
+        //            .append(" WHERE id = '")
+        //            .append(track.getId())
+        //            .append("'");
+        //        dbWrite.execSQL(query.toString());
     }
 
     /**

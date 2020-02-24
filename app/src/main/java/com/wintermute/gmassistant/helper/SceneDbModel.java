@@ -1,5 +1,8 @@
 package com.wintermute.gmassistant.helper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum SceneDbModel
 {
     TABLE_NAME("scene"),
@@ -19,5 +22,13 @@ public enum SceneDbModel
 
     public String value(){
         return column;
+    }
+
+    public static List<String> getValues(){
+        List<String> result = new ArrayList<>();
+        for (SceneDbModel value : values()) {
+            result.add(value.value());
+        }
+        return result;
     }
 }
