@@ -46,11 +46,11 @@ public class SceneOperations
     public List<Scene> loadViewElements()
     {
         dao = new SceneDao(ctx);
-        List<Map<String, Object>> actualElements = dao.getAll();
-        if (actualElements.size() > 0)
+        List<Map<String, Object>> foundScenes = dao.getAll();
+        if (foundScenes.size() > 0)
         {
             Scene scene;
-            for (Map<String, Object> sceneContent : actualElements)
+            for (Map<String, Object> sceneContent : foundScenes)
             {
                 scene = getModel(sceneContent);
                 allScenes.add(scene);

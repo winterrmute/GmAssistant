@@ -7,7 +7,7 @@ public enum TrackDbModel
     NAME("name"),
     PATH("path"),
     DURATION("duration"),
-    ARTIST("name");
+    ARTIST("artist");
 
     private String column;
 

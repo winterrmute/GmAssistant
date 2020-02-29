@@ -17,8 +17,8 @@ import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.client.FileBrowser;
 import com.wintermute.gmassistant.client.panel.LibraryContent;
 import com.wintermute.gmassistant.database.dao.LightDao;
-import com.wintermute.gmassistant.helper.Tags;
 import com.wintermute.gmassistant.helper.SceneDbModel;
+import com.wintermute.gmassistant.helper.Tags;
 import com.wintermute.gmassistant.model.Light;
 import com.wintermute.gmassistant.model.Track;
 import com.wintermute.gmassistant.operations.SceneOperations;
@@ -27,7 +27,9 @@ import com.wintermute.gmassistant.services.FileBrowserService;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -98,19 +100,32 @@ public class SceneConfig extends AppCompatActivity
 
     private void submitScene()
     {
-        content.put(SceneDbModel.NAME.value(), nameField.getText());
-        content.put(SceneDbModel.LIGHT.value(),
-            content.get(SceneDbModel.LIGHT.value()) != null ? content.get(SceneDbModel.LIGHT.value()) : new Light());
-        content.put(Tags.EFFECT.value(), content.get(Tags.EFFECT.value()));
-        content.put(Tags.MUSIC.value(), content.get(Tags.AMBIENCE.value()));
-        content.put(Tags.AMBIENCE.value(), content.get(Tags.AMBIENCE.value()));
         if (!nameField.getText().toString().equals(""))
         {
+            content.put(SceneDbModel.NAME.value(), nameField.getText());
+            content.put(SceneDbModel.LIGHT.value(),
+                content.get(SceneDbModel.LIGHT.value()) != null ? content.get(SceneDbModel.LIGHT.value()) : new Light());
+            storeTracks();
             operations.createScene(content);
             finish();
         } else
         {
             Toast.makeText(this, "Please set scene name!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void storeTracks()
+    {
+        List<Track> tracks =
+            Arrays.asList((Track) content.get(Tags.EFFECT.value()), (Track) content.get(Tags.MUSIC.value()),
+                (Track) content.get(Tags.AMBIENCE.value()));
+
+        TrackOperations operations = new TrackOperations(getApplicationContext());
+        for (Track track : tracks)
+        {
+            if (null != track) {
+                operations.storeTrack(track);
+            }
         }
     }
 
@@ -162,19 +177,21 @@ public class SceneConfig extends AppCompatActivity
         {
             TrackOperations trackOperations = new TrackOperations(getApplicationContext());
 
-            String path = data.getStringExtra("path");
-            String fileName = path == null ? "" : new File(path).getName();
-            Track track = trackOperations.getTrackOrCreateIfNotExist(path);
+            Track track = trackOperations.createTrack(data.getStringExtra("path"));
+            String fileName = track.getName() == null ? new File(track.getPath()).getName() : track.getName();
             if (requestCode == Tags.EFFECT.ordinal())
             {
+                track.setTag(Tags.EFFECT.value());
                 content.put(Tags.EFFECT.value(), track);
                 effectView.setText(fileName);
             } else if (requestCode == Tags.MUSIC.ordinal())
             {
+                track.setTag(Tags.MUSIC.value());
                 content.put(Tags.MUSIC.value(), track);
                 musicView.setText(fileName);
             } else if (requestCode == Tags.AMBIENCE.ordinal())
             {
+                track.setTag(Tags.AMBIENCE.value());
                 content.put(Tags.AMBIENCE.value(), track);
                 ambienceView.setText(fileName);
             } else if (requestCode == 4)

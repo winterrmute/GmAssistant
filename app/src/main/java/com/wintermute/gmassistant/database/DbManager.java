@@ -9,14 +9,15 @@ import java.util.stream.Stream;
 public class DbManager extends SQLiteOpenHelper
 {
 
-    public static final int DB_VERSION = 1;
-    public static final String DB_NAME = "soundboard";
+    private static final int DB_VERSION = 1;
+    private static final String DB_NAME = "soundboard";
 
     private static final String PLAYLIST =
         "CREATE TABLE playlist ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL)";
 
     private static final String TRACK =
-        "CREATE TABLE track ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, path TEXT UNIQUE, duration INT, artist TEXT)";
+        "CREATE TABLE track ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, path TEXT UNIQUE, duration INT, artist"
+            + " TEXT)";
 
     private static final String PLAYLIST_CONTENT =
         "CREATE TABLE playlist_content ( playlist INTEGER, track INTEGER, scene INTEGER, FOREIGN KEY (playlist) "
@@ -25,7 +26,9 @@ public class DbManager extends SQLiteOpenHelper
 
     private static final String SCENE =
         "CREATE TABLE scene ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, light INTEGER, effect INTEGER, "
-            + "music INTEGER, ambience INTEGER)";
+            + "music INTEGER, ambience INTEGER, FOREIGN KEY (light) REFERENCES light (id), FOREIGN KEY (effect) "
+            + "REFERENCES track (id), FOREIGN KEY (music) REFERENCES track (id), FOREIGN KEY (ambience) REFERENCES "
+            + "track (id))";
 
     private static final String LIGHT =
         "CREATE TABLE light ( id INTEGER PRIMARY KEY AUTOINCREMENT, color REAL, " + "brightness REAL)";

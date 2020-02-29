@@ -34,26 +34,6 @@ public class TrackOperations
         return getModel(content);
     }
 
-    /**
-     * @param path to audio file on storage
-     * @return audio file if exists otherwise create a new created track will be returned
-     */
-    public Track getTrackOrCreateIfNotExist(String path)
-    {
-        Track result = checkIfExists(path);
-        return result;
-    }
-
-    private Track checkIfExists(String path)
-    {
-        TrackDao dao = new TrackDao(ctx);
-        Map<String, Object> stringObjectMap = dao.get(TrackDbModel.PATH.value(), path);
-        if (null == stringObjectMap) {
-            return newTrack(path);
-        }
-        return getModel(dao.get(TrackDbModel.PATH.value(), path));
-    }
-
     private Track existingTrack(Map<String, Object> content)
     {
         for (Map.Entry<String, Object> entry : content.entrySet())
@@ -85,14 +65,19 @@ public class TrackOperations
         return track;
     }
 
-    private Track newTrack(String path)
+    /**
+     * Create new track model
+     * @param path to audio file on storage
+     *
+     * @return track model
+     */
+    public Track createTrack(String path)
     {
         track = new Track();
         track.setName(new File(path).getName());
         track.setPath(path);
         track.setDuration(getDuration(path));
         track.setArtist(getArtist(path));
-        storeTrack();
         return track;
     }
 
@@ -136,7 +121,12 @@ public class TrackOperations
         return metadata.extractMetadata(metadataKey);
     }
 
-    private void storeTrack()
+    /**
+     * Stores new track into database.
+     *
+     * @param track to store.
+     */
+    public void storeTrack(Track track)
     {
         ContentValues result = new ContentValues();
         result.put(TrackDbModel.NAME.value(), track.getName());
