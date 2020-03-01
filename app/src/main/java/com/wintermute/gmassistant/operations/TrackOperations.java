@@ -67,8 +67,8 @@ public class TrackOperations
 
     /**
      * Create new track model
-     * @param path to audio file on storage
      *
+     * @param path to audio file on storage
      * @return track model
      */
     public Track createTrack(String path)
@@ -99,11 +99,6 @@ public class TrackOperations
         return track;
     }
 
-    public void setTagForTrack(String tag)
-    {
-        track.setTag(tag);
-    }
-
     private long getDuration(String path)
     {
         return Long.parseLong(extractMetaData(path, MediaMetadataRetriever.METADATA_KEY_DURATION));
@@ -126,15 +121,26 @@ public class TrackOperations
      *
      * @param track to store.
      */
-    public void storeTrack(Track track)
+    public void storeTrackIfNotExist(Track track)
     {
-        ContentValues result = new ContentValues();
-        result.put(TrackDbModel.NAME.value(), track.getName());
-        result.put(TrackDbModel.PATH.value(), track.getPath());
-        result.put(TrackDbModel.DURATION.value(), track.getDuration());
-        result.put(TrackDbModel.ARTIST.value(), track.getArtist());
         TrackDao dao = new TrackDao(ctx);
-        Long insert = dao.insert(result);
-        track.setId(insert);
+        if (trackExists(track, dao))
+        {
+            track.setId(getModel(dao.get(TrackDbModel.PATH.value(), track.getPath())).getId());
+        } else
+        {
+            ContentValues result = new ContentValues();
+            result.put(TrackDbModel.NAME.value(), track.getName());
+            result.put(TrackDbModel.PATH.value(), track.getPath());
+            result.put(TrackDbModel.DURATION.value(), track.getDuration());
+            result.put(TrackDbModel.ARTIST.value(), track.getArtist());
+            Long insert = dao.insert(result);
+            track.setId(insert);
+        }
+    }
+
+    private boolean trackExists(Track track, TrackDao dao)
+    {
+        return dao.get(TrackDbModel.PATH.value(), track.getPath()) != null;
     }
 }

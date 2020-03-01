@@ -40,7 +40,8 @@ public class TrackDao extends BaseDao
      */
     public Long insert(ContentValues values)
     {
-        return dbWrite.insert(TrackDbModel.TABLE_NAME.value(), null, values);
+        return dbWrite.insertWithOnConflict(TrackDbModel.TABLE_NAME.value(), null, values,
+            SQLiteDatabase.CONFLICT_IGNORE);
     }
 
     /**

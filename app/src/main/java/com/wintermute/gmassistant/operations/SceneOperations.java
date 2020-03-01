@@ -49,11 +49,9 @@ public class SceneOperations
         List<Map<String, Object>> foundScenes = dao.getAll();
         if (foundScenes.size() > 0)
         {
-            Scene scene;
             for (Map<String, Object> sceneContent : foundScenes)
             {
-                scene = getModel(sceneContent);
-                allScenes.add(scene);
+                allScenes.add(getModel(sceneContent));
             }
             return allScenes;
         }

@@ -74,9 +74,9 @@ public class SceneAdapter extends BaseAdapter
         }
         name.setText(target.getName());
 
-        startEffect.setText("Effect: " + target.getEffect().getName());
-        music.setText("Music: " + target.getMusic().getName());
-        ambience.setText("Ambience: " + target.getAmbience().getName());
+        startEffect.setText("Effect: " + target.getEffect() != null ? target.getEffect().getName() : "");
+        music.setText("Music: " + target.getMusic() != null ? target.getMusic().getName() : "");
+        ambience.setText("Ambience: " + target.getAmbience() != null ? target.getAmbience().getName() : "");
         result.setTag(position);
         return result;
     }

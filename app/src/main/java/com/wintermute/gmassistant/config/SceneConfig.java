@@ -124,7 +124,7 @@ public class SceneConfig extends AppCompatActivity
         for (Track track : tracks)
         {
             if (null != track) {
-                operations.storeTrack(track);
+                operations.storeTrackIfNotExist(track);
             }
         }
     }
@@ -181,17 +181,14 @@ public class SceneConfig extends AppCompatActivity
             String fileName = track.getName() == null ? new File(track.getPath()).getName() : track.getName();
             if (requestCode == Tags.EFFECT.ordinal())
             {
-                track.setTag(Tags.EFFECT.value());
                 content.put(Tags.EFFECT.value(), track);
                 effectView.setText(fileName);
             } else if (requestCode == Tags.MUSIC.ordinal())
             {
-                track.setTag(Tags.MUSIC.value());
                 content.put(Tags.MUSIC.value(), track);
                 musicView.setText(fileName);
             } else if (requestCode == Tags.AMBIENCE.ordinal())
             {
-                track.setTag(Tags.AMBIENCE.value());
                 content.put(Tags.AMBIENCE.value(), track);
                 ambienceView.setText(fileName);
             } else if (requestCode == 4)
