@@ -16,4 +16,8 @@ public enum Tags
     public String value(){
         return category;
     }
+
+    public static int getTagId(String tag){
+        return Tags.valueOf(tag.toUpperCase()).ordinal();
+    }
 }

@@ -2,6 +2,7 @@ package com.wintermute.gmassistant.services.player;
 
 import static android.media.MediaPlayer.create;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -55,8 +56,10 @@ public class MusicPlayerService extends BasePlayerService
     {
         getExtras(intent);
         mediaPlayer.stop();
-        startForeground(2, createNotification(intent, "Background Music", CHANNEL_ID, MusicPlayerReceiver.class));
-        mediaPlayer = create(this, Uri.parse(trackPath));
+        Notification background_music =
+            createNotification(intent, "Background Music", CHANNEL_ID, MusicPlayerReceiver.class);
+        startForeground(2, background_music);
+        mediaPlayer = create(this, Uri.parse("file://"+trackPath));
         mediaPlayer.setVolume(0.08f, 0.08f);
         mediaPlayer.start();
         mediaPlayer.setLooping(true);
