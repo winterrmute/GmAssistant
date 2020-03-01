@@ -34,17 +34,16 @@ public class BasePlayerService extends Service
      */
     void changeLight(Long sceneId)
     {
-        SceneDao sceneDao = new SceneDao(this);
+//        SceneDao sceneDao = new SceneDao(this);
 //        Long lightId = sceneDao.getById(sceneId).getLight();
-        Long lightId = 0L;
-        if (!"null".equals(lightId) && null != lightId)
-        {
-            LightDao dao = new LightDao(getBaseContext());
-            Light light = dao.getById(lightId);
-            Color color = Color.valueOf(new BigDecimal(String.valueOf(light.getColor())).intValue());
-            LightHandler handler = new LightHandler(getBaseContext(), color, Integer.parseInt(light.getBrightness()));
-            handler.setLight(false);
-        }
+//        if (!"null".equals(lightId) && null != lightId)
+//        {
+//            LightDao dao = new LightDao(getBaseContext());
+//            Light light = dao.getById(lightId);
+//            Color color = Color.valueOf(new BigDecimal(String.valueOf(light.getColor())).intValue());
+//            LightHandler handler = new LightHandler(getBaseContext(), color, Integer.parseInt(light.getBrightness()));
+//            handler.setLight(false);
+//        }
     }
 
     /**

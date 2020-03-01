@@ -1,5 +1,8 @@
 package com.wintermute.gmassistant.helper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum TrackDbModel
 {
     TABLE_NAME("track"),
@@ -18,5 +21,13 @@ public enum TrackDbModel
 
     public String value(){
         return column;
+    }
+
+    public static List<String> getValues(){
+        List<String> result = new ArrayList<>();
+        for (TrackDbModel value : values()) {
+            result.add(value.value());
+        }
+        return result;
     }
 }

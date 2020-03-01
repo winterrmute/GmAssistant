@@ -100,7 +100,7 @@ public class TrackDao extends BaseDao
         while (cursor.moveToNext())
         {
             Map<String, Object> content = new HashMap<>();
-            for (String value : SceneDbModel.getValues())
+            for (String value : TrackDbModel.getValues())
             {
                 if (!value.equals(SceneDbModel.TABLE_NAME.value()))
                 {

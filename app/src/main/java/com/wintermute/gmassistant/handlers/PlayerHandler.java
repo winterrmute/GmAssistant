@@ -2,8 +2,11 @@ package com.wintermute.gmassistant.handlers;
 
 import android.content.Context;
 import android.content.Intent;
+import com.wintermute.gmassistant.database.dao.TrackDao;
 import com.wintermute.gmassistant.helper.Tags;
+import com.wintermute.gmassistant.helper.TrackDbModel;
 import com.wintermute.gmassistant.model.Scene;
+import com.wintermute.gmassistant.model.Track;
 import com.wintermute.gmassistant.operations.TrackOperations;
 import com.wintermute.gmassistant.services.player.AmbiencePlayerService;
 import com.wintermute.gmassistant.services.player.EffectPlayerService;
@@ -53,17 +56,19 @@ public class PlayerHandler
      */
     public void startPlayerByScene(Scene scene)
     {
-
-        TrackOperations operations = new TrackOperations(ctx);
+        if (scene.getEffect() != null) {
+            play(getTrackForScene(scene.getEffect()).getPath(), Tags.EFFECT.ordinal());
+        }
+        if (scene.getMusic() != null) {
+            play(getTrackForScene(scene.getMusic()).getPath(), Tags.MUSIC.ordinal());
+        }
+        if (scene.getAmbience() != null) {
+            play(getTrackForScene(scene.getAmbience()).getPath(), Tags.AMBIENCE.ordinal());
+        }
     }
 
-    /**
-     * @param trackId to identify the right player.
-     * @return player that should be triggered.
-     * @deprecated will be removed in future
-     */
-    private Class specifyServicePlayer(String trackId)
-    {
-        return MusicPlayerService.class;
+    private Track getTrackForScene(Track track){
+        TrackOperations operations = new TrackOperations(ctx);
+        return operations.get(String.valueOf(track.getId()));
     }
 }
