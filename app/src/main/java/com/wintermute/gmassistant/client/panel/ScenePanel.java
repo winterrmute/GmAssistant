@@ -78,8 +78,8 @@ public class ScenePanel extends AppCompatActivity
             {
                 operations.deleteElement(scene);
             }
+            showScenes();
         }
-        showScenes();
     }
 
     /**

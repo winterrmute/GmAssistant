@@ -4,8 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import com.wintermute.gmassistant.database.dao.SceneDao;
 import com.wintermute.gmassistant.handlers.PlayerHandler;
-import com.wintermute.gmassistant.helper.Tags;
 import com.wintermute.gmassistant.helper.SceneDbModel;
+import com.wintermute.gmassistant.helper.Tags;
 import com.wintermute.gmassistant.model.Light;
 import com.wintermute.gmassistant.model.Scene;
 import com.wintermute.gmassistant.model.Track;
@@ -109,10 +109,7 @@ public class SceneOperations
      */
     private Scene getModel(Map<String, Object> content)
     {
-        if (scene == null)
-        {
-            scene = new Scene();
-        }
+        scene = new Scene();
         for (Map.Entry<String, Object> entry : content.entrySet())
         {
             if (null != entry.getValue())
@@ -181,7 +178,8 @@ public class SceneOperations
                     Track track = (Track) entry.getValue();
                     Long value = track.getId();
                     result.put(entry.getKey(), value);
-                } else {
+                } else
+                {
                     String value = entry.getValue().toString();
                     result.put(entry.getKey(), value);
                 }
