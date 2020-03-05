@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
+import com.wintermute.gmassistant.helper.Tags;
 import com.wintermute.gmassistant.model.Scene;
 import com.wintermute.gmassistant.model.Track;
 import com.wintermute.gmassistant.operations.PlayerOperations;
@@ -21,8 +22,6 @@ public class MusicPlayer extends BasePlayer
 {
 
     public static final String CHANNEL_ID = "Music";
-    private MediaPlayer mediaPlayer = new MediaPlayer();
-    private Scene scene;
     private PlayerOperations player;
 
     @Nullable
@@ -50,7 +49,6 @@ public class MusicPlayer extends BasePlayer
     @Override
     public void onCreate()
     {
-        mediaPlayer = new MediaPlayer();
         player = PlayerOperations.getInstance();
     }
 
@@ -58,10 +56,17 @@ public class MusicPlayer extends BasePlayer
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-        scene = intent.getParcelableExtra("scene");
-        Track track = scene.getMusic();
+        Scene scene = intent.getParcelableExtra("scene");
+        Track track = scene != null ? scene.getMusic() : intent.getParcelableExtra("track");
         startForeground(2, createNotification(intent, "Music", CHANNEL_ID, MusicReceiver.class));
-        player.startMusic(this, track);
+
+        if (scene != null && scene.getMusic() != null)
+        {
+            player.startMusicWithEffect(this, scene);
+        } else
+        {
+            player.startMusic(this, track);
+        }
 
         return Service.START_NOT_STICKY;
     }
@@ -69,6 +74,6 @@ public class MusicPlayer extends BasePlayer
     @Override
     public void onDestroy()
     {
-        mediaPlayer.stop();
+        PlayerOperations.getInstance().stopPlayer(Tags.MUSIC.value());
     }
 }

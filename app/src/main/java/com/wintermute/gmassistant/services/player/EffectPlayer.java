@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
+import com.wintermute.gmassistant.helper.Tags;
 import com.wintermute.gmassistant.model.Scene;
 import com.wintermute.gmassistant.model.Track;
 import com.wintermute.gmassistant.operations.PlayerOperations;
@@ -15,7 +16,6 @@ public class EffectPlayer extends BasePlayer
 {
 
     public static final String CHANNEL_ID = "Effect";
-    private MediaPlayer mediaPlayer = new MediaPlayer();
     private PlayerOperations player;
 
     @Nullable
@@ -40,7 +40,6 @@ public class EffectPlayer extends BasePlayer
     @Override
     public void onCreate()
     {
-        mediaPlayer = new MediaPlayer();
         player = PlayerOperations.getInstance();
     }
 
@@ -48,7 +47,7 @@ public class EffectPlayer extends BasePlayer
     public int onStartCommand(Intent intent, int flags, int startId)
     {
         Scene scene = intent.getParcelableExtra("scene");
-        Track track = scene.getEffect();
+        Track track = scene != null ? scene.getEffect() : intent.getParcelableExtra("track");
         startForeground(1, createNotification(intent, "Effect", CHANNEL_ID, EffectReceiver.class));
         player.startEffect(this, track);
 
@@ -58,7 +57,7 @@ public class EffectPlayer extends BasePlayer
     @Override
     public void onDestroy()
     {
-        mediaPlayer.stop();
+        PlayerOperations.getInstance().stopPlayer(Tags.EFFECT.value());
     }
 
     @Override

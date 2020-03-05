@@ -5,6 +5,7 @@ import android.content.Intent;
 import com.wintermute.gmassistant.helper.Tags;
 import com.wintermute.gmassistant.model.Scene;
 import com.wintermute.gmassistant.model.Track;
+import com.wintermute.gmassistant.operations.PlayerOperations;
 import com.wintermute.gmassistant.services.player.AmbiencePlayer;
 import com.wintermute.gmassistant.services.player.EffectPlayer;
 import com.wintermute.gmassistant.services.player.MusicPlayer;
@@ -30,16 +31,15 @@ public class PlayerHandler
     /**
      * Plays single file from path by tagId.
      *
-     * @param path on device to audio track.
-     * @param tag to specify player service.
+     * @param track on device to audio track.
      */
-    public void play(String path, int tag)
+    public void play(Track track)
     {
         Class target;
-        if (tag == Tags.MUSIC.ordinal())
+        if (track.getTag().equals(Tags.MUSIC.value()))
         {
             target = MusicPlayer.class;
-        } else if (tag == Tags.AMBIENCE.ordinal())
+        } else if (track.getTag().equals(Tags.AMBIENCE.value()))
         {
             target = AmbiencePlayer.class;
         } else
@@ -47,8 +47,8 @@ public class PlayerHandler
             target = EffectPlayer.class;
         }
         Intent player = new Intent(ctx, target);
-        player.putExtra("track", path);
-        ctx.startService(player);
+        player.putExtra("track", track);
+        ctx.startForegroundService(player);
     }
 
     /**
@@ -58,27 +58,39 @@ public class PlayerHandler
      */
     public void startPlayers(Scene scene)
     {
+        clearScene();
         List<Track> tracks = Arrays.asList(scene.getEffect(), scene.getMusic(), scene.getAmbience());
         for (Track track : tracks)
         {
-            if (track.getTag().equals("effect"))
+            if (track != null)
             {
-                Intent player = new Intent(ctx, EffectPlayer.class);
-                player.putExtra("scene", scene);
-                ctx.startForegroundService(player);
-            }
-            if (track.getTag().equals("music"))
-            {
-                Intent player = new Intent(ctx, MusicPlayer.class);
-                player.putExtra("scene", scene);
-                ctx.startForegroundService(player);
-            }
-            if (track.getTag().equals("ambience"))
-            {
-                Intent player = new Intent(ctx, AmbiencePlayer.class);
-                player.putExtra("scene", scene);
-                ctx.startForegroundService(player);
+                if (track.getTag().equals("effect"))
+                {
+                    Intent player = new Intent(ctx, EffectPlayer.class);
+                    player.putExtra("scene", scene);
+                    ctx.startForegroundService(player);
+                }
+                if (track.getTag().equals("music"))
+                {
+                    Intent player = new Intent(ctx, MusicPlayer.class);
+                    player.putExtra("scene", scene);
+                    ctx.startForegroundService(player);
+                }
+                if (track.getTag().equals("ambience"))
+                {
+                    Intent player = new Intent(ctx, AmbiencePlayer.class);
+                    player.putExtra("scene", scene);
+                    ctx.startForegroundService(player);
+                }
             }
         }
+    }
+
+    private void clearScene()
+    {
+        ctx.stopService(new Intent(ctx, EffectPlayer.class));
+        ctx.stopService(new Intent(ctx, MusicPlayer.class));
+        ctx.stopService(new Intent(ctx, AmbiencePlayer.class));
+        PlayerOperations.getInstance().stopAll();
     }
 }

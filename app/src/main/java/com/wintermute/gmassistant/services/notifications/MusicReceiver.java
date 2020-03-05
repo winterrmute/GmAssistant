@@ -11,7 +11,9 @@ public class MusicReceiver extends BroadcastReceiver
     @Override
     public void onReceive(Context ctx, Intent intent)
     {
-        PlayerOperations.getInstance().stopPlayer("music");
-        ctx.stopService(new Intent(ctx, MusicPlayer.class));
+        if (PlayerOperations.getInstance().stopPlayer("music"))
+        {
+            ctx.stopService(new Intent(ctx, MusicPlayer.class));
+        }
     }
 }

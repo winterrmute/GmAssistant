@@ -14,6 +14,8 @@ import com.wintermute.gmassistant.adapters.LibraryItemAdapter;
 import com.wintermute.gmassistant.handlers.PlayerHandler;
 import com.wintermute.gmassistant.helper.Tags;
 import com.wintermute.gmassistant.model.LibraryFile;
+import com.wintermute.gmassistant.model.Track;
+import com.wintermute.gmassistant.operations.TrackOperations;
 import com.wintermute.gmassistant.services.FileBrowserService;
 import com.wintermute.gmassistant.view.model.AudioLibrary;
 
@@ -31,7 +33,7 @@ public class CategoryList extends Fragment
 
     private List<LibraryFile> filesInLibrary;
     private int tagId;
-    private boolean selectTrack;
+    private boolean trackForScene;
     private LibraryItemAdapter adapter;
 
     public static CategoryList init(int position, boolean selectTrack)
@@ -51,7 +53,7 @@ public class CategoryList extends Fragment
         if (savedInstanceState == null)
         {
             tagId = getArguments() != null ? getArguments().getInt("tag") : Tags.MUSIC.ordinal();
-            selectTrack = getArguments() != null && getArguments().getBoolean("selectTrack");
+            trackForScene = getArguments() != null && getArguments().getBoolean("selectTrack");
         }
     }
 
@@ -70,19 +72,24 @@ public class CategoryList extends Fragment
 
         lv.setOnItemClickListener((parent, view, position, id) ->
         {
-            List<LibraryFile> libraryElements = fbs.browseLibrary(
-                filesInLibrary.get(position), sharedModel.getAudioLibrary().get(tagId));
+            List<LibraryFile> libraryElements =
+                fbs.browseLibrary(filesInLibrary.get(position), sharedModel.getAudioLibrary().get(tagId));
 
             if ((libraryElements.size() == 1) && !new File(libraryElements.get(0).getPath()).isDirectory())
             {
-                if (selectTrack) {
+                if (trackForScene)
+                {
                     Intent returnSingleTrack = new Intent();
                     returnSingleTrack.putExtra("path", libraryElements.get(0).getPath());
                     Objects.requireNonNull(getActivity()).setResult(Activity.RESULT_OK, returnSingleTrack);
                     Objects.requireNonNull(getActivity()).finish();
-                } else {
+                } else
+                {
                     PlayerHandler handler = new PlayerHandler(getContext());
-                    handler.play(libraryElements.get(0).getPath(), tagId);
+                    TrackOperations operations = new TrackOperations(getContext());
+                    Track track = operations.createTrack(libraryElements.get(0).getPath());
+                    track.setTag(Tags.getByOrdinalWithDefault(tagId));
+                    handler.play(track);
                 }
             } else
             {

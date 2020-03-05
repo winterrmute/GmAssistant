@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
+import com.wintermute.gmassistant.helper.Tags;
 import com.wintermute.gmassistant.model.Scene;
 import com.wintermute.gmassistant.model.Track;
 import com.wintermute.gmassistant.operations.PlayerOperations;
@@ -18,7 +19,6 @@ import com.wintermute.gmassistant.services.notifications.AmbienceReceiver;
 public class AmbiencePlayer extends BasePlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener
 {
     private static final String CHANNEL_ID = "Ambience";
-    private MediaPlayer mediaPlayer;
     private PlayerOperations player;
 
     @Nullable
@@ -37,13 +37,12 @@ public class AmbiencePlayer extends BasePlayer implements MediaPlayer.OnPrepared
     @Override
     public void onPrepared(MediaPlayer mp)
     {
-        mediaPlayer.start();
+        mp.start();
     }
 
     @Override
     public void onCreate()
     {
-        mediaPlayer = new MediaPlayer();
         player = PlayerOperations.getInstance();
     }
 
@@ -51,9 +50,16 @@ public class AmbiencePlayer extends BasePlayer implements MediaPlayer.OnPrepared
     public int onStartCommand(Intent intent, int flags, int startId)
     {
         Scene scene = intent.getParcelableExtra("scene");
-        Track track = scene.getAmbience();
+        Track track = scene != null ? scene.getAmbience() : intent.getParcelableExtra("track");
         startForeground(3, createNotification(intent, "Ambience", CHANNEL_ID, AmbienceReceiver.class));
-        player.startAmbience(this, track);
+
+        if (scene != null)
+        {
+            player.startAmbienceWithEffect(this, scene);
+        } else
+        {
+            player.startAmbience(this, track);
+        }
 
         return Service.START_NOT_STICKY;
     }
@@ -61,6 +67,6 @@ public class AmbiencePlayer extends BasePlayer implements MediaPlayer.OnPrepared
     @Override
     public void onDestroy()
     {
-        mediaPlayer.stop();
+        PlayerOperations.getInstance().stopPlayer(Tags.AMBIENCE.value());
     }
 }

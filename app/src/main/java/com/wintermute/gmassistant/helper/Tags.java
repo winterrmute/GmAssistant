@@ -13,11 +13,25 @@ public enum Tags
         this.category = category;
     }
 
-    public String value(){
+    public String value()
+    {
         return category;
     }
 
-    public static int getTagId(String tag){
-        return Tags.valueOf(tag.toUpperCase()).ordinal();
+    public static String getByOrdinalWithDefault(int ordinal)
+    {
+        if (ordinal == 0)
+        {
+            return MUSIC.value();
+        } else if (ordinal == 1)
+        {
+            return AMBIENCE.value();
+        } else if (ordinal == 2)
+        {
+            return EFFECT.value();
+        } else
+        {
+            return MUSIC.value();
+        }
     }
 }

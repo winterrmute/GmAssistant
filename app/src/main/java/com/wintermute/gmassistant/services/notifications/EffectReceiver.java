@@ -10,7 +10,8 @@ public class EffectReceiver extends BroadcastReceiver
 {
     public void onReceive(Context ctx, Intent intent)
     {
-        PlayerOperations.getInstance().stopPlayer("effect");
-        ctx.stopService(new Intent(ctx, EffectPlayer.class));
+        if (PlayerOperations.getInstance().stopPlayer("effect")){
+            ctx.stopService(new Intent(ctx, EffectPlayer.class));
+        }
     }
 }

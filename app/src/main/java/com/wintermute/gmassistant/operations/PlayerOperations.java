@@ -4,12 +4,8 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
-import com.wintermute.gmassistant.model.Player;
 import com.wintermute.gmassistant.model.Scene;
 import com.wintermute.gmassistant.model.Track;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class PlayerOperations
 {
@@ -17,7 +13,9 @@ public class PlayerOperations
     private MediaPlayer musicPlayer;
     private MediaPlayer ambiencePlayer;
 
-    private Map<String, Player> playerByTag = new HashMap<>();
+    private Handler myHandler = new Handler();
+    private Runnable delayedMusic;
+    private Runnable delayedAmbience;
 
     private static PlayerOperations instance;
 
@@ -30,57 +28,65 @@ public class PlayerOperations
         return PlayerOperations.instance;
     }
 
-    public void start(Context ctx, Track track)
+    public void stopAll()
     {
-        if (track.getTag().equals("effect"))
+        if (effectPlayer != null)
         {
-            effectPlayer = new MediaPlayer();
-            effectPlayer = MediaPlayer.create(ctx, Uri.parse("file://" + track.getPath()));
-            effectPlayer.start();
-        } else if (track.getTag().equals("music"))
-        {
-            musicPlayer = new MediaPlayer();
-            musicPlayer = MediaPlayer.create(ctx, Uri.parse("file://" + track.getPath()));
-            musicPlayer.start();
-        } else
-        {
-            ambiencePlayer = new MediaPlayer();
-            ambiencePlayer = MediaPlayer.create(ctx, Uri.parse("file://" + track.getPath()));
-            ambiencePlayer.start();
+            effectPlayer.stop();
         }
+        if (musicPlayer != null)
+        {
+            musicPlayer.stop();
+        }
+        if (ambiencePlayer != null)
+        {
+            ambiencePlayer.stop();
+        }
+
+        myHandler.removeCallbacks(delayedMusic);
+        myHandler.removeCallbacks(delayedAmbience);
     }
 
-    public void stopPlayer(String tag)
+    public boolean stopPlayer(String tag)
     {
-        if (tag.equals("effect"))
+        if (tag.equals("effect") && effectPlayer != null)
         {
             effectPlayer.stop();
             effectPlayer.release();
-        } else if (tag.equals("music"))
+            effectPlayer = new MediaPlayer();
+            return true;
+        } else if (tag.equals("music") && musicPlayer != null)
         {
             musicPlayer.stop();
             musicPlayer.release();
-        } else
+            musicPlayer = new MediaPlayer();
+            return true;
+        } else if (tag.equals("ambience") && ambiencePlayer != null)
         {
             ambiencePlayer.stop();
             ambiencePlayer.release();
+            ambiencePlayer = new MediaPlayer();
+            return true;
         }
+        return false;
     }
 
-    public void startWithEffect(Context ctx, Scene scene)
+    public void startMusicWithEffect(Context ctx, Scene scene)
     {
-        createMusic(ctx, scene.getAmbience());
-        createAmbience(ctx, scene.getAmbience());
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable()
+        delayedMusic = () ->
         {
-            public void run()
-            {
-                startMusic(ctx, scene.getMusic());
-                startAmbience(ctx, scene.getAmbience());
-            }
-        }, scene.getEffect().getDuration());
+            startMusic(ctx, scene.getMusic());
+        };
+        myHandler.postDelayed(delayedMusic, scene.getEffect().getDuration());
+    }
+
+    public void startAmbienceWithEffect(Context ctx, Scene scene)
+    {
+        delayedAmbience = () ->
+        {
+            startAmbience(ctx, scene.getAmbience());
+        };
+        myHandler.postDelayed(delayedAmbience, scene.getEffect().getDuration());
     }
 
     public void startMusic(Context ctx, Track track)
@@ -103,22 +109,33 @@ public class PlayerOperations
 
     private void createEffect(Context ctx, Track track)
     {
+        if (effectPlayer != null)
+        {
+            effectPlayer.stop();
+        }
         effectPlayer = new MediaPlayer();
         effectPlayer = MediaPlayer.create(ctx, Uri.parse("file://" + track.getPath()));
-        //        effectPlayer.start();
     }
 
     private void createMusic(Context ctx, Track track)
     {
+        if (musicPlayer != null)
+        {
+            musicPlayer.stop();
+        }
         musicPlayer = new MediaPlayer();
         musicPlayer = MediaPlayer.create(ctx, Uri.parse("file://" + track.getPath()));
-        //        musicPlayer.start();
+        musicPlayer.setLooping(true);
     }
 
     private void createAmbience(Context ctx, Track track)
     {
+        if (ambiencePlayer != null)
+        {
+            ambiencePlayer.stop();
+        }
         ambiencePlayer = new MediaPlayer();
         ambiencePlayer = MediaPlayer.create(ctx, Uri.parse("file://" + track.getPath()));
-        //        musicPlayer.start();
+        ambiencePlayer.setLooping(true);
     }
 }
