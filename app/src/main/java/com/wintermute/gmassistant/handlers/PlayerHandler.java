@@ -5,11 +5,12 @@ import android.content.Intent;
 import com.wintermute.gmassistant.helper.Tags;
 import com.wintermute.gmassistant.model.Scene;
 import com.wintermute.gmassistant.model.Track;
-import com.wintermute.gmassistant.operations.TrackOperations;
-import com.wintermute.gmassistant.services.player.AmbiencePlayerService;
-import com.wintermute.gmassistant.services.player.AudioPlayer;
-import com.wintermute.gmassistant.services.player.EffectPlayerService;
-import com.wintermute.gmassistant.services.player.MusicPlayerService;
+import com.wintermute.gmassistant.services.player.AmbiencePlayer;
+import com.wintermute.gmassistant.services.player.EffectPlayer;
+import com.wintermute.gmassistant.services.player.MusicPlayer;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Manages triggering of player services.
@@ -37,13 +38,13 @@ public class PlayerHandler
         Class target;
         if (tag == Tags.MUSIC.ordinal())
         {
-            target = MusicPlayerService.class;
+            target = MusicPlayer.class;
         } else if (tag == Tags.AMBIENCE.ordinal())
         {
-            target = AmbiencePlayerService.class;
+            target = AmbiencePlayer.class;
         } else
         {
-            target = EffectPlayerService.class;
+            target = EffectPlayer.class;
         }
         Intent player = new Intent(ctx, target);
         player.putExtra("track", path);
@@ -51,33 +52,33 @@ public class PlayerHandler
     }
 
     /**
-     * Start proper music player by tag.
+     * TODO: refactor
+     *
+     * @param scene
      */
-    public void startPlayerByScene(Scene scene)
+    public void startPlayers(Scene scene)
     {
-        Track[] tracks = {scene.getEffect(), scene.getMusic(), scene.getAmbience()};
+        List<Track> tracks = Arrays.asList(scene.getEffect(), scene.getMusic(), scene.getAmbience());
         for (Track track : tracks)
         {
-            if (track != null)
+            if (track.getTag().equals("effect"))
             {
-                new Thread()
-                {
-                    @Override
-                    public void run()
-                    {
-                        Intent player = new Intent(ctx, AudioPlayer.class);
-                        player.putExtra("path", track.getPath());
-                        ctx.startService(player);
-                    }
-                }.start();
+                Intent player = new Intent(ctx, EffectPlayer.class);
+                player.putExtra("scene", scene);
+                ctx.startForegroundService(player);
+            }
+            if (track.getTag().equals("music"))
+            {
+                Intent player = new Intent(ctx, MusicPlayer.class);
+                player.putExtra("scene", scene);
+                ctx.startForegroundService(player);
+            }
+            if (track.getTag().equals("ambience"))
+            {
+                Intent player = new Intent(ctx, AmbiencePlayer.class);
+                player.putExtra("scene", scene);
+                ctx.startForegroundService(player);
             }
         }
-    }
-
-
-    private Track getTrackForScene(Track track)
-    {
-        TrackOperations operations = new TrackOperations(ctx);
-        return operations.get(String.valueOf(track.getId()));
     }
 }

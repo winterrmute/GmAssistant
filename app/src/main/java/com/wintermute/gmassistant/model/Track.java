@@ -2,13 +2,15 @@ package com.wintermute.gmassistant.model;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * Represents audio file as an java object
  *
  * @author wintermute
  */
 @Data
-public class Track
+public class Track implements Serializable
 {
     private Long id;
     private String name;

@@ -156,8 +156,7 @@ public class SceneOperations
      */
     public void startScene(Scene scene)
     {
-        PlayerHandler handler = new PlayerHandler(ctx);
-        handler.startPlayerByScene(scene);
+        new PlayerHandler(ctx).startPlayers(scene);
     }
 
     private void storeScene(Map<String, Object> sceneContent)

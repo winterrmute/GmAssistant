@@ -39,15 +39,15 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".services.player.BasePlayerService" />
-        <service android:name=".services.player.MusicPlayerService" />
-        <service android:name=".services.player.AmbiencePlayerService" />
-        <service android:name=".services.player.EffectPlayerService" />
-        <service android:name=".services.player.AudioPlayer" />
+        <service android:name=".services.player.BasePlayer" />
+        <service android:name=".services.player.MusicPlayer" />
+        <service android:name=".services.player.AmbiencePlayer" />
+        <service android:name=".services.player.EffectPlayer" />
 
 
-        <receiver android:name=".services.notifications.MusicPlayerReceiver" />
-        <receiver android:name=".services.notifications.AmbiencePlayerReceiver" />
+        <receiver android:name=".services.notifications.MusicReceiver" />
+        <receiver android:name=".services.notifications.AmbienceReceiver" />
+        <receiver android:name=".services.notifications.EffectReceiver" />
     </application>
 
 </manifest>
