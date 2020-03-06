@@ -53,14 +53,16 @@ public class AmbiencePlayer extends BasePlayer implements MediaPlayer.OnPrepared
         Track track = scene != null ? scene.getAmbience() : intent.getParcelableExtra("track");
         startForeground(3, createNotification(intent, "Ambience", CHANNEL_ID, AmbienceReceiver.class));
 
-        if (scene != null)
+        if (track != null)
         {
-            player.startAmbienceWithEffect(this, scene);
-        } else
-        {
-            player.startAmbience(this, track);
+            if (track.getDelay() == 1)
+            {
+                player.startMusicWithEffect(this, scene);
+            } else
+            {
+                player.startByTag(this, track);
+            }
         }
-
         return Service.START_NOT_STICKY;
     }
 

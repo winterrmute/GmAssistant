@@ -64,19 +64,19 @@ public class PlayerHandler
         {
             if (track != null)
             {
-                if (track.getTag().equals("effect"))
+                if (track.getTag().equals(Tags.EFFECT.value()))
                 {
                     Intent player = new Intent(ctx, EffectPlayer.class);
                     player.putExtra("scene", scene);
                     ctx.startForegroundService(player);
                 }
-                if (track.getTag().equals("music"))
+                if (track.getTag().equals(Tags.MUSIC.value()))
                 {
                     Intent player = new Intent(ctx, MusicPlayer.class);
                     player.putExtra("scene", scene);
                     ctx.startForegroundService(player);
                 }
-                if (track.getTag().equals("ambience"))
+                if (track.getTag().equals(Tags.AMBIENCE.value()))
                 {
                     Intent player = new Intent(ctx, AmbiencePlayer.class);
                     player.putExtra("scene", scene);

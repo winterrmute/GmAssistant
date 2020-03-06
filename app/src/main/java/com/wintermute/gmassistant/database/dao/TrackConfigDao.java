@@ -33,15 +33,18 @@ public class TrackConfigDao
     /**
      * Get config for track in scene.
      *
-     * @param id of desired config
+     * @param sceneId containing track
+     * @param trackId to get its config
      * @return selected track.
      */
-    public Map<String, Long> get(Long id)
+    public Map<String, Long> get(Long sceneId, Long trackId)
     {
-        StringBuilder query = new StringBuilder("SELECT * FROM ")
-            .append(TrackDbModel.TABLE_NAME.value())
-            .append("  WHERE id = '")
-            .append(id)
+        StringBuilder query = new StringBuilder("SELECT volume, delay FROM ")
+            .append(SceneTrackDbModel.TABLE_NAME.value())
+            .append("  WHERE sceneId = '")
+            .append(sceneId)
+            .append("' AND trackId = '")
+            .append(trackId)
             .append("'");
         ArrayList<Map<String, Long>> trackData = getTrackConfig(dbRead.rawQuery(query.toString(), null));
         return trackData.isEmpty() ? null : trackData.get(0);

@@ -17,9 +17,9 @@ public class TrackConfigOperations
         dao = new TrackConfigDao(ctx);
     }
 
-    Map<String, Long> getConfig(Long id)
+    Map<String, Long> getConfig(Long sceneId, Long trackId)
     {
-        return dao.get(id);
+        return dao.get(sceneId, trackId);
     }
 
     void storeTrackWithConfig(Long sceneId, Track track)

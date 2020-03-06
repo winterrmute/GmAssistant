@@ -63,7 +63,6 @@ public class ScenePanel extends AppCompatActivity
     private void addScene(boolean edit)
     {
         Intent sceneConfig = new Intent(ScenePanel.this, SceneConfig.class);
-        sceneConfig.putExtra("edit", edit);
         startActivityForResult(sceneConfig, 1);
     }
 

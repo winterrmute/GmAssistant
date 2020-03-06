@@ -48,28 +48,38 @@ public class PlayerOperations
         myHandler.removeCallbacks(delayedAmbience);
     }
 
-    public boolean stopPlayer(String tag)
+    public void stopPlayer(String tag)
     {
-        if (tag.equals("effect") && effectPlayer != null)
+        if (tag.equals("effect"))
         {
-            effectPlayer.stop();
-            effectPlayer.release();
+            try {
+                effectPlayer.stop();
+                effectPlayer.release();
+            } catch (NullPointerException e) {
+
+            }
             effectPlayer = new MediaPlayer();
-            return true;
-        } else if (tag.equals("music") && musicPlayer != null)
+        } else if (tag.equals("music"))
         {
-            musicPlayer.stop();
-            musicPlayer.release();
+            try {
+                musicPlayer.stop();
+                musicPlayer.release();
+            } catch (NullPointerException e){
+
+            }
+            myHandler.removeCallbacks(delayedMusic);
             musicPlayer = new MediaPlayer();
-            return true;
-        } else if (tag.equals("ambience") && ambiencePlayer != null)
+        } else if (tag.equals("ambience"))
         {
-            ambiencePlayer.stop();
-            ambiencePlayer.release();
+            try {
+                ambiencePlayer.stop();
+                ambiencePlayer.release();
+            } catch (NullPointerException e) {
+
+            }
+            myHandler.removeCallbacks(delayedAmbience);
             ambiencePlayer = new MediaPlayer();
-            return true;
         }
-        return false;
     }
 
     public boolean isPlaying(String tag){
@@ -86,7 +96,7 @@ public class PlayerOperations
         return false;
     }
 
-    public void adjustVolume(int volume, String tag)
+    public void adjustVolume(long volume, String tag)
     {
         float vol = volume / 10.0f;
         if (Tags.EFFECT.value().equals(tag))
@@ -158,6 +168,9 @@ public class PlayerOperations
         }
         effectPlayer = new MediaPlayer();
         effectPlayer = MediaPlayer.create(ctx, Uri.parse("file://" + track.getPath()));
+        if (track.getVolume() != null){
+            adjustVolume(track.getVolume(), track.getTag());
+        }
     }
 
     private void createMusic(Context ctx, Track track)
@@ -169,6 +182,9 @@ public class PlayerOperations
         musicPlayer = new MediaPlayer();
         musicPlayer = MediaPlayer.create(ctx, Uri.parse("file://" + track.getPath()));
         musicPlayer.setLooping(true);
+        if (track.getVolume() != null){
+            adjustVolume(track.getVolume(), track.getTag());
+        }
     }
 
     private void createAmbience(Context ctx, Track track)
@@ -180,5 +196,8 @@ public class PlayerOperations
         ambiencePlayer = new MediaPlayer();
         ambiencePlayer = MediaPlayer.create(ctx, Uri.parse("file://" + track.getPath()));
         ambiencePlayer.setLooping(true);
+        if (track.getVolume() != null){
+            adjustVolume(track.getVolume(), track.getTag());
+        }
     }
 }

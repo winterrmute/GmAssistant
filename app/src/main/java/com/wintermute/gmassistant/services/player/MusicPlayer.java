@@ -60,12 +60,15 @@ public class MusicPlayer extends BasePlayer
         Track track = scene != null ? scene.getMusic() : intent.getParcelableExtra("track");
         startForeground(2, createNotification(intent, "Music", CHANNEL_ID, MusicReceiver.class));
 
-        if (scene != null && scene.getMusic() != null)
+        if (track != null)
         {
-            player.startMusicWithEffect(this, scene);
-        } else
-        {
-            player.startMusic(this, track);
+            if (track.getDelay() == 1)
+            {
+                player.startMusicWithEffect(this, scene);
+            } else
+            {
+                player.startByTag(this, track);
+            }
         }
 
         return Service.START_NOT_STICKY;

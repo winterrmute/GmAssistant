@@ -49,7 +49,9 @@ public class EffectPlayer extends BasePlayer
         Scene scene = intent.getParcelableExtra("scene");
         Track track = scene != null ? scene.getEffect() : intent.getParcelableExtra("track");
         startForeground(1, createNotification(intent, "Effect", CHANNEL_ID, EffectReceiver.class));
-        player.startEffect(this, track);
+        if (track != null) {
+            player.startEffect(this, track);
+        }
 
         return Service.START_NOT_STICKY;
     }

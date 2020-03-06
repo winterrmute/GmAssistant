@@ -111,15 +111,15 @@ public class SceneOperations
                 {
                     scene.setLight((Light) entry.getValue());
                 }
-                if (entry.getKey().equals(SceneDbModel.EFFECT.value()))
+                if (entry.getKey().equals(SceneDbModel.EFFECT.value()) && (Long) entry.getValue() != -1L)
                 {
                     scene.setEffect(addTrackToScene(entry.getValue().toString(), Tags.EFFECT.value()));
                 }
-                if (entry.getKey().equals(SceneDbModel.MUSIC.value()))
+                if (entry.getKey().equals(SceneDbModel.MUSIC.value()) && (Long) entry.getValue() != -1L)
                 {
                     scene.setMusic(addTrackToScene(entry.getValue().toString(), Tags.MUSIC.value()));
                 }
-                if (entry.getKey().equals(SceneDbModel.AMBIENCE.value()))
+                if (entry.getKey().equals(SceneDbModel.AMBIENCE.value()) && (Long) entry.getValue() != -1L)
                 {
                     scene.setAmbience(addTrackToScene(entry.getValue().toString(), Tags.AMBIENCE.value()));
                 }
@@ -134,9 +134,11 @@ public class SceneOperations
         TrackConfigOperations trackConfig = new TrackConfigOperations(ctx);
         Track track = trackOperations.get(id);
         track.setTag(tag);
-        Map<String, Long> config = trackConfig.getConfig(scene.getId());
-        track.setVolume(config.get(SceneTrackDbModel.VOLUME.value()));
-        track.setDelay(config.get(SceneTrackDbModel.DELAY.value()));
+        Map<String, Long> config = trackConfig.getConfig(scene.getId(), track.getId());
+        if (config != null) {
+            track.setVolume(config.get(SceneTrackDbModel.VOLUME.value()));
+            track.setDelay(config.get(SceneTrackDbModel.DELAY.value()));
+        }
         return track;
     }
 
