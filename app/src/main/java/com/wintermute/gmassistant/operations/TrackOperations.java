@@ -121,7 +121,7 @@ public class TrackOperations
      *
      * @param track to store.
      */
-    public void storeTrackIfNotExist(Track track)
+    public Long storeTrackIfNotExist(Track track)
     {
         TrackDao dao = new TrackDao(ctx);
         if (trackExists(track, dao))
@@ -137,6 +137,7 @@ public class TrackOperations
             Long insert = dao.insert(result);
             track.setId(insert);
         }
+        return track.getId();
     }
 
     private boolean trackExists(Track track, TrackDao dao)

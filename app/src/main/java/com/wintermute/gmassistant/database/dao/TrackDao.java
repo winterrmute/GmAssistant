@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.gmassistant.database.DbManager;
-import com.wintermute.gmassistant.helper.SceneDbModel;
 import com.wintermute.gmassistant.helper.Tags;
 import com.wintermute.gmassistant.helper.TrackDbModel;
 import com.wintermute.gmassistant.model.Track;
@@ -89,7 +88,7 @@ public class TrackDao extends BaseDao
         return getTrackData(dbRead.rawQuery(query.toString(), null));
     }
 
-    private ArrayList<Map<String, Object>> getTrackData(Cursor cursor)
+    private ArrayList<Map<String, Object>> getTrackData(Cursor query)
     {
 
         List<String> numericalValues =
@@ -97,19 +96,20 @@ public class TrackDao extends BaseDao
                 TrackDbModel.ID.value());
 
         ArrayList<Map<String, Object>> result = new ArrayList<>();
-        while (cursor.moveToNext())
+        Map<String, Object> content;
+        while (query.moveToNext())
         {
-            Map<String, Object> content = new HashMap<>();
-            for (String value : TrackDbModel.getValues())
+            content = new HashMap<>();
+            for (String attr : TrackDbModel.getValues())
             {
-                if (!value.equals(SceneDbModel.TABLE_NAME.value()))
+                if (!attr.equals(TrackDbModel.TABLE_NAME.value()))
                 {
-                    if (numericalValues.contains(value))
+                    if (numericalValues.contains(attr))
                     {
-                        content.put(value, getNumericalValue(cursor, value));
+                        content.put(attr, getNumericalValue(query, attr));
                     } else
                     {
-                        content.put(value, getStringValue(cursor, value));
+                        content.put(attr, getStringValue(query, attr));
                     }
                 }
             }

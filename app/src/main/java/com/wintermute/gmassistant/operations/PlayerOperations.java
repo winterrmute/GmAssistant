@@ -131,6 +131,19 @@ public class PlayerOperations
         effectPlayer.start();
     }
 
+    public void startByTag(Context ctx, Track track){
+        if (Tags.EFFECT.value().equals(track.getTag()))
+        {
+            startEffect(ctx, track);
+        } else if (Tags.MUSIC.value().equals(track.getTag()))
+        {
+            startMusic(ctx, track);
+        } else if (Tags.AMBIENCE.value().equals(track.getTag()))
+        {
+            startAmbience(ctx, track);
+        }
+    }
+
     public void startAmbience(Context ctx, Track track)
     {
         createAmbience(ctx, track);

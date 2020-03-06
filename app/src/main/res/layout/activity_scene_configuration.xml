@@ -17,10 +17,20 @@
             app:layout_constraintTop_toBottomOf="@+id/effect_volume" />
 
     <Switch
-            android:id="@+id/switch2"
+            android:id="@+id/delay_music"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/play_after_effect"
+            android:checked="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/music_volume" />
+
+    <Switch
+            android:id="@+id/delay_ambience"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/play_after_effect"
+            android:checked="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ambience_volume" />
 
@@ -60,14 +70,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/music_volume" />
-
-    <Switch
-            android:id="@+id/delayMusic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/play_after_effect"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/music_volume" />
 
     <Button

@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,14 +25,13 @@ import com.wintermute.gmassistant.model.Light;
 import com.wintermute.gmassistant.model.Track;
 import com.wintermute.gmassistant.operations.PlayerOperations;
 import com.wintermute.gmassistant.operations.SceneOperations;
+import com.wintermute.gmassistant.operations.SceneTrackOperations;
 import com.wintermute.gmassistant.operations.TrackOperations;
 import com.wintermute.gmassistant.services.FileBrowserService;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,6 +48,13 @@ public class SceneConfig extends AppCompatActivity
     private Button music;
     private Button ambience;
 
+    private SeekBar effectVolume;
+    private SeekBar musicVolume;
+    private SeekBar ambienceVolume;
+
+    private Switch delayMusic;
+    private Switch delayAmbience;
+
     private ImageView colorView;
 
     private String tag;
@@ -56,6 +63,7 @@ public class SceneConfig extends AppCompatActivity
     private SceneOperations operations;
     private PlayerOperations player;
     private Map<String, Object> content = new HashMap<>();
+    private Map<String, Track> trackHolder = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -69,7 +77,10 @@ public class SceneConfig extends AppCompatActivity
         nameField = findViewById(R.id.scene_name);
         colorView = findViewById(R.id.selected_color);
 
-        playPreview();
+        delayMusic = findViewById(R.id.delay_music);
+        delayAmbience = findViewById(R.id.delay_ambience);
+
+        previewPlayers();
         volumeBars();
 
         fbs = new FileBrowserService();
@@ -102,137 +113,6 @@ public class SceneConfig extends AppCompatActivity
         sceneSubmit.setOnClickListener(v -> submitScene());
     }
 
-    private void playPreview()
-    {
-        ImageButton playEffect = findViewById(R.id.play_effect);
-        ImageButton playMusic = findViewById(R.id.play_music);
-        ImageButton playAmbience = findViewById(R.id.play_ambience);
-
-        playEffect.setOnClickListener(v ->
-        {
-            if (content.get(Tags.EFFECT.value()) != null)
-            {
-                if (player.isPlaying(Tags.EFFECT.value()))
-                {
-                    player.stopPlayer(Tags.EFFECT.value());
-                    playEffect.setImageResource(R.drawable.play);
-                } else
-                {
-                    player.startEffect(this, (Track) content.get(Tags.EFFECT.value()));
-                    playEffect.setImageResource(R.drawable.end);
-                }
-            }
-        });
-
-        playMusic.setOnClickListener(v ->
-        {
-            if (content.get(Tags.MUSIC.value()) != null)
-            {
-                if (player.isPlaying(Tags.MUSIC.value()))
-                {
-                    player.stopPlayer(Tags.MUSIC.value());
-                    playMusic.setImageResource(R.drawable.play);
-                } else
-                {
-                    player.startMusic(this, (Track) content.get(Tags.MUSIC.value()));
-                    playMusic.setImageResource(R.drawable.end);
-                }
-            }
-        });
-
-        playAmbience.setOnClickListener(v ->
-        {
-            if (content.get(Tags.AMBIENCE.value()) != null)
-            {
-                if (player.isPlaying(Tags.AMBIENCE.value()))
-                {
-                    player.stopPlayer(Tags.AMBIENCE.value());
-                    playAmbience.setImageResource(R.drawable.play);
-                } else
-                {
-                    player.startEffect(this, (Track) content.get(Tags.AMBIENCE.value()));
-                    playMusic.setImageResource(R.drawable.end);
-                }
-            }
-        });
-    }
-
-    private void volumeBars()
-    {
-        SeekBar effect = findViewById(R.id.effect_volume);
-        effect.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
-        {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
-            {
-                if (content.get(Tags.EFFECT.value()) != null)
-                {
-                    player.adjustVolume(effect.getProgress(), Tags.EFFECT.value());
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar)
-            {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar)
-            {
-
-            }
-        });
-        SeekBar music = findViewById(R.id.music_volume);
-        music.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
-        {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
-            {
-                if (content.get(Tags.MUSIC.value()) != null)
-                {
-                    player.adjustVolume(music.getProgress(), Tags.MUSIC.value());
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar)
-            {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar)
-            {
-
-            }
-        });
-        SeekBar ambience = findViewById(R.id.ambience_volume);
-        ambience.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
-        {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
-            {
-                if (content.get(Tags.AMBIENCE.value()) != null)
-                {
-                    player.adjustVolume(ambience.getProgress(), Tags.AMBIENCE.value());
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar)
-            {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar)
-            {
-
-            }
-        });
-    }
-
     private void submitScene()
     {
         if (!nameField.getText().toString().equals(""))
@@ -243,6 +123,7 @@ public class SceneConfig extends AppCompatActivity
                                                                 : new Light());
             storeTracks();
             operations.createScene(content);
+            setResult(RESULT_OK);
             finish();
         } else
         {
@@ -252,17 +133,120 @@ public class SceneConfig extends AppCompatActivity
 
     private void storeTracks()
     {
-        List<Track> tracks =
-            Arrays.asList((Track) content.get(Tags.EFFECT.value()), (Track) content.get(Tags.MUSIC.value()),
-                (Track) content.get(Tags.AMBIENCE.value()));
-
         TrackOperations operations = new TrackOperations(getApplicationContext());
-        for (Track track : tracks)
+        SceneTrackOperations trackConfig = new SceneTrackOperations(getApplicationContext());
+        for (Track track : trackHolder.values())
         {
             if (null != track)
             {
-                operations.storeTrackIfNotExist(track);
+                track.setId(operations.storeTrackIfNotExist(track));
+                collectConfig(track);
+                Long trackWithConfig = trackConfig.storeTrackWithConfig(track);
+                content.put(track.getTag(), trackWithConfig);
             }
+        }
+    }
+
+    private void collectConfig(Track track)
+    {
+        if (Tags.EFFECT.value().equals(track.getTag()))
+        {
+            track.setVolume((long) effectVolume.getProgress());
+            track.setDelay(0L);
+        } else if (Tags.MUSIC.value().equals(track.getTag()))
+        {
+            track.setVolume((long) musicVolume.getProgress());
+            int delay = delayMusic.isChecked() ? 1 : 0;
+            track.setDelay((long) delay);
+        } else if (Tags.AMBIENCE.value().equals(track.getTag()))
+        {
+            track.setVolume((long) ambienceVolume.getProgress());
+            int delay = delayAmbience.isChecked() ? 1 : 0;
+            track.setDelay((long) delay);
+        }
+    }
+
+    private void previewPlayers()
+    {
+        ImageButton playEffect = findViewById(R.id.play_effect);
+        ImageButton playMusic = findViewById(R.id.play_music);
+        ImageButton playAmbience = findViewById(R.id.play_ambience);
+
+        playEffect.setOnClickListener(v ->
+        {
+            playPreview(trackHolder.get(Tags.EFFECT.value()), playEffect);
+        });
+
+        playMusic.setOnClickListener(v ->
+        {
+            playPreview(trackHolder.get(Tags.MUSIC.value()), playMusic);
+        });
+
+        playAmbience.setOnClickListener(v ->
+        {
+            playPreview(trackHolder.get(Tags.AMBIENCE.value()), playAmbience);
+        });
+    }
+
+    private void playPreview(Track track, ImageButton playerButton)
+    {
+        if (track != null)
+        {
+            String tag = track.getTag();
+            if (tag != null)
+            {
+                if (player.isPlaying(tag))
+                {
+                    player.stopPlayer(tag);
+                    playerButton.setImageResource(R.drawable.play);
+                } else
+                {
+                    player.startByTag(this, track);
+                    playerButton.setImageResource(R.drawable.end);
+                }
+            }
+        }
+    }
+
+    private void volumeBars()
+    {
+        effectVolume = findViewById(R.id.effect_volume);
+        musicVolume = findViewById(R.id.music_volume);
+        ambienceVolume = findViewById(R.id.ambience_volume);
+        Map<String, SeekBar> volumeForPlayer = new HashMap<>();
+        volumeForPlayer.put(Tags.EFFECT.value(), effectVolume);
+        volumeForPlayer.put(Tags.MUSIC.value(), musicVolume);
+        volumeForPlayer.put(Tags.AMBIENCE.value(), ambienceVolume);
+        setVolumeBarListener(volumeForPlayer);
+    }
+
+    private void setVolumeBarListener(Map<String, SeekBar> volumeWithTag)
+    {
+        for (Map.Entry<String, SeekBar> playerVol : volumeWithTag.entrySet())
+        {
+            playerVol.getValue().setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+            {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
+                {
+                    if (trackHolder.get(playerVol.getKey()) != null)
+                    {
+                        player.adjustVolume(playerVol.getValue().getProgress(), playerVol.getKey());
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar)
+                {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar)
+                {
+
+                }
+            });
         }
     }
 
@@ -319,17 +303,17 @@ public class SceneConfig extends AppCompatActivity
             if (requestCode == Tags.EFFECT.ordinal())
             {
                 track.setTag(Tags.EFFECT.value());
-                content.put(Tags.EFFECT.value(), track);
+                trackHolder.put(track.getTag(), track);
                 effect.setText(fileName);
             } else if (requestCode == Tags.MUSIC.ordinal())
             {
                 track.setTag(Tags.MUSIC.value());
-                content.put(Tags.MUSIC.value(), track);
+                trackHolder.put(track.getTag(), track);
                 music.setText(fileName);
             } else if (requestCode == Tags.AMBIENCE.ordinal())
             {
                 track.setTag(Tags.AMBIENCE.value());
-                content.put(Tags.AMBIENCE.value(), track);
+                trackHolder.put(track.getTag(), track);
                 ambience.setText(fileName);
             } else if (requestCode == 4)
             {

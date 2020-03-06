@@ -21,17 +21,21 @@ public class DbManager extends SQLiteOpenHelper
 
     private static final String PLAYLIST_CONTENT =
         "CREATE TABLE playlist_content ( playlist INTEGER, track INTEGER, scene INTEGER, FOREIGN KEY (playlist) "
-            + "REFERENCES playlist(id), FOREIGN KEY " + "(track) REFERENCES track (id), FOREIGN KEY "
+            + "REFERENCES playlist (id), FOREIGN KEY (track) REFERENCES track (id), FOREIGN KEY "
             + "(scene) REFERENCES scene (id) )";
 
     private static final String SCENE =
         "CREATE TABLE scene ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, light INTEGER, effect INTEGER, "
             + "music INTEGER, ambience INTEGER, FOREIGN KEY (light) REFERENCES light (id), FOREIGN KEY (effect) "
-            + "REFERENCES track (id), FOREIGN KEY (music) REFERENCES track (id), FOREIGN KEY (ambience) REFERENCES "
-            + "track (id))";
+            + "REFERENCES scene_track_config (id), FOREIGN KEY (music) REFERENCES scene_track_config (id), FOREIGN "
+            + "KEY (ambience) REFERENCES scene_track_config (id))";
+
+    private static final String SCENE_TRACK_CONFIG =
+        "CREATE TABLE scene_track_config ( id INTEGER PRIMARY KEY AUTOINCREMENT, trackId INTEGER, volume INTEGER, delay"
+            + " INTEGER, FOREIGN KEY (trackId) REFERENCES track (id))";
 
     private static final String LIGHT =
-        "CREATE TABLE light ( id INTEGER PRIMARY KEY AUTOINCREMENT, color REAL, " + "brightness REAL)";
+        "CREATE TABLE light ( id INTEGER PRIMARY KEY AUTOINCREMENT, color REAL, brightness REAL)";
 
     private static final String LIBRARY =
         "CREATE TABLE library ( id INTEGER PRIMARY KEY AUTOINCREMENT, path TEXT, tag TEXT, recursively TEXT)";
@@ -46,7 +50,7 @@ public class DbManager extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase db)
     {
-        Stream.of(PLAYLIST, TRACK, PLAYLIST_CONTENT, SCENE, LIGHT, LIBRARY).forEach(db::execSQL);
+        Stream.of(PLAYLIST, TRACK, PLAYLIST_CONTENT, SCENE, SCENE_TRACK_CONFIG, LIGHT, LIBRARY).forEach(db::execSQL);
     }
 
     @Override

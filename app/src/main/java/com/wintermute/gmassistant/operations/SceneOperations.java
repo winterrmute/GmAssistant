@@ -46,16 +46,16 @@ public class SceneOperations
     public List<Scene> loadViewElements()
     {
         dao = new SceneDao(ctx);
+        List<Scene> result = new ArrayList<>();
         List<Map<String, Object>> foundScenes = dao.getAll();
         if (foundScenes.size() > 0)
         {
             for (Map<String, Object> sceneContent : foundScenes)
             {
-                allScenes.add(getModel(sceneContent));
+                result.add(getModel(sceneContent));
             }
-            return allScenes;
         }
-        return new ArrayList<>();
+        return result;
     }
 
     /**
@@ -66,16 +66,6 @@ public class SceneOperations
     {
         dao = new SceneDao(ctx);
         return getModel(dao.getById(scene.getId()));
-    }
-
-    /**
-     * @param sceneId to load from database
-     * @return scene by id
-     */
-    public Scene getScene(Long sceneId)
-    {
-        dao = new SceneDao(ctx);
-        return getModel(dao.getById(sceneId));
     }
 
     /**
@@ -98,7 +88,6 @@ public class SceneOperations
     {
         dao = new SceneDao(ctx);
         dao.delete(scene);
-        allScenes = loadViewElements();
     }
 
     /**
@@ -174,14 +163,14 @@ public class SceneOperations
                 } else if (entry.getKey().equals(Tags.EFFECT.value()) || entry.getKey().equals(Tags.MUSIC.value())
                     || entry.getKey().equals(Tags.AMBIENCE.value()))
                 {
-                    Track track = (Track) entry.getValue();
-                    Long value = track.getId();
-                    result.put(entry.getKey(), value);
+                    result.put(entry.getKey(), (Long) entry.getValue());
                 } else
                 {
                     String value = entry.getValue().toString();
                     result.put(entry.getKey(), value);
                 }
+            } else {
+                result.put(entry.getKey(), -1);
             }
         }
         SceneDao dao = new SceneDao(ctx);

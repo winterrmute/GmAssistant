@@ -20,6 +20,8 @@ public class Track implements Parcelable
     private Long duration;
     private String artist;
     private String tag;
+    private Long volume;
+    private Long delay;
 
     protected Track(Parcel in)
     {
@@ -29,6 +31,8 @@ public class Track implements Parcelable
         if (in.readByte() == 0) { duration = null; } else { duration = in.readLong(); }
         artist = in.readString();
         tag = in.readString();
+        if (in.readByte() == 0) { volume = null; } else { volume = in.readLong(); }
+        if (in.readByte() == 0) { delay = null; } else { delay = in.readLong(); }
     }
 
     public static final Creator<Track> CREATOR = new Creator<Track>()
@@ -69,5 +73,15 @@ public class Track implements Parcelable
         }
         dest.writeString(artist);
         dest.writeString(tag);
+        if (volume == null) { dest.writeByte((byte) 0); } else
+        {
+            dest.writeByte((byte) 1);
+            dest.writeLong(volume);
+        }
+        if (delay == null) { dest.writeByte((byte) 0); } else
+        {
+            dest.writeByte((byte) 1);
+            dest.writeLong(delay);
+        }
     }
 }
