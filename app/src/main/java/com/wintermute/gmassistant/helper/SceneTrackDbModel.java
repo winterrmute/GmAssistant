@@ -6,7 +6,7 @@ import java.util.List;
 public enum SceneTrackDbModel
 {
     TABLE_NAME("scene_track_config"),
-    ID("id"),
+    SCENE_ID("sceneId"),
     TRACK_ID("trackId"),
     VOLUME("volume"),
     DELAY("delay");

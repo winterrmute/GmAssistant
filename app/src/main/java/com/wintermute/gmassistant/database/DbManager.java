@@ -31,8 +31,8 @@ public class DbManager extends SQLiteOpenHelper
             + "KEY (ambience) REFERENCES scene_track_config (id))";
 
     private static final String SCENE_TRACK_CONFIG =
-        "CREATE TABLE scene_track_config ( id INTEGER PRIMARY KEY AUTOINCREMENT, trackId INTEGER, volume INTEGER, delay"
-            + " INTEGER, FOREIGN KEY (trackId) REFERENCES track (id))";
+        "CREATE TABLE scene_track_config ( sceneId INTEGER, trackId INTEGER, volume INTEGER, delay"
+            + " INTEGER, FOREIGN KEY (sceneId) REFERENCES scene (id), FOREIGN KEY (trackId) REFERENCES track (id))";
 
     private static final String LIGHT =
         "CREATE TABLE light ( id INTEGER PRIMARY KEY AUTOINCREMENT, color REAL, brightness REAL)";

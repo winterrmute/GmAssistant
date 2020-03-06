@@ -47,7 +47,7 @@ public class ScenePanel extends AppCompatActivity
             scene = allScenes.get(position);
             Intent dialog = new Intent(ScenePanel.this, ListDialog.class);
             dialog.putStringArrayListExtra("opts", new ArrayList<>(Arrays.asList("delete")));
-            startActivityForResult(dialog, 1);
+            startActivityForResult(dialog, 2);
             return true;
         });
 
@@ -71,12 +71,13 @@ public class ScenePanel extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == 1)
-        {
-            String selected = data.getStringExtra("selected");
-            if ("delete".equals(selected))
-            {
-                operations.deleteElement(scene);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 2) {
+                String selected = data.getStringExtra("selected");
+                if ("delete".equals(selected))
+                {
+                    operations.deleteElement(scene);
+                }
             }
             showScenes();
         }

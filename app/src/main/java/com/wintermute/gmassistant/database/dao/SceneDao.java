@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import com.wintermute.gmassistant.database.DbManager;
 import com.wintermute.gmassistant.helper.SceneDbModel;
+import com.wintermute.gmassistant.helper.TrackDbModel;
 import com.wintermute.gmassistant.model.Scene;
 
 import java.util.ArrayList;
@@ -35,7 +36,6 @@ public class SceneDao extends BaseDao
     public Long insert(ContentValues values)
     {
         return dbWrite.insert(SceneDbModel.TABLE_NAME.value(), null, values);
-
     }
 
     /**
@@ -56,7 +56,8 @@ public class SceneDao extends BaseDao
     public Map<String, Object> getById(Long sceneId)
     {
         String query =
-            "SELECT * FROM " + SceneDbModel.TABLE_NAME.value() + " WHERE " + SceneDbModel.ID.value() + " = '" + sceneId + "'";
+            "SELECT * FROM " + SceneDbModel.TABLE_NAME.value() + " WHERE " + SceneDbModel.ID.value() + " = '" + sceneId
+                + "'";
         List<Map<String, Object>> scenes = getSceneData(dbRead.rawQuery(query, null));
         return scenes.size() != 0 ? scenes.get(0) : null;
     }
@@ -64,18 +65,27 @@ public class SceneDao extends BaseDao
     /**
      * Translates the data from database to java objects.
      *
-     * @param cursor to iterate over database rows.
+     * @param query to iterate over database rows.
      * @return list of track objects.
      */
-    private List<Map<String, Object>> getSceneData(Cursor cursor)
+    private List<Map<String, Object>> getSceneData(Cursor query)
     {
         ArrayList<Map<String, Object>> result = new ArrayList<>();
-        while (cursor.moveToNext())
+        while (query.moveToNext())
         {
             Map<String, Object> content = new HashMap<>();
-            for (SceneDbModel element : SceneDbModel.values())
+            for (String attr : SceneDbModel.getValues())
             {
-                content.put(element.name().toLowerCase(), getKeyValue(cursor, element.value()));
+                if (!attr.equals(TrackDbModel.TABLE_NAME.value()))
+                {
+                    if (attr.equals(SceneDbModel.NAME.value()))
+                    {
+                        content.put(attr, getStringValue(query, attr));
+                    } else
+                    {
+                        content.put(attr, getNumericalValue(query, attr));
+                    }
+                }
             }
             result.add(content);
         }
@@ -84,21 +94,32 @@ public class SceneDao extends BaseDao
 
     public void updateScene(Scene scene)
     {
-        dbWrite.update(SceneDbModel.TABLE_NAME.value(), null, SceneDbModel.ID.value() + " = " + scene.getId(), new String[] {});
+        dbWrite.update(SceneDbModel.TABLE_NAME.value(), null, SceneDbModel.ID.value() + " = " + scene.getId(),
+            new String[] {});
+    }
+
+    private Long getNumericalValue(Cursor query, String attr)
+    {
+
+        if (query.getColumnIndex(attr) != -1)
+        {
+            return query.getLong(query.getColumnIndex(attr)) != 0 ? query.getLong(query.getColumnIndex(attr)): -1L ;
+        }
+        return -1L;
     }
 
     /**
      * Safely gets data from database.
      *
-     * @param cursor to pick data from database
+     * @param query to pick data from database
      * @param key containing value
      * @return value stored in db if possible, otherwise "-1"
      */
-    private String getKeyValue(Cursor cursor, String key)
+    private String getStringValue(Cursor query, String key)
     {
-        if (cursor.getColumnIndex(key) != -1)
+        if (query.getColumnIndex(key) != -1)
         {
-            return cursor.getString(cursor.getColumnIndex(key));
+            return query.getString(query.getColumnIndex(key));
         }
         return "-1";
     }
@@ -110,6 +131,7 @@ public class SceneDao extends BaseDao
      */
     public void delete(Scene target)
     {
-        dbWrite.delete(SceneDbModel.TABLE_NAME.value(), SceneDbModel.ID.value() + " = " + target.getId(), new String[] {});
+        dbWrite.delete(SceneDbModel.TABLE_NAME.value(), SceneDbModel.ID.value() + " = " + target.getId(),
+            new String[] {});
     }
 }

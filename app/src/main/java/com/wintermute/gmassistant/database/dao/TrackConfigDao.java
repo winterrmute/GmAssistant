@@ -12,12 +12,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SceneTrackDao
+public class TrackConfigDao
 {
     private SQLiteDatabase dbRead;
     private SQLiteDatabase dbWrite;
 
-    public SceneTrackDao(Context ctx)
+    public TrackConfigDao(Context ctx)
     {
         DbManager dbManager = new DbManager(ctx);
         dbRead = dbManager.getReadableDatabase();
@@ -33,33 +33,26 @@ public class SceneTrackDao
     /**
      * Get config for track in scene.
      *
-     * @param key to identify database cell.
-     * @param value column.
+     * @param id of desired config
      * @return selected track.
      */
-    public Map<String, Long> get(String key, String value)
+    public Map<String, Long> get(Long id)
     {
         StringBuilder query = new StringBuilder("SELECT * FROM ")
             .append(TrackDbModel.TABLE_NAME.value())
-            .append("  WHERE ")
-            .append(key)
-            .append("  =  '")
-            .append(value)
+            .append("  WHERE id = '")
+            .append(id)
             .append("'");
         ArrayList<Map<String, Long>> trackData = getTrackConfig(dbRead.rawQuery(query.toString(), null));
         return trackData.isEmpty() ? null : trackData.get(0);
     }
 
-    public Long checkIfExist(Long trackid, Long volume, Long delay)
+    public Long checkIfExist(Long sceneId)
     {
         StringBuilder query = new StringBuilder("SELECT id FROM ")
             .append(SceneTrackDbModel.TABLE_NAME.value())
-            .append(" WHERE trackId = '")
-            .append(trackid)
-            .append("' AND volume = '")
-            .append(volume)
-            .append("' AND delay = '")
-            .append(delay)
+            .append(" WHERE sceneId = '")
+            .append(sceneId)
             .append("'");
         ArrayList<Map<String, Long>> trackData = getTrackConfig(dbRead.rawQuery(query.toString(), null));
         return trackData.isEmpty() ? -1L : trackData.get(0).get("id");

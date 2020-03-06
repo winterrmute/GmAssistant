@@ -22,10 +22,11 @@ import com.wintermute.gmassistant.database.dao.LightDao;
 import com.wintermute.gmassistant.helper.SceneDbModel;
 import com.wintermute.gmassistant.helper.Tags;
 import com.wintermute.gmassistant.model.Light;
+import com.wintermute.gmassistant.model.Scene;
 import com.wintermute.gmassistant.model.Track;
 import com.wintermute.gmassistant.operations.PlayerOperations;
 import com.wintermute.gmassistant.operations.SceneOperations;
-import com.wintermute.gmassistant.operations.SceneTrackOperations;
+import com.wintermute.gmassistant.operations.TrackConfigOperations;
 import com.wintermute.gmassistant.operations.TrackOperations;
 import com.wintermute.gmassistant.services.FileBrowserService;
 
@@ -134,15 +135,13 @@ public class SceneConfig extends AppCompatActivity
     private void storeTracks()
     {
         TrackOperations operations = new TrackOperations(getApplicationContext());
-        SceneTrackOperations trackConfig = new SceneTrackOperations(getApplicationContext());
         for (Track track : trackHolder.values())
         {
             if (null != track)
             {
                 track.setId(operations.storeTrackIfNotExist(track));
                 collectConfig(track);
-                Long trackWithConfig = trackConfig.storeTrackWithConfig(track);
-                content.put(track.getTag(), trackWithConfig);
+                content.put(track.getTag(), track);
             }
         }
     }

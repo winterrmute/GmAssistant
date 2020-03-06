@@ -2,31 +2,33 @@ package com.wintermute.gmassistant.operations;
 
 import android.content.ContentValues;
 import android.content.Context;
-import com.wintermute.gmassistant.database.dao.SceneTrackDao;
+import com.wintermute.gmassistant.database.dao.TrackConfigDao;
 import com.wintermute.gmassistant.helper.SceneTrackDbModel;
 import com.wintermute.gmassistant.model.Track;
 
-public class SceneTrackOperations
-{
-    private SceneTrackDao dao;
+import java.util.Map;
 
-    public SceneTrackOperations(Context ctx)
+public class TrackConfigOperations
+{
+    private TrackConfigDao dao;
+
+    TrackConfigOperations(Context ctx)
     {
-        dao = new SceneTrackDao(ctx);
+        dao = new TrackConfigDao(ctx);
     }
 
-    public Long storeTrackWithConfig(Track track)
+    Map<String, Long> getConfig(Long id)
     {
-        Long trackId = dao.checkIfExist(track.getId(), track.getVolume(), track.getDelay());
-        if (trackId != -1)
-        {
-            return trackId;
-        } else {
+        return dao.get(id);
+    }
+
+    void storeTrackWithConfig(Long sceneId, Track track)
+    {
             ContentValues trackConfig = new ContentValues();
+            trackConfig.put(SceneTrackDbModel.SCENE_ID.value(), sceneId);
             trackConfig.put(SceneTrackDbModel.TRACK_ID.value(), track.getId());
             trackConfig.put(SceneTrackDbModel.VOLUME.value(), track.getVolume());
             trackConfig.put(SceneTrackDbModel.DELAY.value(), track.getDelay());
-            return dao.insert(trackConfig);
-        }
+            dao.insert(trackConfig);
     }
 }
