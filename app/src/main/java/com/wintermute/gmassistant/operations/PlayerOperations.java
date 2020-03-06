@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
+import com.wintermute.gmassistant.helper.Tags;
 import com.wintermute.gmassistant.model.Scene;
 import com.wintermute.gmassistant.model.Track;
 
@@ -69,6 +70,35 @@ public class PlayerOperations
             return true;
         }
         return false;
+    }
+
+    public boolean isPlaying(String tag){
+        if (Tags.EFFECT.value().equals(tag) && effectPlayer != null)
+        {
+            return effectPlayer.isPlaying();
+        } else if (Tags.MUSIC.value().equals(tag)  && musicPlayer != null)
+        {
+            return musicPlayer.isPlaying();
+        } else if (Tags.AMBIENCE.value().equals(tag)  && ambiencePlayer != null)
+        {
+            return ambiencePlayer.isPlaying();
+        }
+        return false;
+    }
+
+    public void adjustVolume(int volume, String tag)
+    {
+        float vol = volume / 10.0f;
+        if (Tags.EFFECT.value().equals(tag))
+        {
+            effectPlayer.setVolume(vol, vol);
+        } else if (Tags.MUSIC.value().equals(tag))
+        {
+            musicPlayer.setVolume(vol, vol);
+        } else if (Tags.AMBIENCE.value().equals(tag))
+        {
+            ambiencePlayer.setVolume(vol, vol);
+        }
     }
 
     public void startMusicWithEffect(Context ctx, Scene scene)

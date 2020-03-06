@@ -6,23 +6,77 @@
         android:layout_height="match_parent"
         tools:context=".config.SceneConfig">
 
-    <include layout="@layout/content_list"/>
-
     <Button
             android:id="@+id/set_music"
+            android:layout_width="409dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:text="@string/set_music"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/effect_volume" />
+
+    <Switch
+            android:id="@+id/switch2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/set_music"
+            android:text="@string/play_after_effect"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ambience_volume" />
+
+    <SeekBar
+            android:id="@+id/effect_volume"
+            android:layout_width="409dp"
+            android:layout_height="wrap_content"
+            android:progress="5"
+            android:max="10"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/play_effect" />
+
+    <SeekBar
+            android:id="@+id/music_volume"
+            android:layout_width="409dp"
+            android:layout_height="wrap_content"
+            android:progress="5"
+            android:max="10"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/play_music" />
+
+    <SeekBar
+            android:id="@+id/ambience_volume"
+            android:layout_width="409dp"
+            android:layout_height="wrap_content"
+            android:progress="5"
+            android:max="10"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/play_ambience" />
+
+    <Button
+            android:id="@+id/set_ambience"
+            android:layout_width="409dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="56dp"
+            android:text="@string/set_ambience"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/set_start_effect" />
+            app:layout_constraintTop_toBottomOf="@+id/music_volume" />
+
+    <Switch
+            android:id="@+id/delayMusic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/play_after_effect"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/music_volume" />
 
     <Button
             android:id="@+id/scene_submit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/submit_scene"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/set_ambience" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     <EditText
             android:id="@+id/scene_name"
@@ -45,51 +99,70 @@
 
     <Button
             android:id="@+id/set_start_effect"
-            android:layout_width="wrap_content"
+            android:layout_width="409dp"
             android:layout_height="wrap_content"
-            android:text="@string/set_start_effect"
+            android:layout_marginTop="24dp"
+            android:text="@string/set_effect"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/set_light" />
-
-    <Button
-            android:id="@+id/set_ambience"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/set_ambience"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/set_music" />
-
-    <TextView
-            android:id="@+id/selected_ambience"
-            android:layout_width="150dp"
-            android:layout_height="33dp"
-            android:text="@string/trackname_placeholder"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/set_music" />
-
-    <TextView
-            android:id="@+id/selected_effect"
-            android:layout_width="150dp"
-            android:layout_height="33dp"
-            android:text="@string/trackname_placeholder"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/set_light" />
-
-    <TextView
-            android:id="@+id/selected_music"
-            android:layout_width="150dp"
-            android:layout_height="33dp"
-            android:text="@string/trackname_placeholder"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/set_start_effect" />
 
     <ImageView
             android:id="@+id/selected_color"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginStart="108dp"
-            android:layout_marginTop="28dp"
+            android:layout_marginStart="112dp"
+            android:layout_marginTop="44dp"
             app:layout_constraintStart_toEndOf="@+id/set_light"
             app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+            android:id="@+id/volume_label_effect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/volume_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/set_start_effect" />
+
+    <TextView
+            android:id="@+id/volume_label_music"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/volume_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/set_music" />
+
+    <TextView
+            android:id="@+id/volume_label_ambience"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/volume_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/set_ambience" />
+
+    <ImageButton
+            android:id="@+id/play_effect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/set_start_effect"
+            app:srcCompat="@drawable/play" />
+
+    <ImageButton
+            android:id="@+id/play_music"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/set_music"
+            app:srcCompat="@drawable/play" />
+
+    <ImageButton
+            android:id="@+id/play_ambience"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/set_ambience"
+            app:srcCompat="@drawable/play" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

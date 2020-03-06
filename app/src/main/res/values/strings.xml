@@ -29,11 +29,13 @@
     <!--  SceneConfig  -->
     <string name="scene_name">Scene Name</string>
     <string name="set_light">Set light effects</string>
-    <string name="set_start_effect">set start effect</string>
+    <string name="set_effect">set effect</string>
     <string name="set_music">Set music</string>
     <string name="set_ambience">set ambience</string>
     <string name="trackname_placeholder">not set</string>
     <string name="submit_scene">Submit</string>
+    <string name="volume_label">Volume</string>
+    <string name="play_after_effect">Play after effect</string>
 
     <!--  SceneHandler  -->
     <string name="add_scene">Add new scene</string>
