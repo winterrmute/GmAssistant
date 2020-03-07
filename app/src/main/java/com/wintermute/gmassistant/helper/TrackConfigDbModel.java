@@ -3,7 +3,7 @@ package com.wintermute.gmassistant.helper;
 import java.util.ArrayList;
 import java.util.List;
 
-public enum SceneTrackDbModel
+public enum TrackConfigDbModel
 {
     TABLE_NAME("scene_track_config"),
     SCENE_ID("sceneId"),
@@ -13,7 +13,7 @@ public enum SceneTrackDbModel
 
     private String column;
 
-    SceneTrackDbModel(String column)
+    TrackConfigDbModel(String column)
     {
         this.column= column;
     }
@@ -24,7 +24,7 @@ public enum SceneTrackDbModel
 
     public static List<String> getValues(){
         List<String> result = new ArrayList<>();
-        for (SceneTrackDbModel value : values()) {
+        for (TrackConfigDbModel value : values()) {
             result.add(value.value());
         }
         return result;

@@ -5,8 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.gmassistant.database.DbManager;
-import com.wintermute.gmassistant.helper.SceneTrackDbModel;
-import com.wintermute.gmassistant.helper.TrackDbModel;
+import com.wintermute.gmassistant.helper.TrackConfigDbModel;
+import com.wintermute.gmassistant.model.Scene;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,8 +26,7 @@ public class TrackConfigDao
 
     public Long insert(ContentValues values)
     {
-        return dbWrite.insertWithOnConflict(SceneTrackDbModel.TABLE_NAME.value(), null, values,
-            SQLiteDatabase.CONFLICT_IGNORE);
+        return dbWrite.insert(TrackConfigDbModel.TABLE_NAME.value(), null, values);
     }
 
     /**
@@ -40,7 +39,7 @@ public class TrackConfigDao
     public Map<String, Long> get(Long sceneId, Long trackId)
     {
         StringBuilder query = new StringBuilder("SELECT volume, delay FROM ")
-            .append(SceneTrackDbModel.TABLE_NAME.value())
+            .append(TrackConfigDbModel.TABLE_NAME.value())
             .append("  WHERE sceneId = '")
             .append(sceneId)
             .append("' AND trackId = '")
@@ -50,17 +49,6 @@ public class TrackConfigDao
         return trackData.isEmpty() ? null : trackData.get(0);
     }
 
-    public Long checkIfExist(Long sceneId)
-    {
-        StringBuilder query = new StringBuilder("SELECT id FROM ")
-            .append(SceneTrackDbModel.TABLE_NAME.value())
-            .append(" WHERE sceneId = '")
-            .append(sceneId)
-            .append("'");
-        ArrayList<Map<String, Long>> trackData = getTrackConfig(dbRead.rawQuery(query.toString(), null));
-        return trackData.isEmpty() ? -1L : trackData.get(0).get("id");
-    }
-
     private ArrayList<Map<String, Long>> getTrackConfig(Cursor query)
     {
         ArrayList<Map<String, Long>> result = new ArrayList<>();
@@ -68,9 +56,9 @@ public class TrackConfigDao
         Long value;
         while (query.moveToNext())
         {
-            for (String attr : SceneTrackDbModel.getValues())
+            for (String attr : TrackConfigDbModel.getValues())
             {
-                if (!attr.equals(SceneTrackDbModel.TABLE_NAME.value()))
+                if (!attr.equals(TrackConfigDbModel.TABLE_NAME.value()))
                 {
                     value = query.getColumnIndex(attr) != -1L ? query.getLong(query.getColumnIndex(attr)) : -1L;
                     content.put(attr, value);
@@ -79,5 +67,11 @@ public class TrackConfigDao
             result.add(content);
         }
         return result;
+    }
+
+    public void delete(Scene scene)
+    {
+        dbWrite.delete(TrackConfigDbModel.TABLE_NAME.value(),
+            TrackConfigDbModel.SCENE_ID.value() + " = " + scene.getId().toString(), new String[] {});
     }
 }

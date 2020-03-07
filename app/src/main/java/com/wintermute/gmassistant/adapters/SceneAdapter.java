@@ -63,9 +63,7 @@ public class SceneAdapter extends BaseAdapter
         TextView startEffect = result.findViewById(R.id.effect);
         TextView music = result.findViewById(R.id.music);
         TextView ambience = result.findViewById(R.id.ambience);
-
-        SceneOperations operations = new SceneOperations(ctx);
-        Scene target = operations.getScene(scenes.get(position));
+        Scene target = scenes.get(position);
 
         Long light = target.getLight() != null ? target.getLight().getId() : 0L;
         if (light != 0L)

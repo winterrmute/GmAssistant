@@ -5,7 +5,7 @@ import android.content.Context;
 import com.wintermute.gmassistant.database.dao.SceneDao;
 import com.wintermute.gmassistant.handlers.PlayerHandler;
 import com.wintermute.gmassistant.helper.SceneDbModel;
-import com.wintermute.gmassistant.helper.SceneTrackDbModel;
+import com.wintermute.gmassistant.helper.TrackConfigDbModel;
 import com.wintermute.gmassistant.helper.Tags;
 import com.wintermute.gmassistant.model.Light;
 import com.wintermute.gmassistant.model.Scene;
@@ -60,16 +60,6 @@ public class SceneOperations
     }
 
     /**
-     * @param scene to load from database
-     * @return scene
-     */
-    public Scene getScene(Scene scene)
-    {
-        dao = new SceneDao(ctx);
-        return getModel(dao.getById(scene.getId()));
-    }
-
-    /**
      * Creates new scene
      *
      * @param content all scene information
@@ -89,6 +79,8 @@ public class SceneOperations
     {
         dao = new SceneDao(ctx);
         dao.delete(scene);
+        TrackConfigOperations operation = new TrackConfigOperations(ctx);
+        operation.deleteConfigs(scene);
     }
 
     /**
@@ -102,24 +94,27 @@ public class SceneOperations
         scene = new Scene();
         scene.setId((Long) content.get(SceneDbModel.ID.value()));
         scene.setName((String) content.get(SceneDbModel.NAME.value()));
+        content.remove(SceneDbModel.TABLE_NAME.value());
+        content.remove(SceneDbModel.NAME.value());
+        content.remove(SceneDbModel.ID.value());
 
         for (Map.Entry<String, Object> entry : content.entrySet())
         {
             if (null != entry.getValue())
             {
-                if (entry.getKey().equals(SceneDbModel.LIGHT.value()) && (Long) entry.getValue() != -1L)
+                if ((Long) entry.getValue() != -1L)
                 {
                     scene.setLight((Light) entry.getValue());
                 }
-                if (entry.getKey().equals(SceneDbModel.EFFECT.value()) && (Long) entry.getValue() != -1L)
+                if (entry.getKey().equals(SceneDbModel.EFFECT.value()))
                 {
                     scene.setEffect(addTrackToScene(entry.getValue().toString(), Tags.EFFECT.value()));
                 }
-                if (entry.getKey().equals(SceneDbModel.MUSIC.value()) && (Long) entry.getValue() != -1L)
+                if (entry.getKey().equals(SceneDbModel.MUSIC.value()))
                 {
                     scene.setMusic(addTrackToScene(entry.getValue().toString(), Tags.MUSIC.value()));
                 }
-                if (entry.getKey().equals(SceneDbModel.AMBIENCE.value()) && (Long) entry.getValue() != -1L)
+                if (entry.getKey().equals(SceneDbModel.AMBIENCE.value()))
                 {
                     scene.setAmbience(addTrackToScene(entry.getValue().toString(), Tags.AMBIENCE.value()));
                 }
@@ -135,9 +130,10 @@ public class SceneOperations
         Track track = trackOperations.get(id);
         track.setTag(tag);
         Map<String, Long> config = trackConfig.getConfig(scene.getId(), track.getId());
-        if (config != null) {
-            track.setVolume(config.get(SceneTrackDbModel.VOLUME.value()));
-            track.setDelay(config.get(SceneTrackDbModel.DELAY.value()));
+        if (config != null)
+        {
+            track.setVolume(config.get(TrackConfigDbModel.VOLUME.value()));
+            track.setDelay(config.get(TrackConfigDbModel.DELAY.value()));
         }
         return track;
     }
@@ -190,8 +186,10 @@ public class SceneOperations
     void storeTrackConfig(List<Track> tracks)
     {
         TrackConfigOperations operations = new TrackConfigOperations(ctx);
-        for (Track track : tracks) {
-            if (track != null) {
+        for (Track track : tracks)
+        {
+            if (track != null)
+            {
                 operations.storeTrackWithConfig(scene.getId(), track);
             }
         }

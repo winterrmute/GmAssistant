@@ -22,11 +22,9 @@ import com.wintermute.gmassistant.database.dao.LightDao;
 import com.wintermute.gmassistant.helper.SceneDbModel;
 import com.wintermute.gmassistant.helper.Tags;
 import com.wintermute.gmassistant.model.Light;
-import com.wintermute.gmassistant.model.Scene;
 import com.wintermute.gmassistant.model.Track;
 import com.wintermute.gmassistant.operations.PlayerOperations;
 import com.wintermute.gmassistant.operations.SceneOperations;
-import com.wintermute.gmassistant.operations.TrackConfigOperations;
 import com.wintermute.gmassistant.operations.TrackOperations;
 import com.wintermute.gmassistant.services.FileBrowserService;
 
@@ -125,6 +123,7 @@ public class SceneConfig extends AppCompatActivity
             storeTracks();
             operations.createScene(content);
             setResult(RESULT_OK);
+            player.stopAll();
             finish();
         } else
         {
@@ -171,20 +170,11 @@ public class SceneConfig extends AppCompatActivity
         ImageButton playMusic = findViewById(R.id.play_music);
         ImageButton playAmbience = findViewById(R.id.play_ambience);
 
-        playEffect.setOnClickListener(v ->
-        {
-            playPreview(trackHolder.get(Tags.EFFECT.value()), playEffect);
-        });
+        playEffect.setOnClickListener(v -> playPreview(trackHolder.get(Tags.EFFECT.value()), playEffect));
 
-        playMusic.setOnClickListener(v ->
-        {
-            playPreview(trackHolder.get(Tags.MUSIC.value()), playMusic);
-        });
+        playMusic.setOnClickListener(v -> playPreview(trackHolder.get(Tags.MUSIC.value()), playMusic));
 
-        playAmbience.setOnClickListener(v ->
-        {
-            playPreview(trackHolder.get(Tags.AMBIENCE.value()), playAmbience);
-        });
+        playAmbience.setOnClickListener(v -> playPreview(trackHolder.get(Tags.AMBIENCE.value()), playAmbience));
     }
 
     private void playPreview(Track track, ImageButton playerButton)
@@ -302,17 +292,14 @@ public class SceneConfig extends AppCompatActivity
             if (requestCode == Tags.EFFECT.ordinal())
             {
                 track.setTag(Tags.EFFECT.value());
-                trackHolder.put(track.getTag(), track);
                 effect.setText(fileName);
             } else if (requestCode == Tags.MUSIC.ordinal())
             {
                 track.setTag(Tags.MUSIC.value());
-                trackHolder.put(track.getTag(), track);
                 music.setText(fileName);
             } else if (requestCode == Tags.AMBIENCE.ordinal())
             {
                 track.setTag(Tags.AMBIENCE.value());
-                trackHolder.put(track.getTag(), track);
                 ambience.setText(fileName);
             } else if (requestCode == 4)
             {
@@ -329,6 +316,7 @@ public class SceneConfig extends AppCompatActivity
 
                 colorView.setImageBitmap(extractColor(color));
             }
+            trackHolder.put(track.getTag(), track);
         }
     }
 

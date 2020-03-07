@@ -52,15 +52,13 @@ public class ScenePanel extends AppCompatActivity
         });
 
         Button addScene = findViewById(R.id.add_scene);
-        addScene.setOnClickListener((v) -> addScene(false));
+        addScene.setOnClickListener((v) -> addScene());
     }
 
     /**
      * Open scene config activity with editing flag.
-     *
-     * @param edit flag to refer if scene should be edited or a new one will be created.
      */
-    private void addScene(boolean edit)
+    private void addScene()
     {
         Intent sceneConfig = new Intent(ScenePanel.this, SceneConfig.class);
         startActivityForResult(sceneConfig, 1);

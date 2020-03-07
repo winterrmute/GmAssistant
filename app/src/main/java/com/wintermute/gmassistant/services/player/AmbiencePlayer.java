@@ -55,7 +55,7 @@ public class AmbiencePlayer extends BasePlayer implements MediaPlayer.OnPrepared
 
         if (track != null)
         {
-            if (track.getDelay() == 1)
+            if (track.getDelay() == 1 && scene.getEffect() != null)
             {
                 player.startAmbienceWithEffect(this, scene);
             } else

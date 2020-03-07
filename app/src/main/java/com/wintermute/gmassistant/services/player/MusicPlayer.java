@@ -62,7 +62,7 @@ public class MusicPlayer extends BasePlayer
 
         if (track != null)
         {
-            if (track.getDelay() == 1)
+            if (track.getDelay() == 1 && scene.getEffect() != null)
             {
                 player.startMusicWithEffect(this, scene);
             } else
