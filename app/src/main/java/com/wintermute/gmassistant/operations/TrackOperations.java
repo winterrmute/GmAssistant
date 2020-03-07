@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
 import com.wintermute.gmassistant.database.dao.TrackDao;
-import com.wintermute.gmassistant.helper.TrackDbModel;
+import com.wintermute.gmassistant.database.model.TrackDbModel;
 import com.wintermute.gmassistant.model.Track;
 
 import java.io.File;
@@ -27,22 +27,23 @@ public class TrackOperations
         this.ctx = ctx;
     }
 
-    public Track get(String id)
+    public Track get(Long id)
     {
         TrackDao dao = new TrackDao(ctx);
-        Map<String, Object> content = dao.get(TrackDbModel.ID.value(), id);
+        Map<String, Object> content = dao.get(id);
         return getModel(content);
     }
 
     private Track existingTrack(Map<String, Object> content)
     {
+        Track track = new Track();
         for (Map.Entry<String, Object> entry : content.entrySet())
         {
             if (null != entry.getValue())
             {
                 if (entry.getKey().equals(TrackDbModel.ID.value()))
                 {
-                    track.setId(Long.parseLong(entry.getValue().toString()));
+                    track.setId((Long) entry.getValue());
                 }
                 if (entry.getKey().equals(TrackDbModel.NAME.value()))
                 {
@@ -126,7 +127,7 @@ public class TrackOperations
         TrackDao dao = new TrackDao(ctx);
         if (trackExists(track, dao))
         {
-            track.setId(getModel(dao.get(TrackDbModel.PATH.value(), track.getPath())).getId());
+            track.setId(getModel(dao.getByAttribute(TrackDbModel.PATH.value(), track.getPath())).getId());
         } else
         {
             ContentValues result = new ContentValues();
@@ -142,6 +143,6 @@ public class TrackOperations
 
     private boolean trackExists(Track track, TrackDao dao)
     {
-        return dao.get(TrackDbModel.PATH.value(), track.getPath()) != null;
+        return dao.getByAttribute(TrackDbModel.PATH.value(), track.getPath()) != null;
     }
 }

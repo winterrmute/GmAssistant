@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.helper;
+package com.wintermute.gmassistant.database.model;
 
 public enum Tags
 {

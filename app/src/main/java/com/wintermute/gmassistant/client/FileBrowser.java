@@ -2,6 +2,7 @@ package com.wintermute.gmassistant.client;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -120,5 +121,11 @@ public class FileBrowser extends AppCompatActivity
         {
             path = new File(path.getParent());
         }
+    }
+
+    public void getFilesInDirectory()
+    {
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
+
     }
 }

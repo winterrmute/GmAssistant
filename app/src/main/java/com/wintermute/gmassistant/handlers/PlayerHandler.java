@@ -2,7 +2,7 @@ package com.wintermute.gmassistant.handlers;
 
 import android.content.Context;
 import android.content.Intent;
-import com.wintermute.gmassistant.helper.Tags;
+import com.wintermute.gmassistant.database.model.Tags;
 import com.wintermute.gmassistant.model.Scene;
 import com.wintermute.gmassistant.model.Track;
 import com.wintermute.gmassistant.operations.PlayerOperations;
@@ -36,10 +36,10 @@ public class PlayerHandler
     public void play(Track track)
     {
         Class target;
-        if (track.getTag().equals(Tags.MUSIC.value()))
+        if (Tags.MUSIC.value().equals(track.getTag()))
         {
             target = MusicPlayer.class;
-        } else if (track.getTag().equals(Tags.AMBIENCE.value()))
+        } else if (Tags.AMBIENCE.value().equals(track.getTag()))
         {
             target = AmbiencePlayer.class;
         } else

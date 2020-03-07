@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.LibraryItemAdapter;
 import com.wintermute.gmassistant.handlers.PlayerHandler;
-import com.wintermute.gmassistant.helper.Tags;
+import com.wintermute.gmassistant.database.model.Tags;
 import com.wintermute.gmassistant.model.LibraryFile;
 import com.wintermute.gmassistant.model.Track;
 import com.wintermute.gmassistant.operations.TrackOperations;

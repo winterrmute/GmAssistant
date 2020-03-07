@@ -3,7 +3,7 @@ package com.wintermute.gmassistant.operations;
 import android.content.ContentValues;
 import android.content.Context;
 import com.wintermute.gmassistant.database.dao.TrackConfigDao;
-import com.wintermute.gmassistant.helper.TrackConfigDbModel;
+import com.wintermute.gmassistant.database.model.TrackConfigDbModel;
 import com.wintermute.gmassistant.model.Scene;
 import com.wintermute.gmassistant.model.Track;
 

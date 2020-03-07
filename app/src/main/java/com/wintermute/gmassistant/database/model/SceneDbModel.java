@@ -1,19 +1,21 @@
-package com.wintermute.gmassistant.helper;
+package com.wintermute.gmassistant.database.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public enum TrackConfigDbModel
+public enum SceneDbModel
 {
-    TABLE_NAME("scene_track_config"),
-    SCENE_ID("sceneId"),
-    TRACK_ID("trackId"),
-    VOLUME("volume"),
-    DELAY("delay");
+    TABLE_NAME("scenes"),
+    ID("id"),
+    EFFECT("effect"),
+    MUSIC("music"),
+    AMBIENCE("ambience"),
+    NAME("name"),
+    LIGHT("light");
 
     private String column;
 
-    TrackConfigDbModel(String column)
+    SceneDbModel(String column)
     {
         this.column= column;
     }
@@ -24,7 +26,7 @@ public enum TrackConfigDbModel
 
     public static List<String> getValues(){
         List<String> result = new ArrayList<>();
-        for (TrackConfigDbModel value : values()) {
+        for (SceneDbModel value : values()) {
             result.add(value.value());
         }
         return result;

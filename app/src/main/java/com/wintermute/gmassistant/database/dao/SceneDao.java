@@ -3,9 +3,10 @@ package com.wintermute.gmassistant.database.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.gmassistant.database.DbManager;
-import com.wintermute.gmassistant.helper.SceneDbModel;
-import com.wintermute.gmassistant.helper.TrackDbModel;
+import com.wintermute.gmassistant.database.model.SceneDbModel;
+import com.wintermute.gmassistant.database.model.TrackDbModel;
 import com.wintermute.gmassistant.model.Scene;
 
 import java.util.ArrayList;
@@ -18,8 +19,10 @@ import java.util.Map;
  *
  * @author wintermute
  */
-public class SceneDao extends BaseDao
+public class SceneDao
 {
+    private SQLiteDatabase dbRead;
+    private SQLiteDatabase dbWrite;
 
     public SceneDao(Context ctx)
     {

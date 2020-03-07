@@ -4,9 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import com.wintermute.gmassistant.database.dao.SceneDao;
 import com.wintermute.gmassistant.handlers.PlayerHandler;
-import com.wintermute.gmassistant.helper.SceneDbModel;
-import com.wintermute.gmassistant.helper.TrackConfigDbModel;
-import com.wintermute.gmassistant.helper.Tags;
+import com.wintermute.gmassistant.database.model.SceneDbModel;
+import com.wintermute.gmassistant.database.model.Tags;
+import com.wintermute.gmassistant.database.model.TrackConfigDbModel;
 import com.wintermute.gmassistant.model.Light;
 import com.wintermute.gmassistant.model.Scene;
 import com.wintermute.gmassistant.model.Track;
@@ -104,26 +104,29 @@ public class SceneOperations
             {
                 if ((Long) entry.getValue() != -1L)
                 {
-                    scene.setLight((Light) entry.getValue());
-                }
-                if (entry.getKey().equals(SceneDbModel.EFFECT.value()))
-                {
-                    scene.setEffect(addTrackToScene(entry.getValue().toString(), Tags.EFFECT.value()));
-                }
-                if (entry.getKey().equals(SceneDbModel.MUSIC.value()))
-                {
-                    scene.setMusic(addTrackToScene(entry.getValue().toString(), Tags.MUSIC.value()));
-                }
-                if (entry.getKey().equals(SceneDbModel.AMBIENCE.value()))
-                {
-                    scene.setAmbience(addTrackToScene(entry.getValue().toString(), Tags.AMBIENCE.value()));
+                    if (entry.getKey().equals(SceneDbModel.LIGHT.value()))
+                    {
+                        scene.setLight((Light) entry.getValue());
+                    }
+                    if (entry.getKey().equals(SceneDbModel.EFFECT.value()))
+                    {
+                        scene.setEffect(addTrackToScene((Long) entry.getValue(), Tags.EFFECT.value()));
+                    }
+                    if (entry.getKey().equals(SceneDbModel.MUSIC.value()))
+                    {
+                        scene.setMusic(addTrackToScene((Long) entry.getValue(), Tags.MUSIC.value()));
+                    }
+                    if (entry.getKey().equals(SceneDbModel.AMBIENCE.value()))
+                    {
+                        scene.setAmbience(addTrackToScene((Long) entry.getValue(), Tags.AMBIENCE.value()));
+                    }
                 }
             }
         }
         return scene;
     }
 
-    private Track addTrackToScene(String id, String tag)
+    private Track addTrackToScene(Long id, String tag)
     {
         TrackOperations trackOperations = new TrackOperations(ctx);
         TrackConfigOperations trackConfig = new TrackConfigOperations(ctx);

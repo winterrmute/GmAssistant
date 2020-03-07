@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.database.dao.LightDao;
 import com.wintermute.gmassistant.model.Scene;
-import com.wintermute.gmassistant.operations.SceneOperations;
+import com.wintermute.gmassistant.model.Track;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -72,16 +72,16 @@ public class SceneAdapter extends BaseAdapter
         }
         name.setText(target.getName());
 
-        String trackName = target.getEffect() != null ? target.getEffect().getName() : "";
-        startEffect.setText("Effect: " + trackName);
-
-        trackName = target.getMusic() != null ? target.getMusic().getName() : "";
-        music.setText("Music: " + trackName);
-
-        trackName = target.getAmbience() != null ? target.getAmbience().getName() : "";
-        ambience.setText("Ambience: " + trackName);
+        startEffect.setText("Effect: " + computeName(target.getEffect()));
+        music.setText("Music: " + computeName(target.getMusic()));
+        ambience.setText("Ambience: " + computeName(target.getAmbience()));
         result.setTag(position);
         return result;
+    }
+
+    private String computeName(Track track){
+        String result = track != null ? track.getName() : "";
+        return result.length() > 30 ? result.substring(0, 27) + "..." : result;
     }
 
     /**

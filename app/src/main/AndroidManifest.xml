@@ -12,6 +12,7 @@
     <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
 
     <application
+            android:requestLegacyExternalStorage="true"
             android:allowBackup="false"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
@@ -19,18 +20,21 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
-        <activity android:name=".client.panel.LibraryContent"></activity>
+        <activity android:name=".client.view.effects.EffectGroups" />
+        <activity android:name=".client.view.effects.EffectBoard" />
+        <activity android:name=".client.view.LibraryContent" />
         <activity
                 android:name=".dialogs.ListDialog"
                 android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".client.panel.ScenePanel" />
-        <activity android:name=".client.panel.LightPanel" />
+        <activity android:name=".client.view.scenes.SceneView" />
+        <activity android:name=".client.view.LightView" />
         <activity android:name=".config.LightConfig" />
-        <activity android:name=".config.SceneConfig" />
+        <activity android:name=".client.view.scenes.SceneConfig" />
         <activity android:name=".client.AddNewPlaylist" />
-        <activity android:name=".client.panel.PlaylistContentPanel" />
+        <activity android:name=".client.view.PlaylistContentView" />
         <activity android:name=".client.FileBrowser" />
-        <activity android:name=".client.panel.PlaylistPanel" />
+        <activity android:name=".client.StorageBrowser" />
+        <activity android:name=".client.view.PlaylistView" />
         <activity android:name=".GmAssistant">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,7 +47,6 @@
         <service android:name=".services.player.MusicPlayer" />
         <service android:name=".services.player.AmbiencePlayer" />
         <service android:name=".services.player.EffectPlayer" />
-
 
         <receiver android:name=".services.notifications.MusicReceiver" />
         <receiver android:name=".services.notifications.AmbienceReceiver" />

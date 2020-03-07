@@ -6,10 +6,11 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
-import com.wintermute.gmassistant.client.panel.LibraryContent;
-import com.wintermute.gmassistant.client.panel.LightPanel;
-import com.wintermute.gmassistant.client.panel.PlaylistPanel;
-import com.wintermute.gmassistant.client.panel.ScenePanel;
+import com.wintermute.gmassistant.client.view.LibraryContent;
+import com.wintermute.gmassistant.client.view.LightView;
+import com.wintermute.gmassistant.client.view.PlaylistView;
+import com.wintermute.gmassistant.client.view.effects.EffectGroups;
+import com.wintermute.gmassistant.client.view.scenes.SceneView;
 
 /**
  * Startup activity. Provides Game masters panel.
@@ -26,16 +27,19 @@ public class GmAssistant extends AppCompatActivity
         grantUserPermission();
 
         Button playlistPanel = findViewById(R.id.manage_playlists);
-        playlistPanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, PlaylistPanel.class)));
+        playlistPanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, PlaylistView.class)));
 
         Button trackPanel = findViewById(R.id.manage_tracks);
         trackPanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, LibraryContent.class)));
 
         Button scenePanel = findViewById(R.id.manage_scenes);
-        scenePanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, ScenePanel.class)));
+        scenePanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, SceneView.class)));
 
         Button lightPanel = findViewById(R.id.manage_lights);
-        lightPanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, LightPanel.class)));
+        lightPanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, LightView.class)));
+
+        Button effectBoards = findViewById(R.id.effect_board);
+        effectBoards.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, EffectGroups.class)));
     }
 
     /**

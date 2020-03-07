@@ -1,20 +1,17 @@
-package com.wintermute.gmassistant.helper;
+package com.wintermute.gmassistant.database.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public enum TrackDbModel
+public enum GroupDbModel
 {
-    TABLE_NAME("track"),
+    TABLE_NAME("groups"),
     ID("id"),
-    NAME("name"),
-    PATH("path"),
-    DURATION("duration"),
-    ARTIST("artist");
+    NAME("name");
 
     private String column;
 
-    TrackDbModel(String column)
+    GroupDbModel(String column)
     {
         this.column= column;
     }
@@ -25,7 +22,7 @@ public enum TrackDbModel
 
     public static List<String> getValues(){
         List<String> result = new ArrayList<>();
-        for (TrackDbModel value : values()) {
+        for (GroupDbModel value : values()) {
             result.add(value.value());
         }
         return result;

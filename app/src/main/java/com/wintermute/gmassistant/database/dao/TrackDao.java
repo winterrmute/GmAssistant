@@ -5,8 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.gmassistant.database.DbManager;
-import com.wintermute.gmassistant.helper.Tags;
-import com.wintermute.gmassistant.helper.TrackDbModel;
+import com.wintermute.gmassistant.database.model.Tags;
+import com.wintermute.gmassistant.database.model.TrackDbModel;
 import com.wintermute.gmassistant.model.Track;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ import java.util.Map;
  *
  * @author wintermute
  */
-public class TrackDao extends BaseDao
+public class TrackDao
 {
     private SQLiteDatabase dbRead;
     private SQLiteDatabase dbWrite;
@@ -44,13 +44,13 @@ public class TrackDao extends BaseDao
     }
 
     /**
-     * Convinience method for getting track.
+     * Get track details.
      *
-     * @param key to identify database entry.
-     * @param value column.
+     * @param key database attribute
+     * @param value of requested attribute.
      * @return selected track.
      */
-    public Map<String, Object> get(String key, String value)
+    public Map<String, Object> getByAttribute(String key, String value)
     {
         StringBuilder query = new StringBuilder("SELECT * FROM ")
             .append(TrackDbModel.TABLE_NAME.value())
@@ -59,7 +59,24 @@ public class TrackDao extends BaseDao
             .append("  =  '")
             .append(value)
             .append("'");
-        ArrayList<Map<String, Object>> trackData = getTrackData(dbRead.rawQuery(query.toString(), null));
+        List<Map<String, Object>> trackData = getTrackData(dbRead.rawQuery(query.toString(), null));
+        return trackData.isEmpty() ? null : trackData.get(0);
+    }
+
+    /**
+     * Get track details.
+     *
+     * @param id of requested track
+     * @return selected track.
+     */
+    public Map<String, Object> get(Long id)
+    {
+        StringBuilder query = new StringBuilder("SELECT * FROM ")
+            .append(TrackDbModel.TABLE_NAME.value())
+            .append("  WHERE id = '")
+            .append(id)
+            .append("'");
+        List<Map<String, Object>> trackData = getTrackData(dbRead.rawQuery(query.toString(), null));
         return trackData.isEmpty() ? null : trackData.get(0);
     }
 
@@ -69,7 +86,7 @@ public class TrackDao extends BaseDao
      * @param id of playlist containing tracks.
      * @return List of Tracks
      */
-    public ArrayList<Map<String, Object>> getReferencedTracks(String id)
+    public List<Map<String, Object>> getReferencedTracks(String id)
     {
         StringBuilder query = new StringBuilder(
             "SELECT * FROM playlist pl, playlist_content ct, track tk WHERE tk.id = ct.track AND pl.id = ct.playlist "
@@ -82,13 +99,13 @@ public class TrackDao extends BaseDao
      *
      * @return list of track names.
      */
-    public ArrayList<Map<String, Object>> getAll()
+    public List<Map<String, Object>> getAll()
     {
         StringBuilder query = new StringBuilder("SELECT * FROM " + TrackDbModel.TABLE_NAME.value());
         return getTrackData(dbRead.rawQuery(query.toString(), null));
     }
 
-    private ArrayList<Map<String, Object>> getTrackData(Cursor query)
+    private List<Map<String, Object>> getTrackData(Cursor query)
     {
 
         List<String> numericalValues =

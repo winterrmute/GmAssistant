@@ -1,10 +1,11 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!--  GmAssistant  -->
     <string name="gm_panel">gm panel</string>
     <string name="manage_playlists">Playlists</string>
     <string name="manage_tracks">Audio files</string>
     <string name="manage_scenes">Scenes</string>
     <string name="manage_lights">Lights</string>
+    <string name="effect_board">Effect Boards</string>
 
     <!--  PlaylistPanel  -->
     <string name="app_name">GM Assistant</string>
@@ -53,5 +54,8 @@
     <!--  universal buttons  -->
     <string name="ok_result">OK</string>
     <string name="cancel_result">Cancel</string>
+
+    <!--  EffectGroups  -->
+    <string name="add_effect_board">Add effect board</string>
 
 </resources>

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
-import com.wintermute.gmassistant.helper.Tags;
+import com.wintermute.gmassistant.database.model.Tags;
 import com.wintermute.gmassistant.model.Scene;
 import com.wintermute.gmassistant.model.Track;
 
@@ -50,31 +50,37 @@ public class PlayerOperations
 
     public void stopPlayer(String tag)
     {
-        if (tag.equals("effect"))
+        if (Tags.EFFECT.value().equals(tag))
         {
-            try {
+            try
+            {
                 effectPlayer.stop();
                 effectPlayer.release();
-            } catch (NullPointerException e) {
+            } catch (NullPointerException e)
+            {
 
             }
             effectPlayer = new MediaPlayer();
-        } else if (tag.equals("music"))
+        } else if (Tags.MUSIC.value().equals(tag))
         {
-            try {
+            try
+            {
                 musicPlayer.stop();
                 musicPlayer.release();
-            } catch (NullPointerException e){
+            } catch (NullPointerException e)
+            {
 
             }
             myHandler.removeCallbacks(delayedMusic);
             musicPlayer = new MediaPlayer();
-        } else if (tag.equals("ambience"))
+        } else if (Tags.AMBIENCE.value().equals(tag))
         {
-            try {
+            try
+            {
                 ambiencePlayer.stop();
                 ambiencePlayer.release();
-            } catch (NullPointerException e) {
+            } catch (NullPointerException e)
+            {
 
             }
             myHandler.removeCallbacks(delayedAmbience);
@@ -82,14 +88,15 @@ public class PlayerOperations
         }
     }
 
-    public boolean isPlaying(String tag){
+    public boolean isPlaying(String tag)
+    {
         if (Tags.EFFECT.value().equals(tag) && effectPlayer != null)
         {
             return effectPlayer.isPlaying();
-        } else if (Tags.MUSIC.value().equals(tag)  && musicPlayer != null)
+        } else if (Tags.MUSIC.value().equals(tag) && musicPlayer != null)
         {
             return musicPlayer.isPlaying();
-        } else if (Tags.AMBIENCE.value().equals(tag)  && ambiencePlayer != null)
+        } else if (Tags.AMBIENCE.value().equals(tag) && ambiencePlayer != null)
         {
             return ambiencePlayer.isPlaying();
         }
@@ -141,7 +148,8 @@ public class PlayerOperations
         effectPlayer.start();
     }
 
-    public void startByTag(Context ctx, Track track){
+    public void startByTag(Context ctx, Track track)
+    {
         if (Tags.EFFECT.value().equals(track.getTag()))
         {
             startEffect(ctx, track);
@@ -168,7 +176,8 @@ public class PlayerOperations
         }
         effectPlayer = new MediaPlayer();
         effectPlayer = MediaPlayer.create(ctx, Uri.parse("file://" + track.getPath()));
-        if (track.getVolume() != null){
+        if (track.getVolume() != null)
+        {
             adjustVolume(track.getVolume(), track.getTag());
         }
     }
@@ -182,7 +191,8 @@ public class PlayerOperations
         musicPlayer = new MediaPlayer();
         musicPlayer = MediaPlayer.create(ctx, Uri.parse("file://" + track.getPath()));
         musicPlayer.setLooping(true);
-        if (track.getVolume() != null){
+        if (track.getVolume() != null)
+        {
             adjustVolume(track.getVolume(), track.getTag());
         }
     }
@@ -196,7 +206,8 @@ public class PlayerOperations
         ambiencePlayer = new MediaPlayer();
         ambiencePlayer = MediaPlayer.create(ctx, Uri.parse("file://" + track.getPath()));
         ambiencePlayer.setLooping(true);
-        if (track.getVolume() != null){
+        if (track.getVolume() != null)
+        {
             adjustVolume(track.getVolume(), track.getTag());
         }
     }

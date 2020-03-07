@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.client.panel;
+package com.wintermute.gmassistant.client.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,7 +22,7 @@ import java.util.List;
  *
  * @author wintermute
  */
-public class PlaylistPanel extends AppCompatActivity
+public class PlaylistView extends AppCompatActivity
 {
     private ListView playlistView;
     private PlaylistDao playlistDao;
@@ -40,13 +40,13 @@ public class PlaylistPanel extends AppCompatActivity
         Button addPlaylist = findViewById(R.id.add_playlist);
         addPlaylist.setOnClickListener(v ->
         {
-            Intent createPlaylist = new Intent(PlaylistPanel.this, AddNewPlaylist.class);
+            Intent createPlaylist = new Intent(PlaylistView.this, AddNewPlaylist.class);
             startActivity(createPlaylist);
         });
 
         playlistView.setOnItemClickListener((parent, view, position, id) ->
         {
-            Intent playlistContent = new Intent(PlaylistPanel.this, PlaylistContentPanel.class);
+            Intent playlistContent = new Intent(PlaylistView.this, PlaylistContentView.class);
             playlistContent.putExtra("playlistId", playlists.get(position).getId());
             startActivity(playlistContent);
         });
@@ -54,7 +54,7 @@ public class PlaylistPanel extends AppCompatActivity
         playlistView.setOnItemLongClickListener((parent, view, position, id) ->
         {
             this.position = position;
-            Intent dialog = new Intent(PlaylistPanel.this, ListDialog.class);
+            Intent dialog = new Intent(PlaylistView.this, ListDialog.class);
             dialog.putStringArrayListExtra("opts", new ArrayList<>(Arrays.asList("rename", "delete")));
             startActivityForResult(dialog, 1);
             return true;
@@ -78,7 +78,7 @@ public class PlaylistPanel extends AppCompatActivity
             } else if ("delete".equals(selected))
             {
                 playlistDao.deleteById(playlists.get(position).getId());
-                PlaylistContentDao pcd = new PlaylistContentDao(PlaylistPanel.this);
+                PlaylistContentDao pcd = new PlaylistContentDao(PlaylistView.this);
                 pcd.deleteByPlaylistId(playlists.get(position).getId());
                 playlistDao.deleteById(playlists.get(position).getId());
                 renderPlaylist();

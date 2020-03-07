@@ -1,10 +1,10 @@
-package com.wintermute.gmassistant.client.panel;
+package com.wintermute.gmassistant.client.view;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
 
-public class LightPanel extends AppCompatActivity
+public class LightView extends AppCompatActivity
 {
 
     @Override

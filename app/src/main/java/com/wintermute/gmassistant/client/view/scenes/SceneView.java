@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.client.panel;
+package com.wintermute.gmassistant.client.view.scenes;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +7,6 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.SceneAdapter;
-import com.wintermute.gmassistant.config.SceneConfig;
 import com.wintermute.gmassistant.dialogs.ListDialog;
 import com.wintermute.gmassistant.model.Scene;
 import com.wintermute.gmassistant.operations.SceneOperations;
@@ -21,7 +20,7 @@ import java.util.List;
  *
  * @author wintermute
  */
-public class ScenePanel extends AppCompatActivity
+public class SceneView extends AppCompatActivity
 {
 
     private ListView sceneView;
@@ -45,7 +44,7 @@ public class ScenePanel extends AppCompatActivity
         sceneView.setOnItemLongClickListener((parent, view, position, id) ->
         {
             scene = allScenes.get(position);
-            Intent dialog = new Intent(ScenePanel.this, ListDialog.class);
+            Intent dialog = new Intent(SceneView.this, ListDialog.class);
             dialog.putStringArrayListExtra("opts", new ArrayList<>(Arrays.asList("delete")));
             startActivityForResult(dialog, 2);
             return true;
@@ -60,7 +59,7 @@ public class ScenePanel extends AppCompatActivity
      */
     private void addScene()
     {
-        Intent sceneConfig = new Intent(ScenePanel.this, SceneConfig.class);
+        Intent sceneConfig = new Intent(SceneView.this, SceneConfig.class);
         startActivityForResult(sceneConfig, 1);
     }
 

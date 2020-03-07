@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.client.panel;
+package com.wintermute.gmassistant.client.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,7 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.TrackAdapter;
-import com.wintermute.gmassistant.config.SceneConfig;
+import com.wintermute.gmassistant.client.view.scenes.SceneConfig;
 import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
 import com.wintermute.gmassistant.database.dao.TrackDao;
 import com.wintermute.gmassistant.dialogs.ListDialog;
@@ -22,7 +22,7 @@ import java.util.List;
  *
  * @author wintermute
  */
-public class PlaylistContentPanel extends AppCompatActivity
+public class PlaylistContentView extends AppCompatActivity
 {
 
     private ListView songView;
@@ -40,11 +40,11 @@ public class PlaylistContentPanel extends AppCompatActivity
         trackDao = new TrackDao(this);
         renderFilesAsList();
 
-        playlistId = PlaylistContentPanel.this.getIntent().getStringExtra("playlistId");
+        playlistId = PlaylistContentView.this.getIntent().getStringExtra("playlistId");
 
         songView.setOnItemClickListener((parent, view, position, id) ->
         {
-            PlayerHandler handler = new PlayerHandler(PlaylistContentPanel.this);
+            PlayerHandler handler = new PlayerHandler(PlaylistContentView.this);
 //            handler.startPlayerByTrack(playlistId, allTracks.get(position).getId());
         });
 
@@ -58,7 +58,7 @@ public class PlaylistContentPanel extends AppCompatActivity
 
     private void openDialog(String... opts)
     {
-        Intent dialog = new Intent(PlaylistContentPanel.this, ListDialog.class);
+        Intent dialog = new Intent(PlaylistContentView.this, ListDialog.class);
         dialog.putStringArrayListExtra("opts", new ArrayList<>(Arrays.asList(opts)));
         startActivityForResult(dialog, 1);
     }
@@ -66,7 +66,7 @@ public class PlaylistContentPanel extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        PlaylistContentDao dao = new PlaylistContentDao(PlaylistContentPanel.this);
+        PlaylistContentDao dao = new PlaylistContentDao(PlaylistContentView.this);
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == 1)
         {
@@ -87,7 +87,7 @@ public class PlaylistContentPanel extends AppCompatActivity
                     break;
                 case "edit":
 //                    String sceneId = dao.getSceneIdForTrackInPlaylist(playlistId, allTracks.get(position).getId());
-                    Intent sceneConfig = new Intent(PlaylistContentPanel.this, SceneConfig.class);
+                    Intent sceneConfig = new Intent(PlaylistContentView.this, SceneConfig.class);
                     sceneConfig
                         .putExtra("edit", true)
 //                        .putExtra("sceneId", sceneId)
@@ -96,7 +96,7 @@ public class PlaylistContentPanel extends AppCompatActivity
                     startActivityForResult(sceneConfig, 1);
                     break;
                 case "add new":
-                    sceneConfig = new Intent(PlaylistContentPanel.this, SceneConfig.class);
+                    sceneConfig = new Intent(PlaylistContentView.this, SceneConfig.class);
                     sceneConfig
                         .putExtra("trackId", allTracks.get(position).getId())
                         .putExtra("playlistId", playlistId)
@@ -104,7 +104,7 @@ public class PlaylistContentPanel extends AppCompatActivity
                     startActivityForResult(sceneConfig, 1);
                     break;
                 case "DELETE":
-                    dao = new PlaylistContentDao(PlaylistContentPanel.this);
+                    dao = new PlaylistContentDao(PlaylistContentView.this);
 //                    dao.deleteTrackFromPlaylist(playlistId, allTracks.get(position).getId());
                     renderFilesAsList();
                     break;
