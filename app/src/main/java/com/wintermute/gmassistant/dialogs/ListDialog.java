@@ -25,7 +25,7 @@ public class ListDialog extends Activity
 
         optsView.setOnItemClickListener((parent, view, position, id) ->
         {
-            setResult(RESULT_OK, new Intent().putExtra("selected", opts.get(position)));
+            setResult(RESULT_OK, new Intent().putExtra("action", opts.get(position)));
             finish();
         });
     }

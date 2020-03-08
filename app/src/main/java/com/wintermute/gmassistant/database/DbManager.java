@@ -26,13 +26,11 @@ public class DbManager extends SQLiteOpenHelper
 
     private static final String SCENES =
         "CREATE TABLE scenes ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, light INTEGER, effect INTEGER, "
-            + "music INTEGER, ambience INTEGER, FOREIGN KEY (light) REFERENCES light (id), FOREIGN KEY (effect) "
-            + "REFERENCES scene_track_config (id), FOREIGN KEY (music) REFERENCES scene_track_config (id), FOREIGN "
-            + "KEY (ambience) REFERENCES scene_track_config (id))";
+            + "music INTEGER, ambience INTEGER)";
 
     private static final String SCENE_TRACK_CONFIGS =
         "CREATE TABLE scene_track_configs ( sceneId INTEGER, trackId INTEGER, volume INTEGER, delay"
-            + " INTEGER, FOREIGN KEY (sceneId) REFERENCES scenes (id), FOREIGN KEY (trackId) REFERENCES tracks (id))";
+            + " INTEGER, FOREIGN KEY (sceneId) REFERENCES scenes (id) ON DELETE CASCADE, FOREIGN KEY (trackId) REFERENCES tracks (id))";
 
     private static final String LIGHTS =
         "CREATE TABLE lights ( id INTEGER PRIMARY KEY AUTOINCREMENT, color REAL, brightness REAL)";
@@ -40,8 +38,9 @@ public class DbManager extends SQLiteOpenHelper
     private static final String LIBRARY =
         "CREATE TABLE library ( id INTEGER PRIMARY KEY AUTOINCREMENT, path TEXT, tag TEXT, recursively TEXT)";
 
-    private static final String EFFECTS = "CREATE TABLE effects (trackId INTEGER, groupId INTEGER, FOREIGN KEY "
-        + "(trackId) REFERENCES tracks (id), FOREIGN KEY (groupId) REFERENCES groups (id) )";
+    private static final String EFFECTS =
+        "CREATE TABLE effects ( trackId INTEGER, groupId INTEGER, FOREIGN KEY (trackId) REFERENCES tracks (id) ON "
+            + "DELETE CASCADE, FOREIGN KEY" + " (groupId) REFERENCES groups (id) ON DELETE CASCADE )";
 
     private static final String GROUPS = "CREATE TABLE groups (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)";
 

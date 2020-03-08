@@ -6,11 +6,16 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.gmassistant.database.DbManager;
 import com.wintermute.gmassistant.database.model.GroupDbModel;
-import com.wintermute.gmassistant.database.model.TrackDbModel;
+import com.wintermute.gmassistant.model.Board;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Manages group (boards) in database.
+ *
+ * @author wintermute
+ */
 public class GroupDao
 {
     private SQLiteDatabase dbRead;
@@ -21,6 +26,7 @@ public class GroupDao
         DbManager dbManager = new DbManager(ctx);
         dbRead = dbManager.getReadableDatabase();
         dbWrite = dbManager.getWritableDatabase();
+        dbWrite.execSQL("PRAGMA foreign_keys=ON;");
     }
 
     /**
@@ -51,7 +57,21 @@ public class GroupDao
         return groups;
     }
 
-    public Long createGroup(ContentValues values) {
+    /**
+     * Creates new board.
+     *
+     * @param values board name.
+     * @return id of created board.
+     */
+    public Long create(ContentValues values)
+    {
         return dbWrite.insert(GroupDbModel.TABLE_NAME.value(), null, values);
+    }
+
+
+    public void delete(Board board)
+    {
+        dbWrite.delete(GroupDbModel.TABLE_NAME.value(), GroupDbModel.ID.value() + " = '" + board.getId() + "'",
+            new String[] {});
     }
 }

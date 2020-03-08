@@ -103,19 +103,32 @@ public class PlayerOperations
         return false;
     }
 
+    /**
+     * Changes volume on player
+     *
+     * @param volume desired volume
+     * @param tag target player
+     */
     public void adjustVolume(long volume, String tag)
     {
         float vol = volume / 10.0f;
         if (Tags.EFFECT.value().equals(tag))
         {
-            effectPlayer.setVolume(vol, vol);
+            safeAdjustVolume(effectPlayer, vol);
         } else if (Tags.MUSIC.value().equals(tag))
         {
-            musicPlayer.setVolume(vol, vol);
+            safeAdjustVolume(musicPlayer, vol);
         } else if (Tags.AMBIENCE.value().equals(tag))
         {
-            ambiencePlayer.setVolume(vol, vol);
+            safeAdjustVolume(ambiencePlayer, vol);
         }
+    }
+
+    private void safeAdjustVolume(MediaPlayer player, float volume) {
+        if (player == null) {
+            player = new MediaPlayer();
+        }
+        player.setVolume(volume, volume);
     }
 
     public void startMusicWithEffect(Context ctx, Scene scene)
@@ -136,7 +149,7 @@ public class PlayerOperations
         myHandler.postDelayed(delayedAmbience, scene.getEffect().getDuration());
     }
 
-    public void startMusic(Context ctx, Track track)
+    private void startMusic(Context ctx, Track track)
     {
         createMusic(ctx, track);
         musicPlayer.start();
@@ -162,7 +175,7 @@ public class PlayerOperations
         }
     }
 
-    public void startAmbience(Context ctx, Track track)
+    private void startAmbience(Context ctx, Track track)
     {
         createAmbience(ctx, track);
         ambiencePlayer.start();
@@ -178,7 +191,7 @@ public class PlayerOperations
         effectPlayer = MediaPlayer.create(ctx, Uri.parse("file://" + track.getPath()));
         if (track.getVolume() != null)
         {
-            adjustVolume(track.getVolume(), track.getTag());
+                adjustVolume(track.getVolume(), track.getTag());
         }
     }
 

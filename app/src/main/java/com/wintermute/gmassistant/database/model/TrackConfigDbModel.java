@@ -15,16 +15,19 @@ public enum TrackConfigDbModel
 
     TrackConfigDbModel(String column)
     {
-        this.column= column;
+        this.column = column;
     }
 
-    public String value(){
+    public String value()
+    {
         return column;
     }
 
-    public static List<String> getValues(){
+    public static List<String> getValues()
+    {
         List<String> result = new ArrayList<>();
-        for (TrackConfigDbModel value : values()) {
+        for (TrackConfigDbModel value : values())
+        {
             result.add(value.value());
         }
         return result;

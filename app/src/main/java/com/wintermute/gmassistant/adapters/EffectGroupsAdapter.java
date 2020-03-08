@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.wintermute.gmassistant.R;
-import com.wintermute.gmassistant.model.EffectBoard;
+import com.wintermute.gmassistant.model.Board;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import java.util.List;
 public class EffectGroupsAdapter extends BaseAdapter
 {
 
-    private List<EffectBoard> effectGroups;
+    private List<Board> effectGroups;
     private LayoutInflater inflater;
 
     /**
@@ -29,7 +29,7 @@ public class EffectGroupsAdapter extends BaseAdapter
      * @param ctx application context.
      * @param effectGroups effects container for board.
      */
-    public EffectGroupsAdapter(Context ctx, List<EffectBoard> effectGroups)
+    public EffectGroupsAdapter(Context ctx, List<Board> effectGroups)
     {
         this.effectGroups = effectGroups;
         inflater = LayoutInflater.from(ctx);

@@ -29,6 +29,7 @@ public class SceneDao
         DbManager dbManager = new DbManager(ctx);
         dbRead = dbManager.getReadableDatabase();
         dbWrite = dbManager.getWritableDatabase();
+        dbWrite.execSQL("PRAGMA foreign_keys=ON;");
     }
 
     /**
@@ -106,7 +107,7 @@ public class SceneDao
 
         if (query.getColumnIndex(attr) != -1)
         {
-            return query.getLong(query.getColumnIndex(attr)) != 0 ? query.getLong(query.getColumnIndex(attr)): -1L ;
+            return query.getLong(query.getColumnIndex(attr)) != 0 ? query.getLong(query.getColumnIndex(attr)) : -1L;
         }
         return -1L;
     }

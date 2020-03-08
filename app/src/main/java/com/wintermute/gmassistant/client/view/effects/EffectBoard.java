@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.EffectsAdapter;
@@ -72,7 +73,17 @@ public class EffectBoard extends AppCompatActivity
             Track track = effects.get(position);
             track.setTag(Tags.EFFECT.value());
             track.setVolume((long) volume.getProgress());
-            player.startByTag(getApplicationContext(), track);
+            try
+            {
+                player.startByTag(getApplicationContext(), track);
+            } catch (Exception e)
+            {
+                Toast
+                    .makeText(getApplicationContext(), "Can´t play track: " + track.getName()
+                            + " \nIf the track contains non characters like: \"?!,;\" etc., rename the file and try again",
+                        Toast.LENGTH_LONG)
+                    .show();
+            }
         });
     }
 

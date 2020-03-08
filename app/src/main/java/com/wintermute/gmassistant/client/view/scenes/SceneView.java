@@ -12,7 +12,7 @@ import com.wintermute.gmassistant.model.Scene;
 import com.wintermute.gmassistant.operations.SceneOperations;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -45,7 +45,7 @@ public class SceneView extends AppCompatActivity
         {
             scene = allScenes.get(position);
             Intent dialog = new Intent(SceneView.this, ListDialog.class);
-            dialog.putStringArrayListExtra("opts", new ArrayList<>(Arrays.asList("delete")));
+            dialog.putStringArrayListExtra("opts", new ArrayList<>(Collections.singletonList("delete")));
             startActivityForResult(dialog, 2);
             return true;
         });
@@ -67,10 +67,12 @@ public class SceneView extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == 2) {
-                String selected = data.getStringExtra("selected");
-                if ("delete".equals(selected))
+        if (resultCode == RESULT_OK)
+        {
+            if (requestCode == 2)
+            {
+                String action = data.getStringExtra("action");
+                if ("delete".equals(action))
                 {
                     operations.deleteElement(scene);
                 }

@@ -139,9 +139,20 @@ public class SceneConfig extends AppCompatActivity
         {
             if (null != track)
             {
-                track.setId(operations.storeTrackIfNotExist(track));
-                collectConfig(track);
-                content.put(track.getTag(), track);
+                try
+                {
+                    track.setId(operations.storeTrackIfNotExist(track));
+                    collectConfig(track);
+                    content.put(track.getTag(), track);
+                } catch (Exception e)
+                {
+                    Toast
+                        .makeText(getApplicationContext(), "Could not add track: " + track.getName()
+                                + " \nIf the track contains non characters like: \"?!,;\" etc., rename the file and "
+                                + "try again",
+                            Toast.LENGTH_LONG)
+                        .show();
+                }
             }
         }
     }

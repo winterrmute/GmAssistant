@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.client.view.LibraryContent;
 import com.wintermute.gmassistant.client.view.LightView;
 import com.wintermute.gmassistant.client.view.PlaylistView;
-import com.wintermute.gmassistant.client.view.effects.EffectGroups;
+import com.wintermute.gmassistant.client.view.effects.EffectBoards;
 import com.wintermute.gmassistant.client.view.scenes.SceneView;
 
 /**
@@ -39,7 +39,7 @@ public class GmAssistant extends AppCompatActivity
         lightPanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, LightView.class)));
 
         Button effectBoards = findViewById(R.id.effect_board);
-        effectBoards.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, EffectGroups.class)));
+        effectBoards.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, EffectBoards.class)));
     }
 
     /**

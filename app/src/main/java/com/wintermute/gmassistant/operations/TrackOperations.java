@@ -47,11 +47,11 @@ public class TrackOperations
                 }
                 if (entry.getKey().equals(TrackDbModel.NAME.value()))
                 {
-                    track.setName(entry.getValue().toString());
+                    track.setName(normalize(entry.getValue().toString()));
                 }
                 if (entry.getKey().equals(TrackDbModel.PATH.value()))
                 {
-                    track.setPath(entry.getValue().toString());
+                    track.setPath(normalize(entry.getValue().toString()));
                 }
                 if (entry.getKey().equals(TrackDbModel.DURATION.value()))
                 {
@@ -124,6 +124,9 @@ public class TrackOperations
      */
     public Long storeTrackIfNotExist(Track track)
     {
+        track.setName(escapeInvalidCharacter(track.getName()));
+        track.setPath(escapeInvalidCharacter(track.getPath()));
+
         TrackDao dao = new TrackDao(ctx);
         if (trackExists(track, dao))
         {
@@ -139,6 +142,16 @@ public class TrackOperations
             track.setId(insert);
         }
         return track.getId();
+    }
+
+    private String escapeInvalidCharacter(String input)
+    {
+        return input.replace("'", "''");
+    }
+
+    private String normalize(String input)
+    {
+        return input.replace("''", "'");
     }
 
     private boolean trackExists(Track track, TrackDao dao)
