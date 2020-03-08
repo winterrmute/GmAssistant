@@ -14,16 +14,11 @@ import java.util.Map;
 public class AudioLibrary extends ViewModel
 {
     private Map<Integer, List<LibraryFile>> audioLibrary;
-    private LibraryFile libraryFile;
 
     public Map<Integer, List<LibraryFile>> getAudioLibrary() {
         if (audioLibrary == null) {
             audioLibrary = new HashMap<>();
         }
         return audioLibrary;
-    }
-
-    public LibraryFile getTrack(){
-        return libraryFile;
     }
 }

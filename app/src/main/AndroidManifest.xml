@@ -32,7 +32,6 @@
         <activity android:name=".client.view.scenes.SceneConfig" />
         <activity android:name=".client.AddNewPlaylist" />
         <activity android:name=".client.view.PlaylistContentView" />
-        <activity android:name=".client.FileBrowser" />
         <activity android:name=".client.StorageBrowser" />
         <activity android:name=".client.view.PlaylistView" />
         <activity android:name=".GmAssistant">

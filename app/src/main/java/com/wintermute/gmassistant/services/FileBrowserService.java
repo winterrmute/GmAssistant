@@ -16,30 +16,6 @@ public class FileBrowserService
     private String rootPath;
 
     /**
-     * Scans directory for files.
-     *
-     * @return list of BrowsedFiles
-     */
-    public ArrayList<File> scanDir(File path)
-    {
-        ArrayList<File> browsedFiles = new ArrayList<>();
-        File[] filesList = new File(path.toString()).listFiles();
-
-        if (filesList != null)
-        {
-            browsedFiles = new ArrayList<>();
-            for (File file : filesList)
-            {
-                if (!file.getName().startsWith("."))
-                {
-                    browsedFiles.add(file);
-                }
-            }
-        }
-        return browsedFiles;
-    }
-
-    /**
      * @param path to scan directory
      * @return list of files for element from library
      */
@@ -55,13 +31,12 @@ public class FileBrowserService
     {
         if (new File(target.getPath()).isDirectory())
         {
-            List<LibraryFile> newContent;
-            String newPath;
             if (target.isRoot())
             {
                 rootPath = target.getPath();
             }
 
+            String newPath;
             if (PREVIOUS_DIRECTORY.equals(target.getName()))
             {
                 newPath = target.getPath().substring(0, target.getPath().lastIndexOf('/'));
@@ -71,6 +46,7 @@ public class FileBrowserService
             }
             LibraryFile goToParent = new LibraryFile(PREVIOUS_DIRECTORY, newPath, false);
 
+            List<LibraryFile> newContent;
             if (target.getPath().equals(rootPath) && !target.isRoot())
             {
                 newContent = rootElements;

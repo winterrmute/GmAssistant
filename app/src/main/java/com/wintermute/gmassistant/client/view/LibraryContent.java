@@ -12,7 +12,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.CategoryListAdapter;
-import com.wintermute.gmassistant.client.FileBrowser;
+import com.wintermute.gmassistant.client.StorageBrowser;
 import com.wintermute.gmassistant.database.dao.DirectoryDao;
 import com.wintermute.gmassistant.database.model.Tags;
 import com.wintermute.gmassistant.model.Directory;
@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 public class LibraryContent extends FragmentActivity
 {
     private static final int TABS_COUNT = 3;
+    public static final int ADD_LIBRARY = 1;
     private TabLayout tabLayout;
     private String[] categories = {Tags.MUSIC.name(), Tags.AMBIENCE.name(), Tags.EFFECT.name()};
 
@@ -47,15 +48,15 @@ public class LibraryContent extends FragmentActivity
 
         if (null != getIntent().getExtras())
         {
-            tabLayout.selectTab(
-                tabLayout.getTabAt(Tags.valueOf(getIntent().getExtras().getString("tag")).ordinal()));
+            tabLayout.selectTab(tabLayout.getTabAt(Tags.valueOf(getIntent().getExtras().getString("tag")).ordinal()));
         }
 
         Button btn = findViewById(R.id.add_files_with_tag);
         btn.setOnClickListener(l ->
         {
-            Intent fileBrowser = new Intent(LibraryContent.this, FileBrowser.class);
-            startActivityForResult(fileBrowser, 1);
+            Intent browser = new Intent(LibraryContent.this, StorageBrowser.class);
+            browser.putExtra("createLibrary", true);
+            startActivityForResult(browser, ADD_LIBRARY);
         });
     }
 
@@ -103,14 +104,13 @@ public class LibraryContent extends FragmentActivity
         if (resultCode == RESULT_OK && requestCode == fileBrowserReqCode)
         {
             String path = data.getStringExtra("path");
-            storeDirectory(path, data.getBooleanExtra("includeSubdirs", true),
+            storeDirectory(path, data.getBooleanExtra("recursive", true),
                 categories[tabLayout.getSelectedTabPosition()]);
             updateViewData();
         }
         if (resultCode == Tags.MUSIC.ordinal() || resultCode == Tags.AMBIENCE.ordinal()
             || resultCode == Tags.EFFECT.ordinal())
         {
-            //TODO: java.lang.String android.content.Intent.getStringExtra(java.lang.String)
             String path = data.getStringExtra("path");
             Intent intent = new Intent().putExtra("path", path);
             setResult(Activity.RESULT_OK, intent);

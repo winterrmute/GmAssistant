@@ -27,7 +27,7 @@ public class AddNewPlaylist extends AppCompatActivity
         Button browseDevice = findViewById(R.id.browse_device);
         browseDevice.setOnClickListener(v ->
         {
-            Intent fileBrowser = new Intent(AddNewPlaylist.this, FileBrowser.class);
+            Intent fileBrowser = new Intent(AddNewPlaylist.this, StorageBrowser.class);
             startActivityForResult(fileBrowser, 1);
         });
 

@@ -48,16 +48,26 @@ public class StorageBrowser extends AppCompatActivity
         browseParent.setOnClickListener(v -> browseParent());
 
         Button selectDirectory = findViewById(R.id.select_current_directory);
-        selectDirectory.setOnClickListener((v) -> selectRecursive());
-        if (startedForSingleTrack) {
+        selectDirectory.setOnClickListener((v) ->
+        {
+            if (getIntent().getBooleanExtra("createLibrary", false))
+            {
+                setResult(RESULT_OK, getIntent().putExtra("path", path.getPath()));
+                finish();
+            } else {
+                selectRecursive();
+            }
+        });
+        if (startedForSingleTrack)
+        {
             selectDirectory.setVisibility(View.GONE);
         }
-
     }
 
     private void handleElement(File selected)
     {
-        if (startedForSingleTrack && !selected.isDirectory()) {
+        if (startedForSingleTrack && !selected.isDirectory())
+        {
             setResult(RESULT_OK, getIntent().putExtra("pathToTrack", selected.getPath()));
             finish();
         }
