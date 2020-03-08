@@ -2,6 +2,7 @@ package com.wintermute.gmassistant.client;
 
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -31,6 +32,7 @@ public class StorageBrowser extends AppCompatActivity
     private FileAdapter adapter;
     private ArrayList<String> requestedFiles = new ArrayList<>();
     private boolean recursive = true;
+    private boolean startedForSingleTrack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -47,10 +49,18 @@ public class StorageBrowser extends AppCompatActivity
 
         Button selectDirectory = findViewById(R.id.select_current_directory);
         selectDirectory.setOnClickListener((v) -> selectRecursive());
+        if (startedForSingleTrack) {
+            selectDirectory.setVisibility(View.GONE);
+        }
+
     }
 
     private void handleElement(File selected)
     {
+        if (startedForSingleTrack && !selected.isDirectory()) {
+            setResult(RESULT_OK, getIntent().putExtra("pathToTrack", selected.getPath()));
+            finish();
+        }
         path = selected;
         if (selected.isDirectory())
         {
@@ -115,6 +125,7 @@ public class StorageBrowser extends AppCompatActivity
 
     private void init()
     {
+        startedForSingleTrack = getIntent().getBooleanExtra("selectTrack", false);
         path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
         currentFiles = new ArrayList<>(getFiles());
         initListView(currentFiles);

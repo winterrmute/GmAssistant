@@ -16,7 +16,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
-import com.wintermute.gmassistant.client.FileBrowser;
+import com.wintermute.gmassistant.client.StorageBrowser;
 import com.wintermute.gmassistant.client.view.LibraryContent;
 import com.wintermute.gmassistant.config.LightConfig;
 import com.wintermute.gmassistant.database.dao.LightDao;
@@ -27,7 +27,6 @@ import com.wintermute.gmassistant.model.Track;
 import com.wintermute.gmassistant.operations.PlayerOperations;
 import com.wintermute.gmassistant.operations.SceneOperations;
 import com.wintermute.gmassistant.operations.TrackOperations;
-import com.wintermute.gmassistant.services.FileBrowserService;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -58,7 +57,6 @@ public class SceneConfig extends AppCompatActivity
     private ImageView colorView;
 
     private String tag;
-    private FileBrowserService fbs;
 
     private SceneOperations operations;
     private PlayerOperations player;
@@ -82,8 +80,6 @@ public class SceneConfig extends AppCompatActivity
 
         previewPlayers();
         volumeBars();
-
-        fbs = new FileBrowserService();
 
         Button lightEffects = findViewById(R.id.set_light);
         lightEffects.setOnClickListener(v -> setLights());
@@ -148,9 +144,8 @@ public class SceneConfig extends AppCompatActivity
                 {
                     Toast
                         .makeText(getApplicationContext(), "Could not add track: " + track.getName()
-                                + " \nIf the track contains non characters like: \"?!,;\" etc., rename the file and "
-                                + "try again",
-                            Toast.LENGTH_LONG)
+                            + " \nIf the track contains non characters like: \"?!,;\" etc., rename the file and "
+                            + "try again", Toast.LENGTH_LONG)
                         .show();
                 }
             }
@@ -272,7 +267,7 @@ public class SceneConfig extends AppCompatActivity
                 browseFiles.putExtra("tag", tag);
             } else
             {
-                browseFiles = new Intent(SceneConfig.this, FileBrowser.class);
+                browseFiles = new Intent(SceneConfig.this, StorageBrowser.class);
             }
             browseFiles.putExtra("selectTrack", true);
             startActivityForResult(browseFiles, requestCode);
@@ -299,7 +294,7 @@ public class SceneConfig extends AppCompatActivity
         {
             TrackOperations trackOperations = new TrackOperations(getApplicationContext());
 
-            Track track = trackOperations.createTrack(data.getStringExtra("path"));
+            Track track = trackOperations.createTrack(data.getStringExtra("pathToTrack"));
             String fileName = track.getName() == null ? new File(track.getPath()).getName() : track.getName();
             if (requestCode == Tags.EFFECT.ordinal())
             {
