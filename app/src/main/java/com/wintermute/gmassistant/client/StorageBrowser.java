@@ -5,6 +5,7 @@ import android.os.Environment;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.FileAdapter;
@@ -16,8 +17,9 @@ import java.util.List;
 
 /**
  * Storage browser to access external storage.
- *
+ * <p>
  * TODO: refactor to use access framework
+ *
  * @author wintermute
  */
 public class StorageBrowser extends AppCompatActivity
@@ -27,7 +29,8 @@ public class StorageBrowser extends AppCompatActivity
     private ListView fileView;
     private List<File> currentFiles;
     private FileAdapter adapter;
-    private List<String> callback = new ArrayList<>();
+    private ArrayList<String> requestedFiles = new ArrayList<>();
+    private boolean recursive = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -43,11 +46,7 @@ public class StorageBrowser extends AppCompatActivity
         browseParent.setOnClickListener(v -> browseParent());
 
         Button selectDirectory = findViewById(R.id.select_current_directory);
-        selectDirectory.setOnClickListener((v) -> {
-            ArrayList<String> effects = new ArrayList<>(collectTracks(path));
-            setResult(RESULT_OK, getIntent().putStringArrayListExtra("effects", effects));
-            finish();
-        });
+        selectDirectory.setOnClickListener((v) -> selectRecursive());
     }
 
     private void handleElement(File selected)
@@ -77,7 +76,7 @@ public class StorageBrowser extends AppCompatActivity
      * @param path to browse for files.
      * @return list of found tracks.
      */
-    public List<String> collectTracks(File path)
+    public ArrayList<String> collectTracks(File path, boolean recursive)
     {
         File[] fList = path.listFiles();
         if (fList != null)
@@ -86,14 +85,32 @@ public class StorageBrowser extends AppCompatActivity
             {
                 if (file.isFile())
                 {
-                    callback.add(file.getPath());
-                } else if (file.isDirectory())
+                    requestedFiles.add(file.getPath());
+                } else if (file.isDirectory() && recursive)
                 {
-                    collectTracks(file);
+                    collectTracks(file, true);
                 }
             }
         }
-        return callback;
+        return requestedFiles;
+    }
+
+    private void selectRecursive()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("include subdirectories?");
+        builder
+            .setMultiChoiceItems(R.array.include_subdirs_value, new boolean[] {true},
+                (dialog, which, isChecked) -> recursive = isChecked)
+            .setPositiveButton(R.string.ok_result, (dialog, id) ->
+            {
+                collectTracks(path, recursive);
+                setResult(RESULT_OK, getIntent().putStringArrayListExtra("effects", requestedFiles));
+                finish();
+            })
+            .setNegativeButton(R.string.cancel_result, (dialog, id) -> dialog.cancel());
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     private void init()
