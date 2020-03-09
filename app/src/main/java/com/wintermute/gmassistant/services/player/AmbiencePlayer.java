@@ -9,6 +9,7 @@ import com.wintermute.gmassistant.database.model.Tags;
 import com.wintermute.gmassistant.model.Scene;
 import com.wintermute.gmassistant.model.Track;
 import com.wintermute.gmassistant.operations.PlayerOperations;
+import com.wintermute.gmassistant.operations.TrackOperations;
 import com.wintermute.gmassistant.services.notifications.AmbienceReceiver;
 
 /**
@@ -53,9 +54,15 @@ public class AmbiencePlayer extends BasePlayer implements MediaPlayer.OnPrepared
         Track track = scene != null ? scene.getAmbience() : intent.getParcelableExtra("track");
         startForeground(3, createNotification(intent, "Ambience", CHANNEL_ID, AmbienceReceiver.class));
 
+        if (track == null)
+        {
+            TrackOperations operations = new TrackOperations(getApplicationContext());
+            track = operations.createTrack(intent.getParcelableExtra("track"));
+        }
+
         if (track != null)
         {
-            if (track.getDelay() == 1 && scene.getEffect() != null)
+            if (scene != null && track.getDelay() == 1 && scene.getEffect() != null)
             {
                 player.startAmbienceWithEffect(this, scene);
             } else

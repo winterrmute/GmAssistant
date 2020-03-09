@@ -193,6 +193,9 @@ public class PlayerOperations
         {
                 adjustVolume(track.getVolume(), track.getTag());
         }
+        else {
+            effectPlayer.setVolume(1f, 1f);
+        }
     }
 
     private void createMusic(Context ctx, Track track)
@@ -208,6 +211,9 @@ public class PlayerOperations
         {
             adjustVolume(track.getVolume(), track.getTag());
         }
+        else {
+            musicPlayer.setVolume(0.3f, 0.3f);
+        }
     }
 
     private void createAmbience(Context ctx, Track track)
@@ -222,6 +228,8 @@ public class PlayerOperations
         if (track.getVolume() != null)
         {
             adjustVolume(track.getVolume(), track.getTag());
+        } else {
+            ambiencePlayer.setVolume(0.1f, 0.1f);
         }
     }
 }

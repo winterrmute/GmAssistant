@@ -9,6 +9,7 @@ import com.wintermute.gmassistant.database.model.Tags;
 import com.wintermute.gmassistant.model.Scene;
 import com.wintermute.gmassistant.model.Track;
 import com.wintermute.gmassistant.operations.PlayerOperations;
+import com.wintermute.gmassistant.operations.TrackOperations;
 import com.wintermute.gmassistant.services.notifications.MusicReceiver;
 import lombok.SneakyThrows;
 
@@ -60,17 +61,22 @@ public class MusicPlayer extends BasePlayer
         Track track = scene != null ? scene.getMusic() : intent.getParcelableExtra("track");
         startForeground(2, createNotification(intent, "Music", CHANNEL_ID, MusicReceiver.class));
 
+        if (track == null) {
+            TrackOperations operations = new TrackOperations(getApplicationContext());
+            track = operations.createTrack(intent.getParcelableExtra("track"));
+        }
+
         if (track != null)
         {
-            if (track.getDelay() == 1 && scene.getEffect() != null)
+            if (scene != null && track.getDelay() == 1 && scene.getEffect() != null)
             {
                 player.startMusicWithEffect(this, scene);
             } else
             {
                 player.startByTag(this, track);
             }
+            startForeground(2, createNotification(intent, "Music", CHANNEL_ID, MusicReceiver.class));
         }
-
         return Service.START_NOT_STICKY;
     }
 
