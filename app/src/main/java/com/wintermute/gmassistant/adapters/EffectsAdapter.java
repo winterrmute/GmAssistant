@@ -57,7 +57,7 @@ public class EffectsAdapter extends BaseAdapter
     public View getView(int position, View convertView, ViewGroup parent)
     {
         LinearLayout result = (LinearLayout) inflater.inflate(R.layout.audio_file, parent, false);
-        TextView effectName = result.findViewById(R.id.title);
+        TextView effectName = result.findViewById(R.id.name);
         String name =
             effects.get(position).getName().length() > 20 ? effects.get(position).getName().substring(0, 17) + "..."
                                                           : effects.get(position).getName();

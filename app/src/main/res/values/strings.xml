@@ -74,5 +74,8 @@
     <string name="bridge_not_found">Hue bridge could not be found in your network. Please make sure you can ping the bridge from your device. Maybe you should check your firewall</string>
     <string name="pending">Searching for hue bridge, please wait.</string>
 
+    <!--   HueBulbs -->
+    <string name="add_bulbs">select bulbs</string>
+
 
 </resources>

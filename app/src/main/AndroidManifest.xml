@@ -20,7 +20,8 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
-        <activity android:name=".hue.HueBridgeRegistrator"/>
+        <activity android:name=".hue.HueBulbSelector"/>
+        <activity android:name=".hue.HueBridgeRegistrator" />
         <activity android:name=".client.view.effects.EffectBoards" />
         <activity android:name=".client.view.effects.EffectBoard" />
         <activity android:name=".client.view.LibraryContent" />

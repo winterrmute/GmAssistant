@@ -10,7 +10,7 @@ public class DbManager extends SQLiteOpenHelper
 {
 
     private static final int DB_VERSION = 1;
-    private static final String DB_NAME = "soundboard";
+    private static final String DB_NAME = "gmassistant";
 
     private static final String PLAYLISTS =
         "CREATE TABLE playlists ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL)";
@@ -35,8 +35,11 @@ public class DbManager extends SQLiteOpenHelper
     private static final String LIGHTS =
         "CREATE TABLE lights ( id INTEGER PRIMARY KEY AUTOINCREMENT, color REAL, brightness REAL)";
 
-    private static final String LIGHT_CONFIG =
-        "CREATE TABLE light_config ( id INTEGER PRIMARY KEY AUTOINCREMENT, ip TEXT UNIQUE, username TEXT)";
+    private static final String HUE_BRIDGES =
+        "CREATE TABLE hue_bridges ( id INTEGER PRIMARY KEY AUTOINCREMENT, ip TEXT UNIQUE, username TEXT)";
+
+    private static final String HUE_BULBS =
+        "CREATE TABLE hue_bulbs ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, type TEXT)";
 
     private static final String LIBRARY =
         "CREATE TABLE library ( id INTEGER PRIMARY KEY AUTOINCREMENT, path TEXT, tag TEXT, recursively TEXT)";
@@ -58,7 +61,7 @@ public class DbManager extends SQLiteOpenHelper
     public void onCreate(SQLiteDatabase db)
     {
         Stream
-            .of(PLAYLISTS, TRACKS, PLAYLISTS_CONTENT, SCENES, SCENE_TRACK_CONFIGS, LIGHTS, LIGHT_CONFIG, LIBRARY, EFFECTS, GROUPS)
+            .of(PLAYLISTS, TRACKS, PLAYLISTS_CONTENT, SCENES, SCENE_TRACK_CONFIGS, LIGHTS, HUE_BRIDGES, HUE_BULBS, LIBRARY, EFFECTS, GROUPS)
             .forEach(db::execSQL);
     }
 

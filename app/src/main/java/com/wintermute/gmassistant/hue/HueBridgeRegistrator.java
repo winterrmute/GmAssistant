@@ -1,6 +1,7 @@
 package com.wintermute.gmassistant.hue;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -8,11 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.wintermute.gmassistant.R;
-import com.wintermute.gmassistant.hue.model.CustomRequest;
 import com.wintermute.gmassistant.operations.LightConfigOperations;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,31 +40,51 @@ public class HueBridgeRegistrator extends AppCompatActivity
         connectionStatus.setVisibility(View.GONE);
 
         Button testConnection = findViewById(R.id.test_connection);
-        testConnection.setOnClickListener(v -> registerDevice());
+        testConnection.setOnClickListener(v -> register());
     }
 
-    private void registerDevice()
+    public void register()
     {
-        String url = "http://" + ipAddress.getText().toString() + "/api/";
-        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        JSONObject req = null;
-        try
-        {
-            req = new JSONObject("{\"devicetype\":\"gm_assistant#gm_assistant\"}");
-        } catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-
-        CustomRequest r = new CustomRequest(Request.Method.POST, url, req, response ->
-        {
-            retrieve(getResponse(response));
-        }, error -> retrieve(null));
-        requestQueue.add(r);
-        instructions.setText(R.string.pending);
+        String url = "http://" + ipAddress.getText().toString() + "/api";
+        ApiCaller
+            .getInstance()
+            .makeCustomCall(getApplicationContext(), Request.Method.POST, url,
+                "{\"devicetype\":\"gm_assistant#gm_assistant\"}", getCallbackListener());
     }
 
-    private void retrieve(JSONObject rsp)
+    @NotNull
+    private CallbackListener getCallbackListener()
+    {
+        return new CallbackListener()
+        {
+            @Override
+            public void onResponse(JSONArray response)
+            {
+                try
+                {
+                    retrieveConnectionStatus(response.getJSONObject(0));
+                } catch (JSONException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onResponse(JSONObject response)
+            {
+                //do nothing
+            }
+
+            @Override
+            public void onError(String msg)
+            {
+                retrieveConnectionStatus(null);
+                Log.e("tag", msg);
+            }
+        };
+    }
+
+    private void retrieveConnectionStatus(JSONObject rsp)
     {
         connectionStatus.setVisibility(View.VISIBLE);
         if (rsp == null)
@@ -97,17 +116,5 @@ public class HueBridgeRegistrator extends AppCompatActivity
                 e.printStackTrace();
             }
         }
-    }
-
-    private JSONObject getResponse(JSONArray response)
-    {
-        try
-        {
-            return response.getJSONObject(0);
-        } catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-        return null;
     }
 }

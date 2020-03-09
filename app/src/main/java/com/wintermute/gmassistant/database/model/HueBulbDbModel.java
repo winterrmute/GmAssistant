@@ -3,16 +3,16 @@ package com.wintermute.gmassistant.database.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public enum LightConfigDbModel
+public enum HueBulbDbModel
 {
-    TABLE_NAME("light_config"),
+    TABLE_NAME("hue_bulbs"),
     ID("id"),
-    IP_ADDRESS("ip_address"),
-    USERNAME("username");
+    IP_ADDRESS("name"),
+    USERNAME("type");
 
     private String column;
 
-    LightConfigDbModel(String column)
+    HueBulbDbModel(String column)
     {
         this.column= column;
     }
@@ -23,7 +23,7 @@ public enum LightConfigDbModel
 
     public static List<String> getValues(){
         List<String> result = new ArrayList<>();
-        for (LightConfigDbModel value : values()) {
+        for (HueBulbDbModel value : values()) {
             result.add(value.value());
         }
         return result;

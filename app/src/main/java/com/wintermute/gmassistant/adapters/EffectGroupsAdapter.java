@@ -57,7 +57,7 @@ public class EffectGroupsAdapter extends BaseAdapter
     public View getView(int position, View convertView, ViewGroup parent)
     {
         LinearLayout result = (LinearLayout) inflater.inflate(R.layout.audio_file, parent, false);
-        TextView groupName = result.findViewById(R.id.title);
+        TextView groupName = result.findViewById(R.id.name);
         groupName.setText(effectGroups.get(position).getName());
         result.setTag(position);
         return result;
