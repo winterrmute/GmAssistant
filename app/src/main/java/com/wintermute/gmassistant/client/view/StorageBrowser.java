@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.client;
+package com.wintermute.gmassistant.client.view;
 
 import android.os.Bundle;
 import android.os.Environment;

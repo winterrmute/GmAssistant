@@ -12,7 +12,6 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.CategoryListAdapter;
-import com.wintermute.gmassistant.client.StorageBrowser;
 import com.wintermute.gmassistant.database.dao.DirectoryDao;
 import com.wintermute.gmassistant.database.model.Tags;
 import com.wintermute.gmassistant.model.Directory;

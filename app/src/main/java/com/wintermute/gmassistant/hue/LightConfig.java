@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.config;
+package com.wintermute.gmassistant.hue;
 
 import android.content.Intent;
 import android.graphics.Color;

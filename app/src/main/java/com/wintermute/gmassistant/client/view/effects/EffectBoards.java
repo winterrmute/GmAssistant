@@ -11,7 +11,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.EffectGroupsAdapter;
-import com.wintermute.gmassistant.client.StorageBrowser;
+import com.wintermute.gmassistant.client.view.StorageBrowser;
 import com.wintermute.gmassistant.dialogs.ListDialog;
 import com.wintermute.gmassistant.model.Board;
 import com.wintermute.gmassistant.operations.EffectBoardOperations;

@@ -35,6 +35,9 @@ public class DbManager extends SQLiteOpenHelper
     private static final String LIGHTS =
         "CREATE TABLE lights ( id INTEGER PRIMARY KEY AUTOINCREMENT, color REAL, brightness REAL)";
 
+    private static final String LIGHT_CONFIG =
+        "CREATE TABLE light_config ( id INTEGER PRIMARY KEY AUTOINCREMENT, ip TEXT UNIQUE, username TEXT)";
+
     private static final String LIBRARY =
         "CREATE TABLE library ( id INTEGER PRIMARY KEY AUTOINCREMENT, path TEXT, tag TEXT, recursively TEXT)";
 
@@ -55,7 +58,7 @@ public class DbManager extends SQLiteOpenHelper
     public void onCreate(SQLiteDatabase db)
     {
         Stream
-            .of(PLAYLISTS, TRACKS, PLAYLISTS_CONTENT, SCENES, SCENE_TRACK_CONFIGS, LIGHTS, LIBRARY, EFFECTS, GROUPS)
+            .of(PLAYLISTS, TRACKS, PLAYLISTS_CONTENT, SCENES, SCENE_TRACK_CONFIGS, LIGHTS, LIGHT_CONFIG, LIBRARY, EFFECTS, GROUPS)
             .forEach(db::execSQL);
     }
 

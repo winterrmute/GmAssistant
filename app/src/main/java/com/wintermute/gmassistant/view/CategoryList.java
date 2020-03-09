@@ -81,8 +81,8 @@ public class CategoryList extends Fragment
                 {
                     Intent returnSingleTrack = new Intent();
                     returnSingleTrack.putExtra("path", libraryElements.get(0).getPath());
-                    Objects.requireNonNull(getActivity()).setResult(Activity.RESULT_OK, returnSingleTrack);
-                    Objects.requireNonNull(getActivity()).finish();
+                    requireActivity().setResult(Activity.RESULT_OK, returnSingleTrack);
+                    requireActivity().finish();
                 } else
                 {
                     PlayerHandler handler = new PlayerHandler(getContext());

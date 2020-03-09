@@ -146,13 +146,6 @@ public class TrackDao
         return -1L;
     }
 
-    /**
-     * Safely gets data from database.
-     *
-     * @param cursor to pick data from database
-     * @param column containing value
-     * @return value stored in db if possible, otherwise "-1"
-     */
     private String getStringValue(Cursor cursor, String column)
     {
         if (cursor.getColumnIndex(column) != -1)

@@ -2,11 +2,6 @@ package com.wintermute.gmassistant.handlers;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -66,30 +61,31 @@ public class LightHandler
 
     public void req(String id, boolean reset)
     {
-        JSONObject requestBody;
-        if (reset)
-        {
-            requestBody = resetToDefault();
-        } else
-        {
-            requestBody = changeColorAndBrightness();
-        }
-
-        JsonObjectRequest jsonObjectRequest = null;
-        try
-        {
-            jsonObjectRequest =
-                new JsonObjectRequest(Request.Method.PUT, HUE_LIGHTS_CONTROL + "/" + id + "/state", requestBody,
-                    response -> Log.e("Response: ", response.toString()), error ->
-                {
-                    //nothing to do
-                });
-        } catch (NullPointerException e)
-        {
-            //nothing to do
-        }
-        RequestQueue que = Volley.newRequestQueue(ctx);
-        que.add(jsonObjectRequest);
+        //        JSONObject requestBody;
+        //        if (reset)
+        //        {
+        //            requestBody = resetToDefault();
+        //        } else
+        //        {
+        //            requestBody = changeColorAndBrightness();
+        //        }
+        //
+        //        JsonObjectRequest jsonObjectRequest = null;
+        //        try
+        //        {
+        //            jsonObjectRequest =
+        //                new JsonObjectRequest(Request.Method.PUT, HUE_LIGHTS_CONTROL + "/" + id + "/state",
+        //                requestBody,
+        //                    response -> Log.e("Response: ", response.toString()), error ->
+        //                {
+        //                    //nothing to do
+        //                });
+        //        } catch (NullPointerException e)
+        //        {
+        //            //nothing to do
+        //        }
+        //        RequestQueue que = Volley.newRequestQueue(ctx);
+        //        que.add(jsonObjectRequest);
     }
 
     /**

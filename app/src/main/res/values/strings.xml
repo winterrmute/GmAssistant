@@ -4,7 +4,7 @@
     <string name="manage_playlists">Playlists</string>
     <string name="manage_tracks">Audio files</string>
     <string name="manage_scenes">Scenes</string>
-    <string name="manage_lights">Lights</string>
+    <string name="manage_lights">Philips Hue configuration</string>
     <string name="effect_board">Effect Boards</string>
 
     <!--  PlaylistPanel  -->
@@ -27,6 +27,12 @@
     <string name="browse_back">previous directory</string>
     <string name="select_directory">Select current directory</string>
 
+    <!--  HueSettings  -->
+    <string name="hue_bridge_ip">Hue Bridge IP-Address:</string>
+    <string name="netmask">Netmask:</string>
+    <string name="hue_username">Hue username (optional):</string>
+    <string name="register_device">register device</string>
+
     <!--  SceneConfig  -->
     <string name="scene_name">Scene Name</string>
     <string name="set_light">Set light effects</string>
@@ -45,6 +51,7 @@
     <string name="submit_light">Submit</string>
     <string name="title_activity_audio_file_panel">AudioFilePanel</string>
     <string name="add_files_with_tag">add files in this category</string>
+    <string name="add_bridge">Connect to Hue Bridge</string>
 
     <!--  alert dialog  -->
     <string name="include_subdirs_message">include files in subdirectories</string>
@@ -57,5 +64,15 @@
 
     <!--  EffectGroups  -->
     <string name="add_effect_board">Add effect board</string>
+    <string name="hue_ip_hint">192.168.1.1.</string>
+    <string name="hue_netmask_default">255.255.255.0</string>
+
+
+    <string name="hue_connection_hint">Please make sure your device can access the hue bridge. Then press the link button on the hue bridge. Once your device can reach the hue bridge and the link button is pressed you can register your device</string>
+    <string name="connection_successful">Successfully connected with philips hue bridge!</string>
+    <string name="permission_denied">Hue bridge was found but the link button on the philips hue bridge was not pressed! To register your device, please press the button on the bridge and try again</string>
+    <string name="bridge_not_found">Hue bridge could not be found in your network. Please make sure you can ping the bridge from your device. Maybe you should check your firewall</string>
+    <string name="pending">Searching for hue bridge, please wait.</string>
+
 
 </resources>

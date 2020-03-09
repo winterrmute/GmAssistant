@@ -7,10 +7,10 @@ import android.os.Bundle;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.client.view.LibraryContent;
-import com.wintermute.gmassistant.client.view.LightView;
 import com.wintermute.gmassistant.client.view.PlaylistView;
 import com.wintermute.gmassistant.client.view.effects.EffectBoards;
 import com.wintermute.gmassistant.client.view.scenes.SceneView;
+import com.wintermute.gmassistant.hue.HueBridgeRegistrator;
 
 /**
  * Startup activity. Provides Game masters panel.
@@ -36,7 +36,7 @@ public class GmAssistant extends AppCompatActivity
         scenePanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, SceneView.class)));
 
         Button lightPanel = findViewById(R.id.manage_lights);
-        lightPanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, LightView.class)));
+        lightPanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, HueBridgeRegistrator.class)));
 
         Button effectBoards = findViewById(R.id.effect_board);
         effectBoards.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, EffectBoards.class)));
