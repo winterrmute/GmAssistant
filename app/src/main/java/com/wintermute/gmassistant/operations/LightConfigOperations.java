@@ -22,6 +22,9 @@ public class LightConfigOperations
     {
         HueBridgeDao dao = new HueBridgeDao(ctx);
         Map<String, String> connectionData = dao.get();
+        if (connectionData.get("ip") == null) {
+            return null;
+        }
         return new HueUser(connectionData.get("ip"), connectionData.get("username"));
     }
 

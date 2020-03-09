@@ -30,7 +30,7 @@ public class HueBridgeDao
     public Map<String, String> get()
     {
         StringBuilder query =
-            new StringBuilder("SELECT ip, username FROM ").append(HueBridgeDbModel.TABLE_NAME.value());
+            new StringBuilder("SELECT ip,username FROM ").append(HueBridgeDbModel.TABLE_NAME.value());
         return getHueConnection(dbRead.rawQuery(query.toString(), null));
     }
 

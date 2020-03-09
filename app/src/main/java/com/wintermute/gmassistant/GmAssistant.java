@@ -10,6 +10,7 @@ import com.wintermute.gmassistant.client.view.LibraryContent;
 import com.wintermute.gmassistant.client.view.PlaylistView;
 import com.wintermute.gmassistant.client.view.effects.EffectBoards;
 import com.wintermute.gmassistant.client.view.scenes.SceneView;
+import com.wintermute.gmassistant.hue.HueBridgeRegistrator;
 import com.wintermute.gmassistant.hue.HueBulbSelector;
 
 /**
@@ -36,7 +37,7 @@ public class GmAssistant extends AppCompatActivity
         scenePanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, SceneView.class)));
 
         Button lightPanel = findViewById(R.id.manage_lights);
-        lightPanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, HueBulbSelector.class)));
+        lightPanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, HueBridgeRegistrator.class)));
 
         Button effectBoards = findViewById(R.id.effect_board);
         effectBoards.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, EffectBoards.class)));

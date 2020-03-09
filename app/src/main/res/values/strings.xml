@@ -73,6 +73,7 @@
     <string name="permission_denied">Hue bridge was found but the link button on the philips hue bridge was not pressed! To register your device, please press the button on the bridge and try again</string>
     <string name="bridge_not_found">Hue bridge could not be found in your network. Please make sure you can ping the bridge from your device. Maybe you should check your firewall</string>
     <string name="pending">Searching for hue bridge, please wait.</string>
+    <string name="configure_bulbs">Pair hue bulbs.</string>
 
     <!--   HueBulbs -->
     <string name="add_bulbs">select bulbs</string>

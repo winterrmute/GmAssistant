@@ -1,5 +1,6 @@
 package com.wintermute.gmassistant.hue;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,7 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.Request;
+import com.wintermute.gmassistant.GmAssistant;
 import com.wintermute.gmassistant.R;
+import com.wintermute.gmassistant.hue.model.HueUser;
 import com.wintermute.gmassistant.operations.LightConfigOperations;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -26,6 +29,9 @@ public class HueBridgeRegistrator extends AppCompatActivity
     private ImageView connectionStatus;
     private EditText ipAddress;
     private TextView instructions;
+    private Button pairBulbs;
+    private Button testConnection;
+    LightConfigOperations operations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -34,13 +40,36 @@ public class HueBridgeRegistrator extends AppCompatActivity
         setContentView(R.layout.activity_hue_bridge);
 
         ipAddress = findViewById(R.id.ip_input);
+        pairBulbs = findViewById(R.id.pair_bulbs);
+        pairBulbs.setVisibility(View.GONE);
+        pairBulbs.setOnClickListener(v -> startActivity(new Intent(HueBridgeRegistrator.this, HueBulbSelector.class)));
 
         instructions = findViewById(R.id.pairing_result);
         connectionStatus = findViewById(R.id.connection_status);
         connectionStatus.setVisibility(View.GONE);
 
-        Button testConnection = findViewById(R.id.test_connection);
+        operations = new LightConfigOperations(getApplicationContext());
+        checkRegistration();
+
+        testConnection = findViewById(R.id.test_connection);
         testConnection.setOnClickListener(v -> register());
+    }
+
+    private void checkRegistration()
+    {
+        HueUser bridge = operations.getBridge();
+        if (bridge != null)
+        {
+            testConnection();
+        }
+    }
+
+    private void testConnection()
+    {
+        operations = new LightConfigOperations(getApplicationContext());
+        HueUser bridge = operations.getBridge();
+        String url = "http://" + bridge.getIp() + "/api/" + bridge.getUsername() + "/lights";
+        ApiCaller.getInstance().makeCall(getApplicationContext(), Request.Method.GET, url, "{}", getCallbackListener());
     }
 
     public void register()
@@ -72,7 +101,14 @@ public class HueBridgeRegistrator extends AppCompatActivity
             @Override
             public void onResponse(JSONObject response)
             {
-                //do nothing
+                if (!response.has("error"))
+                {
+                    pairBulbs.setVisibility(View.VISIBLE);
+                    testConnection.setVisibility(View.GONE);
+                    connectionStatus.setVisibility(View.VISIBLE);
+                    connectionStatus.setImageResource(R.drawable.success);
+                    instructions.setText("Hue bridge is connected!");
+                }
             }
 
             @Override
@@ -105,11 +141,12 @@ public class HueBridgeRegistrator extends AppCompatActivity
         {
             connectionStatus.setImageResource(R.drawable.success);
             instructions.setText(R.string.connection_successful);
+            pairBulbs.setVisibility(View.VISIBLE);
 
             try
             {
                 String username = rsp.getJSONObject("success").get("username").toString();
-                LightConfigOperations operations = new LightConfigOperations(getApplicationContext());
+                operations = new LightConfigOperations(getApplicationContext());
                 operations.storeConfig(ipAddress.getText().toString(), username);
             } catch (JSONException e)
             {

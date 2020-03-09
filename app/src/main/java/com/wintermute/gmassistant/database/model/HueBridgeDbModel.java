@@ -7,7 +7,7 @@ public enum HueBridgeDbModel
 {
     TABLE_NAME("hue_bridges"),
     ID("id"),
-    IP_ADDRESS("ip_address"),
+    IP_ADDRESS("ip"),
     USERNAME("username");
 
     private String column;
