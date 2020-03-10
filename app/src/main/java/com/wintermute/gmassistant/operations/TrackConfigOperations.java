@@ -4,8 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import com.wintermute.gmassistant.database.dao.TrackConfigDao;
 import com.wintermute.gmassistant.database.model.TrackConfigDbModel;
-import com.wintermute.gmassistant.model.Scene;
-import com.wintermute.gmassistant.model.Track;
+import com.wintermute.gmassistant.view.model.Scene;
+import com.wintermute.gmassistant.view.model.Track;
 
 import java.util.Map;
 

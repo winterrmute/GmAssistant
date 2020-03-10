@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.client.view.scenes;
+package com.wintermute.gmassistant.view.scenes;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,14 +16,14 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
-import com.wintermute.gmassistant.client.view.StorageBrowser;
-import com.wintermute.gmassistant.client.view.LibraryContent;
+import com.wintermute.gmassistant.view.StorageBrowser;
+import com.wintermute.gmassistant.view.library.LibraryContent;
 import com.wintermute.gmassistant.database.dao.LightDao;
 import com.wintermute.gmassistant.database.model.SceneDbModel;
 import com.wintermute.gmassistant.database.model.Tags;
 import com.wintermute.gmassistant.hue.LightConfig;
-import com.wintermute.gmassistant.model.Light;
-import com.wintermute.gmassistant.model.Track;
+import com.wintermute.gmassistant.view.model.Light;
+import com.wintermute.gmassistant.view.model.Track;
 import com.wintermute.gmassistant.operations.PlayerOperations;
 import com.wintermute.gmassistant.operations.SceneOperations;
 import com.wintermute.gmassistant.operations.TrackOperations;

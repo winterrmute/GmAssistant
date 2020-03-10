@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.wintermute.gmassistant.R;
-import com.wintermute.gmassistant.model.Track;
+import com.wintermute.gmassistant.view.model.Track;
 
 import java.util.List;
 

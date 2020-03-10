@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.wintermute.gmassistant.R;
-import com.wintermute.gmassistant.model.Playlist;
+import com.wintermute.gmassistant.view.model.Playlist;
 
 import java.util.List;
 

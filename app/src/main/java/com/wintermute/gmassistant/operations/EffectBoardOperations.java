@@ -6,7 +6,7 @@ import com.wintermute.gmassistant.database.dao.EffectsDao;
 import com.wintermute.gmassistant.database.dao.GroupDao;
 import com.wintermute.gmassistant.database.model.EffectDbModel;
 import com.wintermute.gmassistant.database.model.GroupDbModel;
-import com.wintermute.gmassistant.model.Board;
+import com.wintermute.gmassistant.view.model.Board;
 
 import java.util.ArrayList;
 import java.util.List;

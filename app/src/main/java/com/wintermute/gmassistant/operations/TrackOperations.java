@@ -5,7 +5,7 @@ import android.content.Context;
 import android.media.MediaMetadataRetriever;
 import com.wintermute.gmassistant.database.dao.TrackDao;
 import com.wintermute.gmassistant.database.model.TrackDbModel;
-import com.wintermute.gmassistant.model.Track;
+import com.wintermute.gmassistant.view.model.Track;
 
 import java.io.File;
 import java.util.Map;

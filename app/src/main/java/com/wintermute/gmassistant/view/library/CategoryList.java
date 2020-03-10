@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.view;
+package com.wintermute.gmassistant.view.library;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,15 +13,14 @@ import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.LibraryItemAdapter;
 import com.wintermute.gmassistant.handlers.PlayerHandler;
 import com.wintermute.gmassistant.database.model.Tags;
-import com.wintermute.gmassistant.model.LibraryFile;
-import com.wintermute.gmassistant.model.Track;
+import com.wintermute.gmassistant.view.model.LibraryFile;
+import com.wintermute.gmassistant.view.model.Track;
 import com.wintermute.gmassistant.operations.TrackOperations;
 import com.wintermute.gmassistant.services.FileBrowserService;
 import com.wintermute.gmassistant.view.model.AudioLibrary;
 
 import java.io.File;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Represents each audio category elements as list. Allows to browse it.

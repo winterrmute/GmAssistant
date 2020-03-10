@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.client.view;
+package com.wintermute.gmassistant.view.playlist;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,12 +6,12 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.TrackAdapter;
-import com.wintermute.gmassistant.client.view.scenes.SceneConfig;
+import com.wintermute.gmassistant.view.scenes.SceneConfig;
 import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
 import com.wintermute.gmassistant.database.dao.TrackDao;
 import com.wintermute.gmassistant.dialogs.ListDialog;
 import com.wintermute.gmassistant.handlers.PlayerHandler;
-import com.wintermute.gmassistant.model.Track;
+import com.wintermute.gmassistant.view.model.Track;
 
 import java.util.ArrayList;
 import java.util.Arrays;

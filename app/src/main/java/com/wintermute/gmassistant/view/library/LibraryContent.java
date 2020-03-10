@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.client.view;
+package com.wintermute.gmassistant.view.library;
 
 import static androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 
@@ -14,8 +14,9 @@ import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.CategoryListAdapter;
 import com.wintermute.gmassistant.database.dao.DirectoryDao;
 import com.wintermute.gmassistant.database.model.Tags;
-import com.wintermute.gmassistant.model.Directory;
-import com.wintermute.gmassistant.model.LibraryFile;
+import com.wintermute.gmassistant.view.StorageBrowser;
+import com.wintermute.gmassistant.view.model.Directory;
+import com.wintermute.gmassistant.view.model.LibraryFile;
 import com.wintermute.gmassistant.view.model.AudioLibrary;
 
 import java.io.File;

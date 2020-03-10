@@ -4,7 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".client.view.PlaylistView">
+        tools:context=".view.playlist.PlaylistView">
 
     <ListView
             android:id="@+id/playlists"

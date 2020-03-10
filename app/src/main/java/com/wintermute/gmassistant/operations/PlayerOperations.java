@@ -5,8 +5,8 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import com.wintermute.gmassistant.database.model.Tags;
-import com.wintermute.gmassistant.model.Scene;
-import com.wintermute.gmassistant.model.Track;
+import com.wintermute.gmassistant.view.model.Scene;
+import com.wintermute.gmassistant.view.model.Track;
 
 public class PlayerOperations
 {

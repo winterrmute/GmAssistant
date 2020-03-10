@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import com.wintermute.gmassistant.view.CategoryList;
+import com.wintermute.gmassistant.view.library.CategoryList;
 
 /**
  * Receives audio library for given category and displays it.

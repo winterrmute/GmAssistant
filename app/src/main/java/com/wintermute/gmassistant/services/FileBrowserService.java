@@ -1,6 +1,6 @@
 package com.wintermute.gmassistant.services;
 
-import com.wintermute.gmassistant.model.LibraryFile;
+import com.wintermute.gmassistant.view.model.LibraryFile;
 
 import java.io.File;
 import java.util.ArrayList;

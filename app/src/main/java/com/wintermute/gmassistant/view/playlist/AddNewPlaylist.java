@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.client;
+package com.wintermute.gmassistant.view.playlist;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,9 +7,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
-import com.wintermute.gmassistant.client.view.StorageBrowser;
 import com.wintermute.gmassistant.database.ObjectHandler;
-import com.wintermute.gmassistant.model.Playlist;
+import com.wintermute.gmassistant.view.StorageBrowser;
+import com.wintermute.gmassistant.view.model.Playlist;
 
 /**
  * Represents activity in which the user can create new playlist.

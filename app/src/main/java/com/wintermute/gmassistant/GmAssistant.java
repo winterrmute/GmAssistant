@@ -6,12 +6,11 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
-import com.wintermute.gmassistant.client.view.LibraryContent;
-import com.wintermute.gmassistant.client.view.PlaylistView;
-import com.wintermute.gmassistant.client.view.effects.EffectBoards;
-import com.wintermute.gmassistant.client.view.scenes.SceneView;
+import com.wintermute.gmassistant.view.library.LibraryContent;
+import com.wintermute.gmassistant.view.playlist.PlaylistView;
+import com.wintermute.gmassistant.view.effects.EffectBoards;
+import com.wintermute.gmassistant.view.scenes.SceneView;
 import com.wintermute.gmassistant.hue.HueBridgeRegistrator;
-import com.wintermute.gmassistant.hue.HueBulbSelector;
 
 /**
  * Startup activity. Provides Game masters panel.

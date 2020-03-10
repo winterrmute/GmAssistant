@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.client.view.effects;
+package com.wintermute.gmassistant.view.effects;
 
 import android.os.Bundle;
 import android.widget.GridView;
@@ -10,7 +10,7 @@ import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.EffectsAdapter;
 import com.wintermute.gmassistant.database.dao.EffectsDao;
 import com.wintermute.gmassistant.database.model.Tags;
-import com.wintermute.gmassistant.model.Track;
+import com.wintermute.gmassistant.view.model.Track;
 import com.wintermute.gmassistant.operations.PlayerOperations;
 import com.wintermute.gmassistant.operations.TrackOperations;
 

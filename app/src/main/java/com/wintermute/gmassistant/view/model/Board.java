@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.model;
+package com.wintermute.gmassistant.view.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

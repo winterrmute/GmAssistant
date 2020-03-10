@@ -22,20 +22,20 @@
             android:usesCleartextTraffic="true">
         <activity android:name=".hue.HueBulbSelector"/>
         <activity android:name=".hue.HueBridgeRegistrator" />
-        <activity android:name=".client.view.effects.EffectBoards" />
-        <activity android:name=".client.view.effects.EffectBoard" />
-        <activity android:name=".client.view.LibraryContent" />
+        <activity android:name=".view.effects.EffectBoards" />
+        <activity android:name=".view.effects.EffectBoard" />
+        <activity android:name=".view.library.LibraryContent" />
         <activity
                 android:name=".dialogs.ListDialog"
                 android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".client.view.scenes.SceneView" />
-        <activity android:name=".client.view.HueSettingsView" />
+        <activity android:name=".view.scenes.SceneView" />
+        <activity android:name=".view.HueSettingsView" />
         <activity android:name=".hue.LightConfig" />
-        <activity android:name=".client.view.scenes.SceneConfig" />
-        <activity android:name=".client.AddNewPlaylist" />
-        <activity android:name=".client.view.PlaylistContentView" />
-        <activity android:name=".client.view.StorageBrowser" />
-        <activity android:name=".client.view.PlaylistView" />
+        <activity android:name=".view.scenes.SceneConfig" />
+        <activity android:name=".view.playlist.AddNewPlaylist" />
+        <activity android:name=".view.playlist.PlaylistContentView" />
+        <activity android:name=".view.StorageBrowser" />
+        <activity android:name=".view.playlist.PlaylistView" />
         <activity android:name=".GmAssistant">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

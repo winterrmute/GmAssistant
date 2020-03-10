@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.client.view.effects;
+package com.wintermute.gmassistant.view.effects;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,9 +11,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.EffectGroupsAdapter;
-import com.wintermute.gmassistant.client.view.StorageBrowser;
+import com.wintermute.gmassistant.view.StorageBrowser;
 import com.wintermute.gmassistant.dialogs.ListDialog;
-import com.wintermute.gmassistant.model.Board;
+import com.wintermute.gmassistant.view.model.Board;
 import com.wintermute.gmassistant.operations.EffectBoardOperations;
 import com.wintermute.gmassistant.operations.TrackOperations;
 
@@ -133,7 +133,7 @@ public class EffectBoards extends AppCompatActivity
 
     private void openBoard(Long id)
     {
-        Intent board = new Intent(this, com.wintermute.gmassistant.client.view.effects.EffectBoard.class);
+        Intent board = new Intent(this, com.wintermute.gmassistant.view.effects.EffectBoard.class);
         board.putExtra("groupId", id);
         startActivity(board);
     }

@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.gmassistant.database.DbManager;
 import com.wintermute.gmassistant.database.model.SceneDbModel;
 import com.wintermute.gmassistant.database.model.TrackDbModel;
-import com.wintermute.gmassistant.model.Scene;
+import com.wintermute.gmassistant.view.model.Scene;
 
 import java.util.ArrayList;
 import java.util.HashMap;

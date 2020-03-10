@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.gmassistant.database.DbManager;
 import com.wintermute.gmassistant.database.model.GroupDbModel;
-import com.wintermute.gmassistant.model.Board;
+import com.wintermute.gmassistant.view.model.Board;
 
 import java.util.HashMap;
 import java.util.Map;

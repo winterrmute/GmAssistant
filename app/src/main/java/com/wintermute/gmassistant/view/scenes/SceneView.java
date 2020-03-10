@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.client.view.scenes;
+package com.wintermute.gmassistant.view.scenes;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.SceneAdapter;
 import com.wintermute.gmassistant.dialogs.ListDialog;
-import com.wintermute.gmassistant.model.Scene;
+import com.wintermute.gmassistant.view.model.Scene;
 import com.wintermute.gmassistant.operations.SceneOperations;
 
 import java.util.ArrayList;

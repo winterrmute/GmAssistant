@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.client.view;
+package com.wintermute.gmassistant.view;
 
 import android.os.Bundle;
 import android.os.Environment;
@@ -68,7 +68,7 @@ public class StorageBrowser extends AppCompatActivity
     {
         if (startedForSingleTrack && !selected.isDirectory())
         {
-            setResult(RESULT_OK, getIntent().putExtra("pathToTrack", selected.getPath()));
+            setResult(RESULT_OK, getIntent().putExtra("path", selected.getPath()));
             finish();
         }
         path = selected;

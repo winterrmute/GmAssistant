@@ -7,9 +7,9 @@ import com.wintermute.gmassistant.handlers.PlayerHandler;
 import com.wintermute.gmassistant.database.model.SceneDbModel;
 import com.wintermute.gmassistant.database.model.Tags;
 import com.wintermute.gmassistant.database.model.TrackConfigDbModel;
-import com.wintermute.gmassistant.model.Light;
-import com.wintermute.gmassistant.model.Scene;
-import com.wintermute.gmassistant.model.Track;
+import com.wintermute.gmassistant.view.model.Light;
+import com.wintermute.gmassistant.view.model.Scene;
+import com.wintermute.gmassistant.view.model.Track;
 
 import java.util.ArrayList;
 import java.util.Arrays;

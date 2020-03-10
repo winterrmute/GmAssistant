@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.gmassistant.database.DbManager;
 import com.wintermute.gmassistant.database.model.Tags;
 import com.wintermute.gmassistant.database.model.TrackDbModel;
-import com.wintermute.gmassistant.model.Track;
+import com.wintermute.gmassistant.view.model.Track;
 
 import java.util.ArrayList;
 import java.util.Arrays;

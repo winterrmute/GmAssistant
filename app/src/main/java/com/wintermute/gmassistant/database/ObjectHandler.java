@@ -2,7 +2,7 @@ package com.wintermute.gmassistant.database;
 
 import android.content.Context;
 import com.wintermute.gmassistant.database.dao.PlaylistDao;
-import com.wintermute.gmassistant.model.Playlist;
+import com.wintermute.gmassistant.view.model.Playlist;
 import com.wintermute.gmassistant.services.FileBrowserService;
 
 public class ObjectHandler

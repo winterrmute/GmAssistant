@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.model;
+package com.wintermute.gmassistant.view.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.gmassistant.database.DbManager;
-import com.wintermute.gmassistant.model.Directory;
+import com.wintermute.gmassistant.view.model.Directory;
 
 import java.util.ArrayList;
 import java.util.HashMap;

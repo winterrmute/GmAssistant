@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.client.view;
+package com.wintermute.gmassistant.view;
 
 import android.os.Bundle;
 import android.widget.Button;

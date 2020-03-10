@@ -2,7 +2,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.wintermute.gmassistant.client.view.scenes.SceneView" >
+        tools:context=".view.scenes.SceneView" >
 
     <ListView
             android:id="@+id/scene_view"

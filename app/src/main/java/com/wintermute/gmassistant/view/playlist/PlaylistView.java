@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.client.view;
+package com.wintermute.gmassistant.view.playlist;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,11 +7,10 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.PlaylistAdapter;
-import com.wintermute.gmassistant.client.AddNewPlaylist;
 import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
 import com.wintermute.gmassistant.database.dao.PlaylistDao;
 import com.wintermute.gmassistant.dialogs.ListDialog;
-import com.wintermute.gmassistant.model.Playlist;
+import com.wintermute.gmassistant.view.model.Playlist;
 
 import java.util.ArrayList;
 import java.util.Arrays;

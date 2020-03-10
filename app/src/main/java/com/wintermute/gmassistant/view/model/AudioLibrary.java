@@ -1,7 +1,6 @@
 package com.wintermute.gmassistant.view.model;
 
 import androidx.lifecycle.ViewModel;
-import com.wintermute.gmassistant.model.LibraryFile;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
