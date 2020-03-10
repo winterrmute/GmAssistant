@@ -294,7 +294,7 @@ public class SceneConfig extends AppCompatActivity
         {
             TrackOperations trackOperations = new TrackOperations(getApplicationContext());
 
-            Track track = trackOperations.createTrack(data.getStringExtra("pathToTrack"));
+            Track track = trackOperations.createTrack(data.getStringExtra("path"));
             String fileName = track.getName() == null ? new File(track.getPath()).getName() : track.getName();
             if (requestCode == Tags.EFFECT.ordinal())
             {
