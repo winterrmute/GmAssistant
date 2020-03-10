@@ -2,6 +2,7 @@ package com.wintermute.gmassistant.hue;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -11,7 +12,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.wintermute.gmassistant.R;
-import com.wintermute.gmassistant.adapters.HueBulbAdapter;
 import com.wintermute.gmassistant.hue.model.HueBulb;
 import com.wintermute.gmassistant.hue.model.HueUser;
 import com.wintermute.gmassistant.operations.LightConfigOperations;
@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Lists selectable bulbs and allows to create bulb setting.
@@ -42,22 +43,17 @@ public class HueBulbSelector extends AppCompatActivity
         setContentView(R.layout.activity_hue_bulb_selector);
 
         bulbsView = findViewById(R.id.bulbs);
-
         checkConnection();
 
         bulbsView.setOnItemClickListener((parent, view, position, id) ->
         {
-            String msg = "";
             if (!selected.containsKey(bulbList.get(position).getName()))
             {
                 selected.put(bulbList.get(position).getName(), bulbList.get(position));
-                msg = bulbList.get(position).getName() + " selected";
             } else
             {
                 selected.remove(bulbList.get(position).getName());
-                msg = bulbList.get(position).getName() + " removed";
             }
-            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
         });
 
         Button addBulbs = findViewById(R.id.add_bulbs);
@@ -67,6 +63,15 @@ public class HueBulbSelector extends AppCompatActivity
             operations.addBulbs(selected);
             finish();
         });
+    }
+
+    private void createSelectableListAdapter()
+    {
+        List<String> bulbs = bulbList.stream().map(HueBulb::getName).collect(Collectors.toList());
+        ArrayAdapter<String> adapter =
+            new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, bulbs);
+        bulbsView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        bulbsView.setAdapter(adapter);
     }
 
     private void checkConnection()
@@ -86,9 +91,7 @@ public class HueBulbSelector extends AppCompatActivity
             String bulbType = entry.getValue().getAsJsonObject().get("productname").toString().replace("\"", "");
             bulbList.add(new HueBulb(bulbName, bulbType, false));
         }
-
-        HueBulbAdapter adapter = new HueBulbAdapter(getApplicationContext(), bulbList);
-        bulbsView.setAdapter(adapter);
+        createSelectableListAdapter();
     }
 
     private void isConnected(JSONObject rsp)
@@ -104,7 +107,6 @@ public class HueBulbSelector extends AppCompatActivity
             //do something
             return;
         }
-
         listBulbs(rsp);
     }
 
