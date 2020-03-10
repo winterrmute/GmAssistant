@@ -101,20 +101,22 @@ public class LibraryContent extends FragmentActivity
     {
         super.onActivityResult(requestCode, resultCode, data);
         int fileBrowserReqCode = 1;
-        if (resultCode == RESULT_OK && requestCode == fileBrowserReqCode)
+        if (resultCode == RESULT_OK)
         {
-            String path = data.getStringExtra("path");
-            storeDirectory(path, data.getBooleanExtra("recursive", true),
-                categories[tabLayout.getSelectedTabPosition()]);
-            updateViewData();
-        }
-        if (resultCode == Tags.MUSIC.ordinal() || resultCode == Tags.AMBIENCE.ordinal()
-            || resultCode == Tags.EFFECT.ordinal())
-        {
-            String path = data.getStringExtra("path");
-            Intent intent = new Intent().putExtra("path", path);
-            setResult(Activity.RESULT_OK, intent);
-            finish();
+            if (requestCode == fileBrowserReqCode)
+            {
+                String path = data.getStringExtra("path");
+                storeDirectory(path, data.getBooleanExtra("recursive", true), categories[tabLayout.getSelectedTabPosition()]);
+                updateViewData();
+            }
+            if (resultCode == Tags.MUSIC.ordinal() || resultCode == Tags.AMBIENCE.ordinal() || resultCode == Tags.EFFECT
+                .ordinal())
+            {
+                String path = data.getStringExtra("path");
+                Intent intent = new Intent().putExtra("path", path);
+                setResult(Activity.RESULT_OK, intent);
+                finish();
+            }
         }
     }
 

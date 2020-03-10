@@ -2,14 +2,12 @@ package com.wintermute.gmassistant.services.player;
 
 import android.app.Service;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
 import com.wintermute.gmassistant.database.model.Tags;
 import com.wintermute.gmassistant.view.model.Scene;
 import com.wintermute.gmassistant.view.model.Track;
 import com.wintermute.gmassistant.operations.PlayerOperations;
-import com.wintermute.gmassistant.operations.TrackOperations;
 import com.wintermute.gmassistant.services.notifications.AmbienceReceiver;
 
 /**
@@ -17,7 +15,7 @@ import com.wintermute.gmassistant.services.notifications.AmbienceReceiver;
  *
  * @author wintermute
  */
-public class AmbiencePlayer extends BasePlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener
+public class AmbiencePlayer extends BaseService
 {
     private static final String CHANNEL_ID = "Ambience";
     private PlayerOperations player;
@@ -27,18 +25,6 @@ public class AmbiencePlayer extends BasePlayer implements MediaPlayer.OnPrepared
     public IBinder onBind(Intent intent)
     {
         return null;
-    }
-
-    @Override
-    public boolean onError(MediaPlayer mp, int what, int extra)
-    {
-        return false;
-    }
-
-    @Override
-    public void onPrepared(MediaPlayer mp)
-    {
-        mp.start();
     }
 
     @Override
@@ -52,13 +38,6 @@ public class AmbiencePlayer extends BasePlayer implements MediaPlayer.OnPrepared
     {
         Scene scene = intent.getParcelableExtra("scene");
         Track track = scene != null ? scene.getAmbience() : intent.getParcelableExtra("track");
-        startForeground(3, createNotification(intent, "Ambience", CHANNEL_ID, AmbienceReceiver.class));
-
-        if (track == null)
-        {
-            TrackOperations operations = new TrackOperations(getApplicationContext());
-            track = operations.createTrack(intent.getParcelableExtra("track"));
-        }
 
         if (track != null)
         {
@@ -69,6 +48,7 @@ public class AmbiencePlayer extends BasePlayer implements MediaPlayer.OnPrepared
             {
                 player.startByTag(this, track);
             }
+            startForeground(3, createNotification(intent, "Ambience", CHANNEL_ID, AmbienceReceiver.class));
         }
         return Service.START_NOT_STICKY;
     }

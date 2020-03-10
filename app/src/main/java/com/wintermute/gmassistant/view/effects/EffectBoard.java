@@ -26,6 +26,7 @@ public class EffectBoard extends AppCompatActivity
     private List<Track> effects;
     private GridView effectsGrid;
     private SeekBar volume;
+    private PlayerOperations player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -33,16 +34,13 @@ public class EffectBoard extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_effect_board);
 
-        PlayerOperations player = new PlayerOperations();
+        player = new PlayerOperations();
 
         effects = new ArrayList<>();
         effectsGrid = findViewById(R.id.effect_grid);
 
         ImageButton stopPlayer = findViewById(R.id.stop_player);
-        stopPlayer.setOnClickListener(v ->
-        {
-            player.stopPlayer(Tags.EFFECT.value());
-        });
+        stopPlayer.setOnClickListener(v -> player.stopPlayer(Tags.EFFECT.value()));
 
         volume = findViewById(R.id.volume);
         volume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
@@ -80,11 +78,17 @@ public class EffectBoard extends AppCompatActivity
             {
                 Toast
                     .makeText(getApplicationContext(), "Can´t play track: " + track.getName()
-                            + " \nIf the track contains non characters like: \"?!,;\" etc., rename the file and try again",
-                        Toast.LENGTH_LONG)
+                        + " \nIf the track contains non characters like: \"?!,;\" etc., rename the file and try "
+                        + "again", Toast.LENGTH_LONG)
                     .show();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        player.stopPlayer(Tags.EFFECT.value());
+        finish();
     }
 
     private void listItems()

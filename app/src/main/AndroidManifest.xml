@@ -44,7 +44,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".services.player.BasePlayer" />
+        <service android:name=".services.player.BaseService" />
         <service android:name=".services.player.MusicPlayer" />
         <service android:name=".services.player.AmbiencePlayer" />
         <service android:name=".services.player.EffectPlayer" />

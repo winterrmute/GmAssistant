@@ -94,9 +94,8 @@ public class StorageBrowser extends AppCompatActivity
      * Scans directory for audio tracks.
      *
      * @param path to browse for files.
-     * @return list of found tracks.
      */
-    public ArrayList<String> collectTracks(File path, boolean recursive)
+    public void collectTracks(File path, boolean recursive)
     {
         File[] fList = path.listFiles();
         if (fList != null)
@@ -112,7 +111,6 @@ public class StorageBrowser extends AppCompatActivity
                 }
             }
         }
-        return requestedFiles;
     }
 
     private void selectRecursive()
@@ -131,6 +129,12 @@ public class StorageBrowser extends AppCompatActivity
             .setNegativeButton(R.string.cancel_result, (dialog, id) -> dialog.cancel());
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    @Override
+    public void onBackPressed(){
+        setResult(RESULT_CANCELED);
+        finish();
     }
 
     private void init()

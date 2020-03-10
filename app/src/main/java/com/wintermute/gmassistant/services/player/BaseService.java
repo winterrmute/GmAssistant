@@ -12,7 +12,7 @@ import androidx.core.app.NotificationCompat;
 import com.wintermute.gmassistant.GmAssistant;
 import com.wintermute.gmassistant.R;
 
-public class BasePlayer extends Service
+public class BaseService extends Service
 {
 
     @Nullable

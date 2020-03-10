@@ -52,15 +52,14 @@ public class PlayerHandler
     }
 
     /**
-     * TODO: refactor
+     * Starts players for scene track categories.
      *
-     * @param scene
+     * @param scene to be started by players
      */
     public void startPlayers(Scene scene)
     {
         clearScene();
-        List<Track> tracks = Arrays.asList(scene.getEffect(), scene.getMusic(), scene.getAmbience());
-        for (Track track : tracks)
+        for (Track track : Arrays.asList(scene.getEffect(), scene.getMusic(), scene.getAmbience()))
         {
             if (track != null)
             {

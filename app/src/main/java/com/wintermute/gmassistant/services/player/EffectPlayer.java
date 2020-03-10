@@ -11,7 +11,7 @@ import com.wintermute.gmassistant.view.model.Track;
 import com.wintermute.gmassistant.operations.PlayerOperations;
 import com.wintermute.gmassistant.services.notifications.EffectReceiver;
 
-public class EffectPlayer extends BasePlayer
+public class EffectPlayer extends BaseService
     implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener
 {
 
