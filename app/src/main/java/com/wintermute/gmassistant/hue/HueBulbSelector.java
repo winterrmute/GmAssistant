@@ -35,6 +35,7 @@ public class HueBulbSelector extends AppCompatActivity
     private ListView bulbsView;
     private List<HueBulb> bulbList = new ArrayList<>();
     private Map<String, HueBulb> selected = new HashMap<>();
+    private HueBridge bridge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -76,7 +77,7 @@ public class HueBulbSelector extends AppCompatActivity
 
     private void checkConnection()
     {
-        HueBridge bridge = getIntent().getParcelableExtra("bridge");
+        bridge = getIntent().getParcelableExtra("bridge");
         String url = "http://" + bridge.getIp() + "/api/" + bridge.getUsername() + "/lights";
         ApiCaller.getInstance().makeCall(getApplicationContext(), Request.Method.GET, url, "{}", getCallbackListener());
     }
@@ -88,9 +89,27 @@ public class HueBulbSelector extends AppCompatActivity
         {
             String bulbName = entry.getValue().getAsJsonObject().get("name").toString().replace("\"", "");
             String bulbType = entry.getValue().getAsJsonObject().get("productname").toString().replace("\"", "");
-            bulbList.add(new HueBulb(bulbName, bulbType, false));
+            bulbList.add(new HueBulb(bulbName, bulbType, bridge.getId()));
         }
+        getSelected();
         createSelectableListAdapter();
+    }
+
+    private void getSelected()
+    {
+        LightConfigOperations operations = new LightConfigOperations(getApplicationContext());
+        List<HueBulb> connectedBulbs = operations.getConnectedBulbs(bridge);
+
+        for (HueBulb bulb : bulbList)
+        {
+            for (HueBulb selected : connectedBulbs)
+            {
+                if (selected.getName().equals(bulb.getName()))
+                {
+                    bulb.setBridgeId(selected.getBridgeId());
+                }
+            }
+        }
     }
 
     private void isConnected(JSONObject rsp)

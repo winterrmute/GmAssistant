@@ -36,10 +36,10 @@ public class DbManager extends SQLiteOpenHelper
         "CREATE TABLE lights ( id INTEGER PRIMARY KEY AUTOINCREMENT, color REAL, brightness REAL)";
 
     private static final String HUE_BRIDGES =
-        "CREATE TABLE hue_bridges ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, ip TEXT UNIQUE, username TEXT)";
+        "CREATE TABLE hue_bridges ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, ip TEXT UNIQUE, username TEXT, active INTEGER)";
 
     private static final String HUE_BULBS =
-        "CREATE TABLE hue_bulbs ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, type TEXT)";
+        "CREATE TABLE hue_bulbs ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, type TEXT, bridgeId INTEGER, FOREIGN KEY (bridgeId) REFERENCES hue_bridges (id))";
 
     private static final String LIBRARY =
         "CREATE TABLE library ( id INTEGER PRIMARY KEY AUTOINCREMENT, path TEXT, tag TEXT, recursively TEXT)";

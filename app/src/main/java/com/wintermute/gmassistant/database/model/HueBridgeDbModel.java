@@ -9,7 +9,8 @@ public enum HueBridgeDbModel
     ID("id"),
     NAME("name"),
     IP_ADDRESS("ip"),
-    USERNAME("username");
+    USERNAME("username"),
+    ACTIVE("active");
 
     private String column;
 

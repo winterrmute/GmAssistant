@@ -14,5 +14,5 @@ public class HueBulb
 {
     private String name;
     private String type;
-    private boolean selected;
+    private Long bridgeId;
 }

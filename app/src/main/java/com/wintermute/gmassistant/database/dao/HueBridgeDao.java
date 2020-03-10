@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.gmassistant.database.DbManager;
 import com.wintermute.gmassistant.database.model.HueBridgeDbModel;
+import com.wintermute.gmassistant.database.model.HueBulbDbModel;
 import com.wintermute.gmassistant.hue.model.HueBridge;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class HueBridgeDao
             SQLiteDatabase.CONFLICT_REPLACE);
     }
 
-    public Map<String, String> get(String ip)
+    public Map<String, Object> get(String ip)
     {
         StringBuilder query = new StringBuilder("SELECT * FROM ")
             .append(HueBridgeDbModel.TABLE_NAME.value())
@@ -43,28 +44,50 @@ public class HueBridgeDao
         return getHueBridges(dbRead.rawQuery(query.toString(), null)).get(0);
     }
 
-    public List<Map<String, String>> getAll()
+    public List<Map<String, Object>> getAll()
     {
         StringBuilder query = new StringBuilder("SELECT * FROM ").append(HueBridgeDbModel.TABLE_NAME.value());
         return getHueBridges(dbRead.rawQuery(query.toString(), null));
     }
 
-    private List<Map<String, String>> getHueBridges(Cursor query)
+    private List<Map<String, Object>> getHueBridges(Cursor query)
     {
-        List<Map<String, String>> result = new ArrayList<>();
-        Map<String, String> bridge = new HashMap<>();
+        List<Map<String, Object>> result = new ArrayList<>();
+        Map<String, Object> bridge = new HashMap<>();
         while (query.moveToNext())
         {
             for (String attr : HueBridgeDbModel.getValues())
             {
-                if (query.getColumnIndex(attr) != -1)
+                if (attr.equals(HueBulbDbModel.ID.value()))
                 {
-                    bridge.put(attr, query.getString(query.getColumnIndex(attr)));
+                    bridge.put(attr, getNumericalValue(query, attr));
+                } else
+                {
+                    bridge.put(attr, getStringValue(query, attr));
                 }
             }
             result.add(bridge);
         }
         return result;
+    }
+
+    private Long getNumericalValue(Cursor cursor, String column)
+    {
+
+        if (cursor.getColumnIndex(column) != -1)
+        {
+            return cursor.getLong(cursor.getColumnIndex(column));
+        }
+        return -1L;
+    }
+
+    private String getStringValue(Cursor cursor, String column)
+    {
+        if (cursor.getColumnIndex(column) != -1)
+        {
+            return cursor.getString(cursor.getColumnIndex(column));
+        }
+        return "-1";
     }
 
     public void delete(HueBridge bridge)

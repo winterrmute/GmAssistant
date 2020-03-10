@@ -7,8 +7,9 @@ public enum HueBulbDbModel
 {
     TABLE_NAME("hue_bulbs"),
     ID("id"),
-    IP_ADDRESS("name"),
-    USERNAME("type");
+    NAME("name"),
+    TYPE("type"),
+    BRIDGE("bridgeId");
 
     private String column;
 

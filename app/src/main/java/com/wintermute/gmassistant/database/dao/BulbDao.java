@@ -7,8 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.gmassistant.database.DbManager;
 import com.wintermute.gmassistant.database.model.HueBridgeDbModel;
 import com.wintermute.gmassistant.database.model.HueBulbDbModel;
+import com.wintermute.gmassistant.hue.model.HueBridge;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BulbDao
@@ -28,25 +31,32 @@ public class BulbDao
         return dbWrite.insert(HueBulbDbModel.TABLE_NAME.value(), null, values);
     }
 
-    public Map<String, String> get()
+    public List<Map<String, String>> getByBridge(HueBridge bridge)
     {
-        StringBuilder query =
-            new StringBuilder("SELECT ip, username FROM ").append(HueBridgeDbModel.TABLE_NAME.value());
+        StringBuilder query = new StringBuilder("SELECT name, type FROM ")
+            .append(HueBulbDbModel.TABLE_NAME.value())
+            .append(" WHERE ")
+            .append(HueBulbDbModel.BRIDGE.value())
+            .append(" = '")
+            .append(bridge.getId())
+            .append("'");
         return getHueConnection(dbRead.rawQuery(query.toString(), null));
     }
 
-    private Map<String, String> getHueConnection(Cursor query)
+    private List<Map<String, String>> getHueConnection(Cursor query)
     {
-        Map<String, String> result = new HashMap<>();
+        List<Map<String, String>> result = new ArrayList<>();
+        Map<String, String> bulb = new HashMap<>();
         while (query.moveToNext())
         {
             for (String attr : HueBridgeDbModel.getValues())
             {
                 if (query.getColumnIndex(attr) != -1)
                 {
-                    result.put(attr, query.getString(query.getColumnIndex(attr)));
+                    bulb.put(attr, query.getString(query.getColumnIndex(attr)));
                 }
             }
+            result.add(bulb);
         }
         return result;
     }
