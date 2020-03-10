@@ -64,9 +64,8 @@
 
     <!--  EffectGroups  -->
     <string name="add_effect_board">Add effect board</string>
-    <string name="hue_ip_hint">192.168.1.1.</string>
-    <string name="hue_netmask_default">255.255.255.0</string>
-
+    <string name="hue_ip_hint">192.168.1.1</string>
+    <string name="hue_bridge_name">Display name:</string>
 
     <string name="hue_connection_hint">Please make sure your device can access the hue bridge. Then press the link button on the hue bridge. Once your device can reach the hue bridge and the link button is pressed you can register your device</string>
     <string name="connection_successful">Successfully connected with philips hue bridge!</string>
@@ -74,6 +73,10 @@
     <string name="bridge_not_found">Hue bridge could not be found in your network. Please make sure you can ping the bridge from your device. Maybe you should check your firewall</string>
     <string name="pending">Searching for hue bridge, please wait.</string>
     <string name="configure_bulbs">Pair hue bulbs.</string>
+    <string name="no_devices_paired">No paired devices found. Please configure hue bridge.</string>
+    <string name="pair_bridge">Configure hue bridge.</string>
+    <string name="check_connection">"Please wait 5 seconds, trying to connect Philips hue bridge."</string>
+
 
     <!--   HueBulbs -->
     <string name="add_bulbs">select bulbs</string>

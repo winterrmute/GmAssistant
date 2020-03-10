@@ -4,9 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import com.wintermute.gmassistant.database.dao.BulbDao;
 import com.wintermute.gmassistant.database.dao.HueBridgeDao;
+import com.wintermute.gmassistant.hue.model.HueBridge;
 import com.wintermute.gmassistant.hue.model.HueBulb;
-import com.wintermute.gmassistant.hue.model.HueUser;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class LightConfigOperations
@@ -18,20 +20,23 @@ public class LightConfigOperations
         this.ctx = ctx;
     }
 
-    public HueUser getBridge()
+    public List<HueBridge> getBridges()
     {
+        List<HueBridge> result = new ArrayList<>();
         HueBridgeDao dao = new HueBridgeDao(ctx);
-        Map<String, String> connectionData = dao.get();
-        if (connectionData.get("ip") == null) {
-            return null;
+        List<Map<String, String>> bridges = dao.getAll();
+        for (Map<String, String> bridgeDetails : bridges)
+        {
+            result.add(new HueBridge(bridgeDetails.get("name"), bridgeDetails.get("ip"), bridgeDetails.get("username")));
         }
-        return new HueUser(connectionData.get("ip"), connectionData.get("username"));
+        return result;
     }
 
-    public void storeConfig(String ip, String username)
+    public void storeConfig(String name, String ip, String username)
     {
         HueBridgeDao dao = new HueBridgeDao(ctx);
         ContentValues values = new ContentValues();
+        values.put("name", name);
         values.put("ip", ip);
         values.put("username", username);
         dao.insert(values);

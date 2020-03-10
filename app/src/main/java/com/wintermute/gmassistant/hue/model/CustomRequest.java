@@ -31,6 +31,11 @@ public class CustomRequest extends JsonRequest<JSONArray>
         {
             String jsonString =
                 new String(response.data, HttpHeaderParser.parseCharset(response.headers, PROTOCOL_CHARSET));
+            String jsonArray;
+            if (jsonString.startsWith("{")){
+                jsonArray = new StringBuilder("[").append(jsonString).append("]").toString();
+                return Response.success(new JSONArray(jsonArray), HttpHeaderParser.parseCacheHeaders(response));
+            }
             return Response.success(new JSONArray(jsonString), HttpHeaderParser.parseCacheHeaders(response));
         } catch (UnsupportedEncodingException | JSONException e)
         {

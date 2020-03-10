@@ -34,7 +34,8 @@ public class ApiCaller
             e.printStackTrace();
         }
 
-        CustomRequest req = new CustomRequest(method, url, reqBody, listener::onResponse, error -> listener.onError(String.valueOf(error)));
+        CustomRequest req = new CustomRequest(method, url, reqBody, listener::onResponse,
+            error -> listener.onError(String.valueOf(error)));
         requestQueue.add(req);
     }
 
@@ -50,7 +51,8 @@ public class ApiCaller
             e.printStackTrace();
         }
 
-        JsonObjectRequest req = new JsonObjectRequest(method, url, reqBody, listener::onResponse, error -> listener.onError(String.valueOf(error)));
+        JsonObjectRequest req = new JsonObjectRequest(method, url, reqBody, listener::onResponse,
+            error -> listener.onError(String.valueOf(error)));
         requestQueue.add(req);
     }
 }

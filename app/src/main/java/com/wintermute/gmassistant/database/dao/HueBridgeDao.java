@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.gmassistant.database.DbManager;
 import com.wintermute.gmassistant.database.model.HueBridgeDbModel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class HueBridgeDao
@@ -24,28 +26,41 @@ public class HueBridgeDao
 
     public Long insert(ContentValues values)
     {
-        return dbWrite.insert(HueBridgeDbModel.TABLE_NAME.value(), null, values);
+        return dbWrite.insertWithOnConflict(HueBridgeDbModel.TABLE_NAME.value(), null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
-    public Map<String, String> get()
+    public Map<String, String> get(String ip)
     {
-        StringBuilder query =
-            new StringBuilder("SELECT ip,username FROM ").append(HueBridgeDbModel.TABLE_NAME.value());
-        return getHueConnection(dbRead.rawQuery(query.toString(), null));
+        StringBuilder query = new StringBuilder("SELECT * FROM ")
+            .append(HueBridgeDbModel.TABLE_NAME.value())
+            .append(" WHERE ")
+            .append(HueBridgeDbModel.IP_ADDRESS.value())
+            .append(" = ")
+            .append(ip)
+            .append("'");
+        return getHueBridges(dbRead.rawQuery(query.toString(), null)).get(0);
     }
 
-    private Map<String, String> getHueConnection(Cursor query)
+    public List<Map<String, String>> getAll()
     {
-        Map<String, String> result = new HashMap<>();
+        StringBuilder query = new StringBuilder("SELECT * FROM ").append(HueBridgeDbModel.TABLE_NAME.value());
+        return getHueBridges(dbRead.rawQuery(query.toString(), null));
+    }
+
+    private List<Map<String, String>> getHueBridges(Cursor query)
+    {
+        List<Map<String, String>> result = new ArrayList<>();
+        Map<String, String> bridge = new HashMap<>();
         while (query.moveToNext())
         {
             for (String attr : HueBridgeDbModel.getValues())
             {
                 if (query.getColumnIndex(attr) != -1)
                 {
-                    result.put(attr, query.getString(query.getColumnIndex(attr)));
+                    bridge.put(attr, query.getString(query.getColumnIndex(attr)));
                 }
             }
+            result.add(bridge);
         }
         return result;
     }

@@ -12,8 +12,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.wintermute.gmassistant.R;
+import com.wintermute.gmassistant.hue.model.HueBridge;
 import com.wintermute.gmassistant.hue.model.HueBulb;
-import com.wintermute.gmassistant.hue.model.HueUser;
 import com.wintermute.gmassistant.operations.LightConfigOperations;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -76,8 +76,7 @@ public class HueBulbSelector extends AppCompatActivity
 
     private void checkConnection()
     {
-        LightConfigOperations operations = new LightConfigOperations(getApplicationContext());
-        HueUser bridge = operations.getBridge();
+        HueBridge bridge = getIntent().getParcelableExtra("bridge");
         String url = "http://" + bridge.getIp() + "/api/" + bridge.getUsername() + "/lights";
         ApiCaller.getInstance().makeCall(getApplicationContext(), Request.Method.GET, url, "{}", getCallbackListener());
     }

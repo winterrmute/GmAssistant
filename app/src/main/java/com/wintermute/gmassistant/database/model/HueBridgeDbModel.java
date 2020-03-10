@@ -7,6 +7,7 @@ public enum HueBridgeDbModel
 {
     TABLE_NAME("hue_bridges"),
     ID("id"),
+    NAME("name"),
     IP_ADDRESS("ip"),
     USERNAME("username");
 
