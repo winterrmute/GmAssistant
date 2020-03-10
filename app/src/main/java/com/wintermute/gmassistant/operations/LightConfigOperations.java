@@ -14,16 +14,17 @@ import java.util.Map;
 public class LightConfigOperations
 {
     private final Context ctx;
+    private HueBridgeDao dao;
 
     public LightConfigOperations(Context ctx)
     {
         this.ctx = ctx;
+        dao = new HueBridgeDao(ctx);
     }
 
     public List<HueBridge> getBridges()
     {
         List<HueBridge> result = new ArrayList<>();
-        HueBridgeDao dao = new HueBridgeDao(ctx);
         List<Map<String, String>> bridges = dao.getAll();
         for (Map<String, String> bridgeDetails : bridges)
         {
@@ -34,7 +35,6 @@ public class LightConfigOperations
 
     public void storeConfig(String name, String ip, String username)
     {
-        HueBridgeDao dao = new HueBridgeDao(ctx);
         ContentValues values = new ContentValues();
         values.put("name", name);
         values.put("ip", ip);
@@ -53,5 +53,10 @@ public class LightConfigOperations
             values.put("type", bulb.getType());
             dao.insert(values);
         }
+    }
+
+    public void delete(HueBridge bridge)
+    {
+        dao.delete(bridge);
     }
 }

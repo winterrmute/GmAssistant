@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.gmassistant.database.DbManager;
 import com.wintermute.gmassistant.database.model.HueBridgeDbModel;
+import com.wintermute.gmassistant.hue.model.HueBridge;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +27,8 @@ public class HueBridgeDao
 
     public Long insert(ContentValues values)
     {
-        return dbWrite.insertWithOnConflict(HueBridgeDbModel.TABLE_NAME.value(), null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        return dbWrite.insertWithOnConflict(HueBridgeDbModel.TABLE_NAME.value(), null, values,
+            SQLiteDatabase.CONFLICT_REPLACE);
     }
 
     public Map<String, String> get(String ip)
@@ -63,5 +65,11 @@ public class HueBridgeDao
             result.add(bridge);
         }
         return result;
+    }
+
+    public void delete(HueBridge bridge)
+    {
+        dbWrite.delete(HueBridgeDbModel.TABLE_NAME.value(),
+            HueBridgeDbModel.IP_ADDRESS.value() + " = '" + bridge.getIp() + "'", new String[] {});
     }
 }

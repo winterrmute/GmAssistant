@@ -64,6 +64,12 @@ public class HueBridgeRegistrator extends AppCompatActivity
         });
     }
 
+    @Override
+    public void onBackPressed(){
+        setResult(RESULT_OK);
+        finish();
+    }
+
     void init()
     {
         operations = new LightConfigOperations(getApplicationContext());

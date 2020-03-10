@@ -9,8 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.hue.model.HueBridge;
-import com.wintermute.gmassistant.view.model.Playlist;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -62,5 +62,11 @@ public class HueBridgeAdapter extends BaseAdapter
         fileName.setText(bridge.getName());
         result.setTag(position);
         return result;
+    }
+
+    public void update(List<HueBridge> newContent)
+    {
+        bridges = new ArrayList<>(newContent);
+        notifyDataSetChanged();
     }
 }
