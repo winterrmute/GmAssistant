@@ -3,7 +3,7 @@ package com.wintermute.gmassistant.hue;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-interface CallbackListener
+public interface CallbackListener
 {
     void onResponse(JSONArray response);
 

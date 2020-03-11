@@ -24,17 +24,23 @@ public class LightConfigOperations
         bulbDao = new BulbDao(ctx);
     }
 
+    public HueBridge getActiveBridge()
+    {
+        Map<String, Object> bridge = dao.getActiveBridge();
+        return new HueBridge((Long) bridge.get("id"), (String) bridge.get("name"), (String) bridge.get("ip"),
+            (String) bridge.get("username"), 1);
+    }
+
     public List<HueBridge> getBridges()
     {
         List<HueBridge> result = new ArrayList<>();
         List<Map<String, Object>> bridges = dao.getAll();
         for (Map<String, Object> bridgeDetails : bridges)
         {
-            result.add(
-                new HueBridge((Long)bridgeDetails.get("id"), (String) bridgeDetails.get("name"), (String) bridgeDetails.get("ip"), (String) bridgeDetails.get("username"),
-                    0));
+            result.add(new HueBridge((Long) bridgeDetails.get("id"), (String) bridgeDetails.get("name"),
+                (String) bridgeDetails.get("ip"), (String) bridgeDetails.get("username"), 0));
         }
-        return result;
+        return result.size() == 0 ? null : result;
     }
 
     public void storeConfig(String name, String ip, String username)
@@ -66,11 +72,14 @@ public class LightConfigOperations
 
     public List<HueBulb> getConnectedBulbs(HueBridge bridge)
     {
-        List<Map<String, String>> bulbs = bulbDao.getByBridge(bridge);
+        List<Map<String, Object>> bulbs = bulbDao.getByBridge(bridge);
         List<HueBulb> result = new ArrayList<>();
-        for (Map<String, String> bulb : bulbs)
+        for (Map<String, Object> bulb : bulbs)
         {
-            result.add(new HueBulb(bulb.get("name"), bulb.get("type"), Long.valueOf(bulb.get("bridge"))));
+            String name = (String) bulb.get("name");
+            String type = (String) bulb.get("type");
+            Long bridgeId = (Long) bulb.get("bridgeId");
+            result.add(new HueBulb(name, type, bridgeId));
         }
         return result;
     }

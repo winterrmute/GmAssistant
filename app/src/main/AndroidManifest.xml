@@ -49,6 +49,7 @@
         <service android:name=".services.player.MusicPlayer" />
         <service android:name=".services.player.AmbiencePlayer" />
         <service android:name=".services.player.EffectPlayer" />
+        <service android:name=".services.LightConnectorBuilder" />
 
         <receiver android:name=".services.notifications.MusicReceiver" />
         <receiver android:name=".services.notifications.AmbienceReceiver" />

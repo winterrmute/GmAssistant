@@ -41,7 +41,7 @@ public class HueBridges extends AppCompatActivity
         bridges = operations.getBridges();
 
         bridgeView = findViewById(R.id.bridges);
-        if (bridges.size() > 0)
+        if (bridges != null)
         {
             findViewById(R.id.no_devices_configured).setVisibility(View.GONE);
             listBridges(bridgeView);

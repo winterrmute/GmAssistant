@@ -2,7 +2,6 @@ package com.wintermute.gmassistant.hue;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -23,7 +22,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Lists selectable bulbs and allows to create bulb setting.
@@ -37,6 +35,7 @@ public class HueBulbSelector extends AppCompatActivity
     private List<HueBulb> bulbList = new ArrayList<>();
     private Map<String, HueBulb> selected = new HashMap<>();
     private HueBridge bridge;
+    private HueBulbAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -46,6 +45,7 @@ public class HueBulbSelector extends AppCompatActivity
 
         bulbsView = findViewById(R.id.bulbs);
         checkConnection();
+        createSelectableListAdapter();
 
         bulbsView.setOnItemClickListener((parent, view, position, id) ->
         {
@@ -69,11 +69,8 @@ public class HueBulbSelector extends AppCompatActivity
 
     private void createSelectableListAdapter()
     {
-//        List<String> bulbs = bulbList.stream().map(HueBulb::getName).collect(Collectors.toList());
-//        ArrayAdapter<String> adapter =
-//            new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, bulbs);
-        HueBulbAdapter adapter = new HueBulbAdapter(getApplicationContext(), bulbList);
-        bulbsView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        adapter = new HueBulbAdapter(getApplicationContext(), bulbList);
+        bulbsView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         bulbsView.setAdapter(adapter);
     }
 
@@ -93,25 +90,7 @@ public class HueBulbSelector extends AppCompatActivity
             String bulbType = entry.getValue().getAsJsonObject().get("productname").toString().replace("\"", "");
             bulbList.add(new HueBulb(bulbName, bulbType, bridge.getId()));
         }
-//        getSelected();
         createSelectableListAdapter();
-    }
-
-    private void getSelected()
-    {
-        LightConfigOperations operations = new LightConfigOperations(getApplicationContext());
-        List<HueBulb> connectedBulbs = operations.getConnectedBulbs(bridge);
-
-        for (HueBulb bulb : bulbList)
-        {
-            for (HueBulb selected : connectedBulbs)
-            {
-                if (selected.getName().equals(bulb.getName()))
-                {
-                    bulb.setBridgeId(selected.getBridgeId());
-                }
-            }
-        }
     }
 
     private void isConnected(JSONObject rsp)

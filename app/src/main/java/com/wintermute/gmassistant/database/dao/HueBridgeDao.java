@@ -44,6 +44,16 @@ public class HueBridgeDao
         return getHueBridges(dbRead.rawQuery(query.toString(), null)).get(0);
     }
 
+    public Map<String, Object> getActiveBridge()
+    {
+        StringBuilder query = new StringBuilder("SELECT * FROM ")
+            .append(HueBridgeDbModel.TABLE_NAME.value())
+            .append(" WHERE ")
+            .append(HueBridgeDbModel.ACTIVE.value())
+            .append(" = 1'");
+        return getHueBridges(dbRead.rawQuery(query.toString(), null)).get(0);
+    }
+
     public List<Map<String, Object>> getAll()
     {
         StringBuilder query = new StringBuilder("SELECT * FROM ").append(HueBridgeDbModel.TABLE_NAME.value());

@@ -6,16 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckedTextView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import com.wintermute.gmassistant.R;
-import com.wintermute.gmassistant.hue.model.HueBridge;
 import com.wintermute.gmassistant.hue.model.HueBulb;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +22,6 @@ public class HueBulbAdapter extends BaseAdapter
 {
     private List<HueBulb> bulbs;
     private LayoutInflater inflater;
-    private Context ctx;
 
     /**
      * Creates an instance.
@@ -37,7 +31,6 @@ public class HueBulbAdapter extends BaseAdapter
      */
     public HueBulbAdapter(Context ctx, List<HueBulb> bulbs)
     {
-        this.ctx = ctx;
         this.bulbs = bulbs;
         inflater = LayoutInflater.from(ctx);
     }
@@ -70,6 +63,15 @@ public class HueBulbAdapter extends BaseAdapter
         name.setText(bulb.getName());
         type.setText(bulb.getType());
         result.setTag(position);
+        toggle(name);
+
+
         return result;
+    }
+
+    private void toggle(CheckedTextView ctv) {
+        ctv.setOnClickListener(v -> {
+            ctv.setChecked(!ctv.isChecked());
+        });
     }
 }

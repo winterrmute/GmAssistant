@@ -31,9 +31,9 @@ public class BulbDao
         return dbWrite.insert(HueBulbDbModel.TABLE_NAME.value(), null, values);
     }
 
-    public List<Map<String, String>> getByBridge(HueBridge bridge)
+    public List<Map<String, Object>> getByBridge(HueBridge bridge)
     {
-        StringBuilder query = new StringBuilder("SELECT name, type FROM ")
+        StringBuilder query = new StringBuilder("SELECT * FROM ")
             .append(HueBulbDbModel.TABLE_NAME.value())
             .append(" WHERE ")
             .append(HueBulbDbModel.BRIDGE.value())
@@ -43,17 +43,24 @@ public class BulbDao
         return getHueConnection(dbRead.rawQuery(query.toString(), null));
     }
 
-    private List<Map<String, String>> getHueConnection(Cursor query)
+    private List<Map<String, Object>> getHueConnection(Cursor query)
     {
-        List<Map<String, String>> result = new ArrayList<>();
-        Map<String, String> bulb = new HashMap<>();
+        List<Map<String, Object>> result = new ArrayList<>();
+        Map<String, Object> bulb = new HashMap<>();
         while (query.moveToNext())
         {
-            for (String attr : HueBridgeDbModel.getValues())
+            for (String attr : HueBulbDbModel.getValues())
             {
-                if (query.getColumnIndex(attr) != -1)
-                {
-                    bulb.put(attr, query.getString(query.getColumnIndex(attr)));
+                if (attr.equals(HueBulbDbModel.BRIDGE.value()) || attr.equals(HueBulbDbModel.ID.value())) {
+                    if (query.getColumnIndex(attr) != -1)
+                    {
+                        bulb.put(attr, query.getLong(query.getColumnIndex(attr)));
+                    }
+                } else if (!attr.equals(HueBulbDbModel.TABLE_NAME.value())) {
+                    if (query.getColumnIndex(attr) != -1)
+                    {
+                        bulb.put(attr, query.getString(query.getColumnIndex(attr)));
+                    }
                 }
             }
             result.add(bulb);
