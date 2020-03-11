@@ -12,6 +12,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.wintermute.gmassistant.R;
+import com.wintermute.gmassistant.adapters.HueBulbAdapter;
 import com.wintermute.gmassistant.hue.model.HueBridge;
 import com.wintermute.gmassistant.hue.model.HueBulb;
 import com.wintermute.gmassistant.operations.LightConfigOperations;
@@ -68,9 +69,10 @@ public class HueBulbSelector extends AppCompatActivity
 
     private void createSelectableListAdapter()
     {
-        List<String> bulbs = bulbList.stream().map(HueBulb::getName).collect(Collectors.toList());
-        ArrayAdapter<String> adapter =
-            new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, bulbs);
+//        List<String> bulbs = bulbList.stream().map(HueBulb::getName).collect(Collectors.toList());
+//        ArrayAdapter<String> adapter =
+//            new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, bulbs);
+        HueBulbAdapter adapter = new HueBulbAdapter(getApplicationContext(), bulbList);
         bulbsView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         bulbsView.setAdapter(adapter);
     }
@@ -91,7 +93,7 @@ public class HueBulbSelector extends AppCompatActivity
             String bulbType = entry.getValue().getAsJsonObject().get("productname").toString().replace("\"", "");
             bulbList.add(new HueBulb(bulbName, bulbType, bridge.getId()));
         }
-        getSelected();
+//        getSelected();
         createSelectableListAdapter();
     }
 
