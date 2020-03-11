@@ -20,11 +20,15 @@ public class LightConnection
         return instance;
     }
 
-    public void init(Context ctx, HueBridge bridge){
+    void init(Context ctx, HueBridge bridge){
         this.bridge = bridge;
 
         LightConfigOperations operations = new LightConfigOperations(ctx);
         bulbs = operations.getConnectedBulbs(bridge);
         System.out.println();
+    }
+
+    public String getUrl(){
+        return "http://" + bridge.getIp() + "/api/" + bridge.getUsername() + "/lights";
     }
 }

@@ -68,7 +68,8 @@ public class SceneAdapter extends BaseAdapter
         Long light = target.getLight() != null ? target.getLight().getId() : 0L;
         if (light != 0L)
         {
-            image.setImageBitmap(extractColor(light));
+            //TODO
+//            image.setImageBitmap(extractColor(light));
         }
         name.setText(target.getName());
 
@@ -82,23 +83,5 @@ public class SceneAdapter extends BaseAdapter
     private String computeName(Track track){
         String result = track != null ? track.getName() : "";
         return result.length() > 30 ? result.substring(0, 27) + "..." : result;
-    }
-
-    /**
-     * Extract bitmap from color of light.
-     *
-     * @param lightId to get its color
-     * @return
-     */
-    private Bitmap extractColor(Long lightId)
-    {
-        LightDao dao = new LightDao(ctx);
-        Rect rect = new Rect(0, 0, 1, 1);
-        Bitmap image = Bitmap.createBitmap(rect.width(), rect.height(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(image);
-        Paint paint = new Paint();
-        paint.setColor(new BigDecimal(dao.getById(lightId).getColor()).intValue());
-        canvas.drawRect(0, 0, 1, 1, paint);
-        return image;
     }
 }

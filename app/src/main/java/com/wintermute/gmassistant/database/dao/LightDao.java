@@ -5,11 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.gmassistant.database.DbManager;
+import com.wintermute.gmassistant.database.model.LightDbModel;
 import com.wintermute.gmassistant.view.model.Light;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,40 +40,42 @@ public class LightDao extends BaseDao
     /**
      * Create new light scene.
      *
-     * @param light color and brightness information.
      * @return id.
      */
-    public long insert(Light light)
+    public long insert(ContentValues values)
     {
-        Map<String, Object> object = createObject(light);
-        ContentValues values = getContentValues(object);
         return dbWrite.insert(TABLE_NAME, null, values);
     }
 
-    public Light getById(Long lightId)
+    public Map<String, Object> get(Long lightId)
     {
-        StringBuilder query =
-            new StringBuilder("SELECT * FROM ").append(TABLE_NAME).append(" WHERE id = '").append(lightId).append("'");
-        return mapObject(dbRead.rawQuery(query.toString(), null)).get(0);
+        StringBuilder query = new StringBuilder("SELECT * FROM ")
+            .append(LightDbModel.TABLE_NAME.value())
+            .append(" WHERE id = '")
+            .append(lightId)
+            .append("'");
+        return getLightData(dbRead.rawQuery(query.toString(), null));
     }
 
-    /**
-     * Translates the data from database to java objects.
-     *
-     * @param cursor to iterate over database rows.
-     * @return list of track objects.
-     */
-    private ArrayList<Light> mapObject(Cursor cursor)
+    private Map<String, Object> getLightData(Cursor query)
     {
-        ArrayList<Light> result = new ArrayList<>();
-        while (cursor.moveToNext())
+        Map<String, Object> result = new HashMap<>();
+        while (query.moveToNext())
         {
-            Light light = new Light();
-//            light.setId(getKeyValue(cursor, ID_KEY));
-            light.setColor(getKeyValue(cursor, COLOR_KEY));
-            light.setColor(getKeyValue(cursor, COLOR_KEY));
-            light.setBrightness(getKeyValue(cursor, BRIGHTNESS_KEY));
-            result.add(light);
+            result = new HashMap<>();
+            for (String attr : LightDbModel.getValues())
+            {
+                if (query.getColumnIndex(attr) != -1)
+                {
+                    if (attr.equals(LightDbModel.COLOR.value()))
+                    {
+                        result.put(attr, query.getLong(query.getColumnIndex(attr)));
+                    } else
+                    {
+                        result.put(attr, query.getLong(query.getColumnIndex(attr)));
+                    }
+                }
+            }
         }
         return result;
     }
@@ -104,5 +106,11 @@ public class LightDao extends BaseDao
             return cursor.getString(cursor.getColumnIndex(column));
         }
         return "-1";
+    }
+
+    public void delete(Light light)
+    {
+        dbWrite.delete(LightDbModel.TABLE_NAME.value(), LightDbModel.ID.value() + " = " + light.getId(),
+            new String[] {});
     }
 }

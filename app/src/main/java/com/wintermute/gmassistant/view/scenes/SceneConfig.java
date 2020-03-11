@@ -1,10 +1,6 @@
 package com.wintermute.gmassistant.view.scenes;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,12 +12,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
+import com.wintermute.gmassistant.operations.LightOperations;
 import com.wintermute.gmassistant.view.StorageBrowser;
 import com.wintermute.gmassistant.view.library.LibraryContent;
-import com.wintermute.gmassistant.database.dao.LightDao;
 import com.wintermute.gmassistant.database.model.SceneDbModel;
 import com.wintermute.gmassistant.database.model.Tags;
-import com.wintermute.gmassistant.hue.LightConfig;
+import com.wintermute.gmassistant.view.light.LightConfig;
 import com.wintermute.gmassistant.view.model.Light;
 import com.wintermute.gmassistant.view.model.Track;
 import com.wintermute.gmassistant.operations.PlayerOperations;
@@ -29,7 +25,6 @@ import com.wintermute.gmassistant.operations.SceneOperations;
 import com.wintermute.gmassistant.operations.TrackOperations;
 
 import java.io.File;
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -311,30 +306,18 @@ public class SceneConfig extends AppCompatActivity
             } else if (requestCode == 4)
             {
                 //TODO: extract to light operations
-                Light light = new Light();
-                String color = String.valueOf(data.getIntExtra("color", 0));
-                light.setColor(color);
-                light.setBrightness(String.valueOf(data.getIntExtra("brightness", 0)));
+                LightOperations operations = new LightOperations(getApplicationContext());
 
-                LightDao dao = new LightDao(this);
-                light.setId(dao.insert(light));
-
-                content.put(SceneDbModel.LIGHT.value(), dao.getById(light.getId()));
-
-                colorView.setImageBitmap(extractColor(color));
+//                Light light = new Light();
+//                String color = String.valueOf(data.getIntExtra("color", 0));
+//                light.setColor(color);
+//                light.setBrightness(String.valueOf(data.getIntExtra("brightness", 0)));
+//                LightDao dao = new LightDao(this);
+//                light.setId(dao.insert(light));
+//                content.put(SceneDbModel.LIGHT.value(), dao.get(light.getId()));
+//                colorView.setImageBitmap(extractColor(color));
             }
             trackHolder.put(track.getTag(), track);
         }
-    }
-
-    private Bitmap extractColor(String color)
-    {
-        Rect rect = new Rect(0, 0, 1, 1);
-        Bitmap image = Bitmap.createBitmap(rect.width(), rect.height(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(image);
-        Paint paint = new Paint();
-        paint.setColor(new BigDecimal(color).intValue());
-        canvas.drawRect(0, 0, 1, 1, paint);
-        return image;
     }
 }

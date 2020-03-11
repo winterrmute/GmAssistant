@@ -5,7 +5,7 @@
         android:id="@+id/btn"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".hue.LightConfig">
+        tools:context=".view.light.LightConfig">
 
 
     <com.skydoves.colorpickerview.ColorPickerView
