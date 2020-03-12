@@ -40,7 +40,7 @@ public class ApiCaller
         requestQueue.add(req);
     }
 
-    public void callWithoutResponse(Context ctx, String url, String body){
+    public void callPut(Context ctx, String url, String body){
         RequestQueue requestQueue = Volley.newRequestQueue(ctx);
         JSONObject reqBody = null;
         try
@@ -50,8 +50,9 @@ public class ApiCaller
         {
             e.printStackTrace();
         }
-
-        JsonObjectRequest req = new JsonObjectRequest(Request.Method.PUT, url, reqBody, null, null);
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.PUT, url, reqBody, response -> {}, error -> {
+            System.out.println(error.toString());
+        });
         requestQueue.add(req);
     }
 

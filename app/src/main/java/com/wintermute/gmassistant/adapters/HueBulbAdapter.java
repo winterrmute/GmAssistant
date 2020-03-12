@@ -57,17 +57,12 @@ public class HueBulbAdapter extends BaseAdapter
     public View getView(int position, View convertView, ViewGroup parent)
     {
         ConstraintLayout result = (ConstraintLayout) inflater.inflate(R.layout.hue_bulb, parent, false);
-        CheckedTextView name = result.findViewById(R.id.name);
+        TextView name = result.findViewById(R.id.name);
         TextView type = result.findViewById(R.id.type);
         HueBulb bulb = bulbs.get(position);
         name.setText(bulb.getName());
         type.setText(bulb.getType());
         result.setTag(position);
-        name.setOnClickListener(v ->
-        {
-            bulb.setChecked(!bulb.isChecked());  // toggle
-            name.setChecked(bulb.isChecked());
-        });
         return result;
     }
 }

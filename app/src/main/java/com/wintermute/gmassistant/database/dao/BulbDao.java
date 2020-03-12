@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.gmassistant.database.DbManager;
-import com.wintermute.gmassistant.database.model.HueBridgeDbModel;
 import com.wintermute.gmassistant.database.model.HueBulbDbModel;
 import com.wintermute.gmassistant.hue.model.HueBridge;
 
@@ -46,17 +45,20 @@ public class BulbDao
     private List<Map<String, Object>> getHueConnection(Cursor query)
     {
         List<Map<String, Object>> result = new ArrayList<>();
-        Map<String, Object> bulb = new HashMap<>();
+        Map<String, Object> bulb;
         while (query.moveToNext())
         {
+            bulb = new HashMap<>();
             for (String attr : HueBulbDbModel.getValues())
             {
-                if (attr.equals(HueBulbDbModel.BRIDGE.value()) || attr.equals(HueBulbDbModel.ID.value())) {
+                if (attr.equals(HueBulbDbModel.BRIDGE.value()) || attr.equals(HueBulbDbModel.ID.value()))
+                {
                     if (query.getColumnIndex(attr) != -1)
                     {
                         bulb.put(attr, query.getLong(query.getColumnIndex(attr)));
                     }
-                } else if (!attr.equals(HueBulbDbModel.TABLE_NAME.value())) {
+                } else if (!attr.equals(HueBulbDbModel.TABLE_NAME.value()))
+                {
                     if (query.getColumnIndex(attr) != -1)
                     {
                         bulb.put(attr, query.getString(query.getColumnIndex(attr)));
@@ -65,6 +67,7 @@ public class BulbDao
             }
             result.add(bulb);
         }
+        dbWrite.close();
         return result;
     }
 }

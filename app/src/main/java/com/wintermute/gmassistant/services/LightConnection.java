@@ -5,6 +5,7 @@ import com.wintermute.gmassistant.hue.model.HueBridge;
 import com.wintermute.gmassistant.hue.model.HueBulb;
 import com.wintermute.gmassistant.operations.LightConfigOperations;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LightConnection
@@ -29,7 +30,6 @@ public class LightConnection
 
         LightConfigOperations operations = new LightConfigOperations(ctx);
         bulbs = operations.getConnectedBulbs(bridge);
-        System.out.println();
     }
 
     public void kill()
@@ -37,8 +37,16 @@ public class LightConnection
         instance = null;
     }
 
-    public String getUrl()
+    public String getLightsUrl()
     {
         return "http://" + bridge.getIp() + "/api/" + bridge.getUsername() + "/lights";
+    }
+
+    public List<String> getLightManagementUrls(){
+        List<String> result = new ArrayList<>();
+        for (HueBulb bulb : bulbs) {
+            result.add(getLightsUrl() + "/" + bulb.getId().toString() + "/state");
+        }
+        return result;
     }
 }
