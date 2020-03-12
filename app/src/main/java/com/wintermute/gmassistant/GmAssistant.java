@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.hue.HueBridges;
-import com.wintermute.gmassistant.services.LightConnectorBuilder;
 import com.wintermute.gmassistant.view.library.LibraryContent;
 import com.wintermute.gmassistant.view.playlist.PlaylistView;
 import com.wintermute.gmassistant.view.effects.EffectBoards;
@@ -18,7 +17,6 @@ import com.wintermute.gmassistant.view.scenes.SceneView;
  */
 public class GmAssistant extends AppCompatActivity
 {
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -26,8 +24,6 @@ public class GmAssistant extends AppCompatActivity
         setContentView(R.layout.activity_gm_assistant);
 
         grantUserPermission();
-
-        getApplicationContext().startService(new Intent(GmAssistant.this, LightConnectorBuilder.class));
 
         Button playlistPanel = findViewById(R.id.manage_playlists);
         playlistPanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, PlaylistView.class)));

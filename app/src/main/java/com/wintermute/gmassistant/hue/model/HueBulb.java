@@ -15,4 +15,5 @@ public class HueBulb
     private String name;
     private String type;
     private Long bridgeId;
+    private boolean checked;
 }

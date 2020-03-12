@@ -69,9 +69,27 @@ public class HueBulbSelector extends AppCompatActivity
 
     private void createSelectableListAdapter()
     {
+        LightConfigOperations operations = new LightConfigOperations(getApplicationContext());
+        List<HueBulb> connectedBulbs = operations.getConnectedBulbs(getIntent().getParcelableExtra("bridge"));
+
         adapter = new HueBulbAdapter(getApplicationContext(), bulbList);
         bulbsView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         bulbsView.setAdapter(adapter);
+
+        for (int i = 0; i < adapter.getCount(); i++)
+        {
+            HueBulb bulb = (HueBulb) adapter.getItem(i);
+            if (bulb.isChecked())
+            {
+                for (HueBulb current : connectedBulbs)
+                {
+                    if (current.getName().equals(((HueBulb) adapter.getItem(i)).getName()))
+                    {
+                        ((HueBulb) adapter.getItem(i)).setChecked(true);
+                    }
+                }
+            }
+        }
     }
 
     private void checkConnection()
@@ -88,7 +106,7 @@ public class HueBulbSelector extends AppCompatActivity
         {
             String bulbName = entry.getValue().getAsJsonObject().get("name").toString().replace("\"", "");
             String bulbType = entry.getValue().getAsJsonObject().get("productname").toString().replace("\"", "");
-            bulbList.add(new HueBulb(bulbName, bulbType, bridge.getId()));
+            bulbList.add(new HueBulb(bulbName, bulbType, bridge.getId(), false));
         }
         createSelectableListAdapter();
     }

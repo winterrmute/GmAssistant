@@ -44,7 +44,7 @@ public class HueBulbAdapter extends BaseAdapter
     @Override
     public Object getItem(int position)
     {
-        return null;
+        return bulbs.get(position);
     }
 
     @Override
@@ -63,15 +63,11 @@ public class HueBulbAdapter extends BaseAdapter
         name.setText(bulb.getName());
         type.setText(bulb.getType());
         result.setTag(position);
-        toggle(name);
-
-
-        return result;
-    }
-
-    private void toggle(CheckedTextView ctv) {
-        ctv.setOnClickListener(v -> {
-            ctv.setChecked(!ctv.isChecked());
+        name.setOnClickListener(v ->
+        {
+            bulb.setChecked(!bulb.isChecked());  // toggle
+            name.setChecked(bulb.isChecked());
         });
+        return result;
     }
 }

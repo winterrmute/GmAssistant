@@ -79,7 +79,7 @@ public class LightConfigOperations
             String name = (String) bulb.get("name");
             String type = (String) bulb.get("type");
             Long bridgeId = (Long) bulb.get("bridgeId");
-            result.add(new HueBulb(name, type, bridgeId));
+            result.add(new HueBulb(name, type, bridgeId, true));
         }
         return result;
     }

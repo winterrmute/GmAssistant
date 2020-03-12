@@ -73,8 +73,7 @@ public class LightConfig extends AppCompatActivity
             {
                 ApiCaller
                     .getInstance()
-                    .makeCustomCall(getApplicationContext(), Request.Method.PUT, LightConnection.getInstance().getUrl(),
-                        "{}", getCallbackListener());
+                    .callWithoutResponse(getApplicationContext(), "url", "{}");
 
                 brightness = progress;
                 lightHandler =

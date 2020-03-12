@@ -8,18 +8,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import com.wintermute.gmassistant.database.dao.LightDao;
-import com.wintermute.gmassistant.database.dao.SceneDao;
-import com.wintermute.gmassistant.database.model.SceneDbModel;
-import com.wintermute.gmassistant.database.model.Tags;
-import com.wintermute.gmassistant.database.model.TrackConfigDbModel;
-import com.wintermute.gmassistant.handlers.PlayerHandler;
+import com.wintermute.gmassistant.hue.ApiCaller;
 import com.wintermute.gmassistant.view.model.Light;
-import com.wintermute.gmassistant.view.model.Scene;
-import com.wintermute.gmassistant.view.model.Track;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -69,13 +61,11 @@ public class LightOperations
     {
         Light result = new Light();
         Map<String, Object> lightData = dao.get(lightId);
-        result.setId((Long)lightData.get("id"));
-        result.setColor((String)lightData.get("color"));
-        result.setBrightness((Long)lightData.get("brightness"));
+        result.setId((Long) lightData.get("id"));
+        result.setColor((String) lightData.get("color"));
+        result.setBrightness((Long) lightData.get("brightness"));
         return result;
     }
-
-
 
     /**
      * Creates new scene
@@ -91,8 +81,8 @@ public class LightOperations
     private void storeLight(Map<String, Object> content)
     {
         ContentValues values = new ContentValues();
-        values.put("color", (String)content.get("brightness"));
-        values.put("brightness", (Long)content.get("brightness"));
+        values.put("color", (String) content.get("brightness"));
+        values.put("brightness", (Long) content.get("brightness"));
         dao.insert(values);
     }
 
@@ -134,7 +124,8 @@ public class LightOperations
         }
     }
 
-    public void changeLight(double[] color, long brightness){
-        //TODO: implements changing color
+    public void changeLight(double[] color, long brightness)
+    {
+
     }
 }

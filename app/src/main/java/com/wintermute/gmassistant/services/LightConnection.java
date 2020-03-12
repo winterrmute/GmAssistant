@@ -13,14 +13,18 @@ public class LightConnection
     private HueBridge bridge;
     private List<HueBulb> bulbs;
 
-    public static LightConnection getInstance(){
-        if (instance == null){
-            return new LightConnection();
+    public static LightConnection getInstance()
+    {
+        if (instance == null)
+        {
+            instance = new LightConnection();
+            return instance;
         }
         return instance;
     }
 
-    void init(Context ctx, HueBridge bridge){
+    public void init(Context ctx, HueBridge bridge)
+    {
         this.bridge = bridge;
 
         LightConfigOperations operations = new LightConfigOperations(ctx);
@@ -28,7 +32,13 @@ public class LightConnection
         System.out.println();
     }
 
-    public String getUrl(){
+    public void kill()
+    {
+        instance = null;
+    }
+
+    public String getUrl()
+    {
         return "http://" + bridge.getIp() + "/api/" + bridge.getUsername() + "/lights";
     }
 }

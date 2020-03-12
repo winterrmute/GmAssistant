@@ -1,6 +1,7 @@
 package com.wintermute.gmassistant.hue;
 
 import android.content.Context;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -39,7 +40,22 @@ public class ApiCaller
         requestQueue.add(req);
     }
 
-    public void makeCall(Context ctx, int method, String url, String body, CallbackListener listener)
+    public void callWithoutResponse(Context ctx, String url, String body){
+        RequestQueue requestQueue = Volley.newRequestQueue(ctx);
+        JSONObject reqBody = null;
+        try
+        {
+            reqBody = new JSONObject(body);
+        } catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.PUT, url, reqBody, null, null);
+        requestQueue.add(req);
+    }
+
+    void makeCall(Context ctx, int method, String url, String body, CallbackListener listener)
     {
         RequestQueue requestQueue = Volley.newRequestQueue(ctx);
         JSONObject reqBody = null;
