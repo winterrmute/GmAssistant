@@ -289,40 +289,36 @@ public class SceneConfig extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK)
         {
-            TrackOperations trackOperations = new TrackOperations(getApplicationContext());
-
-            Track track = trackOperations.createTrack(data.getStringExtra("path"));
-            String fileName = track.getName() == null ? new File(track.getPath()).getName() : track.getName();
-            if (requestCode == Tags.EFFECT.ordinal())
-            {
-                track.setTag(Tags.EFFECT.value());
-                effect.setText(fileName);
-            } else if (requestCode == Tags.MUSIC.ordinal())
-            {
-                track.setTag(Tags.MUSIC.value());
-                music.setText(fileName);
-            } else if (requestCode == Tags.AMBIENCE.ordinal())
-            {
-                track.setTag(Tags.AMBIENCE.value());
-                ambience.setText(fileName);
-            } else if (requestCode == LIGHT_CONFIG)
+            if (requestCode == LIGHT_CONFIG)
             {
                 //TODO: extract to light operations
                 Light light = data.getParcelableExtra("light");
                 LightOperations operations = new LightOperations(getApplicationContext());
-                if (light != null){
+                if (light != null)
+                {
                     colorView.setImageBitmap(operations.extractColor(light));
-                }
-//                Light light = new Light();
-//                String color = String.valueOf(data.getIntExtra("color", 0));
-//                light.setColor(color);
-//                light.setBrightness(String.valueOf(data.getIntExtra("brightness", 0)));
-//                LightDao dao = new LightDao(this);
-//                light.setId(dao.insert(light));
-//                content.put(SceneDbModel.LIGHT.value(), dao.get(light.getId()));
+                } else
+                {
+                    TrackOperations trackOperations = new TrackOperations(getApplicationContext());
 
+                    Track track = trackOperations.createTrack(data.getStringExtra("path"));
+                    String fileName = track.getName() == null ? new File(track.getPath()).getName() : track.getName();
+                    if (requestCode == Tags.EFFECT.ordinal())
+                    {
+                        track.setTag(Tags.EFFECT.value());
+                        effect.setText(fileName);
+                    } else if (requestCode == Tags.MUSIC.ordinal())
+                    {
+                        track.setTag(Tags.MUSIC.value());
+                        music.setText(fileName);
+                    } else if (requestCode == Tags.AMBIENCE.ordinal())
+                    {
+                        track.setTag(Tags.AMBIENCE.value());
+                        ambience.setText(fileName);
+                    }
+                    trackHolder.put(track.getTag(), track);
+                }
             }
-            trackHolder.put(track.getTag(), track);
         }
     }
 }

@@ -61,6 +61,7 @@ public class SceneLightConfiguration extends AppCompatActivity
         });
 
         SeekBar seekbar = findViewById(R.id.brightness_bar);
+        brightness = seekbar.getMax();
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
         {
             @Override

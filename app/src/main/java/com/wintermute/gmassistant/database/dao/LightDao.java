@@ -44,7 +44,7 @@ public class LightDao extends BaseDao
      */
     public long insert(ContentValues values)
     {
-        return dbWrite.insert(TABLE_NAME, null, values);
+        return dbWrite.insert(LightDbModel.TABLE_NAME.value(), null, values);
     }
 
     public Map<String, Object> get(Light light)
