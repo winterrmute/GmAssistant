@@ -6,21 +6,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Light implements Parcelable
 {
     private Long id;
-    private String color;
+    private Long color;
     private Long brightness;
 
     protected Light(Parcel in)
     {
         if (in.readByte() == 0) { id = null; } else { id = in.readLong(); }
-        color = in.readString();
+        if (in.readByte() == 0) { color = null; } else { color = in.readLong(); }
         if (in.readByte() == 0) { brightness = null; } else { brightness = in.readLong(); }
     }
 
@@ -53,7 +51,11 @@ public class Light implements Parcelable
             dest.writeByte((byte) 1);
             dest.writeLong(id);
         }
-        dest.writeString(color);
+        if (color == null) { dest.writeByte((byte) 0); } else
+        {
+            dest.writeByte((byte) 1);
+            dest.writeLong(color);
+        }
         if (brightness == null) { dest.writeByte((byte) 0); } else
         {
             dest.writeByte((byte) 1);

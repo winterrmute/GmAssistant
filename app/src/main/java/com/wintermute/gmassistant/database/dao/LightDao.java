@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.gmassistant.database.DbManager;
 import com.wintermute.gmassistant.database.model.LightDbModel;
-import com.wintermute.gmassistant.view.model.Light;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -67,30 +66,11 @@ public class LightDao extends BaseDao
             {
                 if (query.getColumnIndex(attr) != -1)
                 {
-                    if (attr.equals(LightDbModel.COLOR.value()))
-                    {
-                        result.put(attr, query.getLong(query.getColumnIndex(attr)));
-                    } else
-                    {
-                        result.put(attr, query.getLong(query.getColumnIndex(attr)));
-                    }
+                    result.put(attr, query.getLong(query.getColumnIndex(attr)));
                 }
             }
         }
-        closeDatabases();
         return result;
-    }
-
-    private void closeDatabases()
-    {
-        if (dbWrite.isOpen())
-        {
-            dbWrite.close();
-        }
-        if (dbRead.isOpen())
-        {
-            dbRead.close();
-        }
     }
 
     public void update(Long lightId, ContentValues values)

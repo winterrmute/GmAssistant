@@ -40,7 +40,7 @@ public class LightOperations
     public Light getLight(Long id)
     {
         Map<String, Object> lightData = dao.get(id);
-        return new Light((Long) lightData.get("id"), (String) lightData.get("color"),
+        return new Light((Long) lightData.get("id"), (Long) lightData.get("color"),
             (Long) lightData.get("brightness"));
     }
 
@@ -69,11 +69,11 @@ public class LightOperations
         return dao.insert(values);
     }
 
-    public void assignLightToScene(Long lightId, Scene scene)
+    public void assignLightToScene(Long lightId, Long sceneId)
     {
         LightDao dao = new LightDao(ctx);
         ContentValues values = new ContentValues();
-        values.put("sceneId", scene.getId());
+        values.put("sceneId", sceneId);
         dao.update(lightId, values);
     }
 

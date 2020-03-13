@@ -34,8 +34,8 @@ public class DbManager extends SQLiteOpenHelper
             + "REFERENCES tracks (id))";
 
     private static final String LIGHTS =
-        "CREATE TABLE lights ( id INTEGER PRIMARY KEY AUTOINCREMENT, color REAL, brightness REAL, lightId INTEGER, "
-            + "FOREIGN KEY (lightId) REFERENCES lights (id) ON DELETE CASCADE)";
+        "CREATE TABLE lights ( id INTEGER PRIMARY KEY AUTOINCREMENT, color REAL, brightness REAL, sceneId INTEGER, "
+            + "FOREIGN KEY (sceneId) REFERENCES scenes (id) ON DELETE CASCADE)";
 
     private static final String HUE_BRIDGES =
         "CREATE TABLE hue_bridges ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, ip TEXT UNIQUE, username TEXT, "

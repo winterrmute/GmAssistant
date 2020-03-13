@@ -15,9 +15,7 @@ import com.wintermute.gmassistant.services.LightConnection;
 import com.wintermute.gmassistant.view.model.Light;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class SceneLightConfiguration extends AppCompatActivity
 {
@@ -43,10 +41,12 @@ public class SceneLightConfiguration extends AppCompatActivity
         btn.setOnClickListener(v ->
         {
             Intent result = new Intent();
-            try {
-                result.putExtra("light", new Light(null, String.valueOf(sceneLightColor), (long) brightness));
+            try
+            {
+                result.putExtra("light", new Light(null, (long) sceneLightColor, (long) brightness));
                 setResult(RESULT_OK, result);
-            } catch (Exception e) {
+            } catch (Exception e)
+            {
                 e.printStackTrace();
                 setResult(RESULT_CANCELED);
             }
@@ -90,15 +90,5 @@ public class SceneLightConfiguration extends AppCompatActivity
 
             }
         });
-    }
-
-    private Light configureLight()
-    {
-        return new Light(null, String.valueOf(sceneLightColor), (long) brightness);
-        //        LightOperations operations = new LightOperations(getApplicationContext());
-        //        Map<String, Object> content = new HashMap<>();
-        //        content.put("color", String.valueOf(sceneLightColor));
-        //        content.put("brightness", (long) brightness);
-        //        return operations.createLight(content);
     }
 }
