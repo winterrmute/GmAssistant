@@ -47,12 +47,12 @@ public class LightDao extends BaseDao
         return dbWrite.insert(TABLE_NAME, null, values);
     }
 
-    public Map<String, Object> get(Long lightId)
+    public Map<String, Object> get(Light light)
     {
         StringBuilder query = new StringBuilder("SELECT * FROM ")
             .append(LightDbModel.TABLE_NAME.value())
             .append(" WHERE id = '")
-            .append(lightId)
+            .append(light.getId())
             .append("'");
         return getLightData(dbRead.rawQuery(query.toString(), null));
     }
@@ -77,35 +77,17 @@ public class LightDao extends BaseDao
                 }
             }
         }
+        closeDatabases();
         return result;
     }
 
-    /**
-     * @return map containing non null values.
-     */
-    private Map<String, Object> createObject(Light target)
-    {
-        HashMap<String, Object> obj = new HashMap<>();
-        obj.put(ID_KEY, target.getId());
-        obj.put(COLOR_KEY, target.getColor());
-        obj.put(BRIGHTNESS_KEY, target.getBrightness());
-        return removeEmptyValues(obj);
-    }
-
-    /**
-     * Safely gets data from database.
-     *
-     * @param cursor to pick data from database
-     * @param column containing value
-     * @return value stored in db if possible, otherwise "-1"
-     */
-    private String getKeyValue(Cursor cursor, String column)
-    {
-        if (cursor.getColumnIndex(column) != -1)
-        {
-            return cursor.getString(cursor.getColumnIndex(column));
+    private void closeDatabases(){
+        if (dbWrite.isOpen()) {
+            dbWrite.close();
         }
-        return "-1";
+        if (dbRead.isOpen()) {
+            dbRead.close();
+        }
     }
 
     public void delete(Light light)

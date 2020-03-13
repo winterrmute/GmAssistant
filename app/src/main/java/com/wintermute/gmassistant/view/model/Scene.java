@@ -26,7 +26,7 @@ public class Scene implements Parcelable
     {
         if (in.readByte() == 0) { id = null; } else { id = in.readLong(); }
         name = in.readString();
-        this.light = (Light) in.readSerializable();
+        this.light = in.readParcelable(Light.class.getClassLoader());
         this.effect = in.readParcelable(Track.class.getClassLoader());
         this.music = in.readParcelable(Track.class.getClassLoader());
         this.ambience = in.readParcelable(Track.class.getClassLoader());
@@ -65,7 +65,7 @@ public class Scene implements Parcelable
             dest.writeInt(0);
         }
         dest.writeString(name);
-        dest.writeSerializable(light);
+        dest.writeParcelable(light, flags);
         dest.writeParcelable(effect, flags);
         dest.writeParcelable(music, flags);
         dest.writeParcelable(ambience, flags);

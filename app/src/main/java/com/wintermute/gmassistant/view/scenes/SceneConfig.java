@@ -2,6 +2,7 @@ package com.wintermute.gmassistant.view.scenes;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -17,7 +18,7 @@ import com.wintermute.gmassistant.view.StorageBrowser;
 import com.wintermute.gmassistant.view.library.LibraryContent;
 import com.wintermute.gmassistant.database.model.SceneDbModel;
 import com.wintermute.gmassistant.database.model.Tags;
-import com.wintermute.gmassistant.view.light.prepareLightConfiguration;
+import com.wintermute.gmassistant.view.light.SceneLightConfiguration;
 import com.wintermute.gmassistant.view.model.Light;
 import com.wintermute.gmassistant.view.model.Track;
 import com.wintermute.gmassistant.operations.PlayerOperations;
@@ -36,6 +37,7 @@ import java.util.Map;
 public class SceneConfig extends AppCompatActivity
 {
 
+    public static final int LIGHT_CONFIG = 4;
     private EditText nameField;
 
     private Button effect;
@@ -277,7 +279,7 @@ public class SceneConfig extends AppCompatActivity
      */
     private void setLights()
     {
-        Intent lightConfigurator = new Intent(SceneConfig.this, prepareLightConfiguration.class);
+        Intent lightConfigurator = new Intent(SceneConfig.this, SceneLightConfiguration.class);
         startActivityForResult(lightConfigurator, 4);
     }
 
@@ -303,11 +305,14 @@ public class SceneConfig extends AppCompatActivity
             {
                 track.setTag(Tags.AMBIENCE.value());
                 ambience.setText(fileName);
-            } else if (requestCode == 4)
+            } else if (requestCode == LIGHT_CONFIG)
             {
                 //TODO: extract to light operations
+                Light light = data.getParcelableExtra("light");
                 LightOperations operations = new LightOperations(getApplicationContext());
-
+                if (light != null){
+                    colorView.setImageBitmap(operations.extractColor(light));
+                }
 //                Light light = new Light();
 //                String color = String.valueOf(data.getIntExtra("color", 0));
 //                light.setColor(color);
@@ -315,7 +320,7 @@ public class SceneConfig extends AppCompatActivity
 //                LightDao dao = new LightDao(this);
 //                light.setId(dao.insert(light));
 //                content.put(SceneDbModel.LIGHT.value(), dao.get(light.getId()));
-//                colorView.setImageBitmap(extractColor(color));
+
             }
             trackHolder.put(track.getTag(), track);
         }

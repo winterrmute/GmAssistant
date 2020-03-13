@@ -52,11 +52,11 @@
     <string name="title_activity_audio_file_panel">AudioFilePanel</string>
     <string name="add_files_with_tag">add files in this category</string>
     <string name="add_bridge">Connect to Hue Bridge</string>
+    <string name="change_light_in_realtime">Show changes in realtime</string>
 
     <!--  alert dialog  -->
     <string name="include_subdirs_message">include files in subdirectories</string>
     <string name="include_subdirs_title">select files in directory</string>
-
 
     <!--  universal buttons  -->
     <string name="ok_result">OK</string>

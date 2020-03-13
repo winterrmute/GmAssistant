@@ -42,12 +42,8 @@ public class LightOperations
      * @param lightId to get its color
      * @return
      */
-    private Bitmap extractColor(Long lightId)
+    public Bitmap extractColor(Light light)
     {
-        LightOperations operations = new LightOperations(ctx);
-        Light light = operations.getLight(lightId);
-
-        LightDao dao = new LightDao(ctx);
         Rect rect = new Rect(0, 0, 1, 1);
         Bitmap image = Bitmap.createBitmap(rect.width(), rect.height(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(image);
@@ -57,33 +53,15 @@ public class LightOperations
         return image;
     }
 
-    private Light getLight(Long lightId)
-    {
-        Light result = new Light();
-        Map<String, Object> lightData = dao.get(lightId);
-        result.setId((Long) lightData.get("id"));
-        result.setColor((String) lightData.get("color"));
-        result.setBrightness((Long) lightData.get("brightness"));
-        return result;
-    }
-
-    /**
-     * Creates new scene
-     *
-     * @param content all scene information
-     */
-    public void createLight(Map<String, Object> content)
-    {
-        Light light = new Light();
-        storeLight(content);
-    }
-
-    private void storeLight(Map<String, Object> content)
+    public Light createLight(Map<String, Object> content)
     {
         ContentValues values = new ContentValues();
-        values.put("color", (String) content.get("brightness"));
+        values.put("color", (String) content.get("color"));
         values.put("brightness", (Long) content.get("brightness"));
-        dao.insert(values);
+        Long id = dao.insert(values);
+        String color = (String) content.get("color");
+        Long brightness = (Long) content.get("brightness");
+        return new Light(id, color, brightness);
     }
 
     /**

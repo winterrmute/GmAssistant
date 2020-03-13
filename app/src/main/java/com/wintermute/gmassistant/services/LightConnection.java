@@ -42,10 +42,15 @@ public class LightConnection
         return "http://" + bridge.getIp() + "/api/" + bridge.getUsername() + "/lights";
     }
 
-    public List<String> getLightManagementUrls(){
+    public List<String> getLightManagementUrls()
+    {
         List<String> result = new ArrayList<>();
-        for (HueBulb bulb : bulbs) {
-            result.add(getLightsUrl() + "/" + bulb.getId().toString() + "/state");
+        if (bulbs != null)
+        {
+            for (HueBulb bulb : bulbs)
+            {
+                result.add(getLightsUrl() + "/" + bulb.getId().toString() + "/state");
+            }
         }
         return result;
     }

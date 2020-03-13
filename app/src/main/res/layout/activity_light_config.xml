@@ -5,12 +5,12 @@
         android:id="@+id/btn"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.light.prepareLightConfiguration">
+        tools:context=".view.light.SceneLightConfiguration">
 
 
     <com.skydoves.colorpickerview.ColorPickerView
             android:id="@+id/color_picker"
-            android:layout_width="300dp"
+            android:layout_width="409dp"
             android:layout_height="300dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,7 +33,16 @@
             android:max="255"
             android:progress="255"
             app:layout_constraintTop_toBottomOf="@+id/color_picker"
-            tools:layout_editor_absoluteX="182dp" />
+            tools:layout_editor_absoluteX="0dp" />
+
+    <Switch
+            android:id="@+id/light_in_real_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/change_light_in_realtime"
+            android:checked="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/brightness_bar" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
