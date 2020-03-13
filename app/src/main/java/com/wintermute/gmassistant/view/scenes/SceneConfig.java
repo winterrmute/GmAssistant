@@ -2,7 +2,6 @@ package com.wintermute.gmassistant.view.scenes;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -51,12 +50,14 @@ public class SceneConfig extends AppCompatActivity
     private Switch delayMusic;
     private Switch delayAmbience;
 
+    private Light configuredLight;
     private ImageView colorView;
 
     private String tag;
 
     private SceneOperations operations;
     private PlayerOperations player;
+    private LightOperations light;
     private Map<String, Object> content = new HashMap<>();
     private Map<String, Track> trackHolder = new HashMap<>();
 
@@ -82,28 +83,22 @@ public class SceneConfig extends AppCompatActivity
         lightEffects.setOnClickListener(v -> setLights());
 
         effect = findViewById(R.id.set_start_effect);
-        effect.setOnClickListener(v ->
-        {
-            browseFilesForTrack(Tags.EFFECT.ordinal());
-            tag = Tags.EFFECT.name();
-        });
+        effect.setOnClickListener(v -> selectTrack(Tags.EFFECT));
 
         music = findViewById(R.id.set_music);
-        music.setOnClickListener(v ->
-        {
-            browseFilesForTrack(Tags.MUSIC.ordinal());
-            tag = Tags.MUSIC.name();
-        });
+        music.setOnClickListener(v -> selectTrack(Tags.MUSIC));
 
         ambience = findViewById(R.id.set_ambience);
-        ambience.setOnClickListener(v ->
-        {
-            browseFilesForTrack(Tags.AMBIENCE.ordinal());
-            tag = Tags.AMBIENCE.name();
-        });
+        ambience.setOnClickListener(v -> selectTrack(Tags.AMBIENCE));
 
         Button sceneSubmit = findViewById(R.id.scene_submit);
         sceneSubmit.setOnClickListener(v -> submitScene());
+    }
+
+    private void selectTrack(Tags category)
+    {
+        browseFilesForTrack(category.ordinal());
+        tag = category.name();
     }
 
     private void submitScene()
@@ -111,10 +106,8 @@ public class SceneConfig extends AppCompatActivity
         if (!nameField.getText().toString().equals(""))
         {
             content.put(SceneDbModel.NAME.value(), nameField.getText());
-            content.put(SceneDbModel.LIGHT.value(),
-                content.get(SceneDbModel.LIGHT.value()) != null ? content.get(SceneDbModel.LIGHT.value())
-                                                                : new Light());
             storeTracks();
+            storeLight();
             operations.createScene(content);
             setResult(RESULT_OK);
             player.stopAll();
@@ -122,6 +115,14 @@ public class SceneConfig extends AppCompatActivity
         } else
         {
             Toast.makeText(this, "Please set scene name!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void storeLight()
+    {
+        if (configuredLight != null)
+        {
+            configuredLight.setId(light.createLight(configuredLight));
         }
     }
 
@@ -291,33 +292,32 @@ public class SceneConfig extends AppCompatActivity
         {
             if (requestCode == LIGHT_CONFIG)
             {
-                //TODO: extract to light operations
-                Light light = data.getParcelableExtra("light");
-                LightOperations operations = new LightOperations(getApplicationContext());
-                if (light != null)
+                configuredLight = data.getParcelableExtra("light");
+                if (configuredLight != null)
                 {
-                    colorView.setImageBitmap(operations.extractColor(light));
-                } else
-                {
-                    TrackOperations trackOperations = new TrackOperations(getApplicationContext());
-
-                    Track track = trackOperations.createTrack(data.getStringExtra("path"));
-                    String fileName = track.getName() == null ? new File(track.getPath()).getName() : track.getName();
-                    if (requestCode == Tags.EFFECT.ordinal())
-                    {
-                        track.setTag(Tags.EFFECT.value());
-                        effect.setText(fileName);
-                    } else if (requestCode == Tags.MUSIC.ordinal())
-                    {
-                        track.setTag(Tags.MUSIC.value());
-                        music.setText(fileName);
-                    } else if (requestCode == Tags.AMBIENCE.ordinal())
-                    {
-                        track.setTag(Tags.AMBIENCE.value());
-                        ambience.setText(fileName);
-                    }
-                    trackHolder.put(track.getTag(), track);
+                    content.put("light", configuredLight);
+                    light = new LightOperations(getApplicationContext());
+                    colorView.setImageBitmap(light.extractColor(configuredLight));
                 }
+            } else
+            {
+                TrackOperations trackOperations = new TrackOperations(getApplicationContext());
+                Track track = trackOperations.createTrack(data.getStringExtra("path"));
+                String fileName = track.getName() == null ? new File(track.getPath()).getName() : track.getName();
+                if (requestCode == Tags.EFFECT.ordinal())
+                {
+                    track.setTag(Tags.EFFECT.value());
+                    effect.setText(fileName);
+                } else if (requestCode == Tags.MUSIC.ordinal())
+                {
+                    track.setTag(Tags.MUSIC.value());
+                    music.setText(fileName);
+                } else if (requestCode == Tags.AMBIENCE.ordinal())
+                {
+                    track.setTag(Tags.AMBIENCE.value());
+                    ambience.setText(fileName);
+                }
+                trackHolder.put(track.getTag(), track);
             }
         }
     }

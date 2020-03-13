@@ -106,7 +106,9 @@ public class SceneOperations
                 {
                     if (entry.getKey().equals(SceneDbModel.LIGHT.value()))
                     {
-                        scene.setLight((Light) entry.getValue());
+                        LightOperations operations = new LightOperations(ctx);
+                        Light light = operations.getLight((Long) entry.getValue());
+                        scene.setLight(light);
                     }
                     if (entry.getKey().equals(SceneDbModel.EFFECT.value()))
                     {
@@ -158,9 +160,7 @@ public class SceneOperations
             {
                 if (entry.getKey().equals(SceneDbModel.LIGHT.value()))
                 {
-                    Light light = (Light) entry.getValue();
-                    Long value = light.getId();
-                    result.put(entry.getKey(), value);
+                    result.put(entry.getKey(), ((Light) entry.getValue()).getId());
                 } else if (entry.getKey().equals(Tags.EFFECT.value()) || entry.getKey().equals(Tags.MUSIC.value())
                     || entry.getKey().equals(Tags.AMBIENCE.value()))
                 {
@@ -184,6 +184,13 @@ public class SceneOperations
             Arrays.asList((Track) sceneContent.get(Tags.EFFECT.value()), (Track) sceneContent.get(Tags.MUSIC.value()),
                 (Track) sceneContent.get(Tags.AMBIENCE.value()));
         storeTrackConfig(tracks);
+        assignLight(scene.getLight().getId());
+    }
+
+    private void assignLight(Long lightId)
+    {
+        LightOperations operations = new LightOperations(ctx);
+        operations.assignLightToScene(lightId, scene);
     }
 
     void storeTrackConfig(List<Track> tracks)

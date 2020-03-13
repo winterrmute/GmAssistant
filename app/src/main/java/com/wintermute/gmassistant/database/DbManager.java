@@ -30,16 +30,20 @@ public class DbManager extends SQLiteOpenHelper
 
     private static final String SCENE_TRACK_CONFIGS =
         "CREATE TABLE scene_track_configs ( sceneId INTEGER, trackId INTEGER, volume INTEGER, delay"
-            + " INTEGER, FOREIGN KEY (sceneId) REFERENCES scenes (id) ON DELETE CASCADE, FOREIGN KEY (trackId) REFERENCES tracks (id))";
+            + " INTEGER, FOREIGN KEY (sceneId) REFERENCES scenes (id) ON DELETE CASCADE, FOREIGN KEY (trackId) "
+            + "REFERENCES tracks (id))";
 
     private static final String LIGHTS =
-        "CREATE TABLE lights ( id INTEGER PRIMARY KEY AUTOINCREMENT, color REAL, brightness REAL)";
+        "CREATE TABLE lights ( id INTEGER PRIMARY KEY AUTOINCREMENT, color REAL, brightness REAL, lightId INTEGER, "
+            + "FOREIGN KEY (lightId) REFERENCES lights (id) ON DELETE CASCADE)";
 
     private static final String HUE_BRIDGES =
-        "CREATE TABLE hue_bridges ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, ip TEXT UNIQUE, username TEXT, active INTEGER)";
+        "CREATE TABLE hue_bridges ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, ip TEXT UNIQUE, username TEXT, "
+            + "active INTEGER)";
 
     private static final String HUE_BULBS =
-        "CREATE TABLE hue_bulbs ( id INTEGER PRIMARY KEY NOT NULL, name TEXT, type TEXT, bridgeId INTEGER, FOREIGN KEY (bridgeId) REFERENCES hue_bridges (id))";
+        "CREATE TABLE hue_bulbs ( id INTEGER PRIMARY KEY NOT NULL, name TEXT, type TEXT, bridgeId INTEGER, FOREIGN "
+            + "KEY (bridgeId) REFERENCES hue_bridges (id))";
 
     private static final String LIBRARY =
         "CREATE TABLE library ( id INTEGER PRIMARY KEY AUTOINCREMENT, path TEXT, tag TEXT, recursively TEXT)";
@@ -61,7 +65,8 @@ public class DbManager extends SQLiteOpenHelper
     public void onCreate(SQLiteDatabase db)
     {
         Stream
-            .of(PLAYLISTS, TRACKS, PLAYLISTS_CONTENT, SCENES, SCENE_TRACK_CONFIGS, LIGHTS, HUE_BRIDGES, HUE_BULBS, LIBRARY, EFFECTS, GROUPS)
+            .of(PLAYLISTS, TRACKS, PLAYLISTS_CONTENT, SCENES, SCENE_TRACK_CONFIGS, LIGHTS, HUE_BRIDGES, HUE_BULBS,
+                LIBRARY, EFFECTS, GROUPS)
             .forEach(db::execSQL);
     }
 

@@ -10,6 +10,7 @@ import android.graphics.Rect;
 import com.wintermute.gmassistant.database.dao.LightDao;
 import com.wintermute.gmassistant.hue.ApiCaller;
 import com.wintermute.gmassistant.view.model.Light;
+import com.wintermute.gmassistant.view.model.Scene;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -36,11 +37,18 @@ public class LightOperations
         dao = new LightDao(ctx);
     }
 
+    public Light getLight(Long id)
+    {
+        Map<String, Object> lightData = dao.get(id);
+        return new Light((Long) lightData.get("id"), (String) lightData.get("color"),
+            (Long) lightData.get("brightness"));
+    }
+
     /**
      * Extract bitmap from color of light.
      *
-     * @param lightId to get its color
-     * @return
+     * @param light containing selected color to extract as bitmap
+     * @return bitmap containing selected color
      */
     public Bitmap extractColor(Light light)
     {
@@ -53,15 +61,20 @@ public class LightOperations
         return image;
     }
 
-    public Light createLight(Map<String, Object> content)
+    public Long createLight(Light light)
     {
         ContentValues values = new ContentValues();
-        values.put("color", (String) content.get("color"));
-        values.put("brightness", (Long) content.get("brightness"));
-        Long id = dao.insert(values);
-        String color = (String) content.get("color");
-        Long brightness = (Long) content.get("brightness");
-        return new Light(id, color, brightness);
+        values.put("color", light.getColor());
+        values.put("brightness", light.getBrightness());
+        return dao.insert(values);
+    }
+
+    public void assignLightToScene(Long lightId, Scene scene)
+    {
+        LightDao dao = new LightDao(ctx);
+        ContentValues values = new ContentValues();
+        values.put("sceneId", scene.getId());
+        dao.update(lightId, values);
     }
 
     /**

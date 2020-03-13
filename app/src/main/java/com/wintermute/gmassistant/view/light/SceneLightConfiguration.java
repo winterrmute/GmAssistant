@@ -42,10 +42,14 @@ public class SceneLightConfiguration extends AppCompatActivity
         Button btn = findViewById(R.id.light_submit);
         btn.setOnClickListener(v ->
         {
-            Light light = storeLight();
             Intent result = new Intent();
-            result.putExtra("light", light);
-            setResult(RESULT_OK, result);
+            try {
+                result.putExtra("light", new Light(null, String.valueOf(sceneLightColor), (long) brightness));
+                setResult(RESULT_OK, result);
+            } catch (Exception e) {
+                e.printStackTrace();
+                setResult(RESULT_CANCELED);
+            }
             finish();
         });
 
@@ -88,12 +92,13 @@ public class SceneLightConfiguration extends AppCompatActivity
         });
     }
 
-    private Light storeLight()
+    private Light configureLight()
     {
-        LightOperations operations = new LightOperations(getApplicationContext());
-        Map<String, Object> content = new HashMap<>();
-        content.put("color", String.valueOf(sceneLightColor));
-        content.put("brightness", (long) brightness);
-        return operations.createLight(content);
+        return new Light(null, String.valueOf(sceneLightColor), (long) brightness);
+        //        LightOperations operations = new LightOperations(getApplicationContext());
+        //        Map<String, Object> content = new HashMap<>();
+        //        content.put("color", String.valueOf(sceneLightColor));
+        //        content.put("brightness", (long) brightness);
+        //        return operations.createLight(content);
     }
 }

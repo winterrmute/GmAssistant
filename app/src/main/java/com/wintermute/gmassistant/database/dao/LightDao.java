@@ -42,17 +42,17 @@ public class LightDao extends BaseDao
      *
      * @return id.
      */
-    public long insert(ContentValues values)
+    public Long insert(ContentValues values)
     {
         return dbWrite.insert(LightDbModel.TABLE_NAME.value(), null, values);
     }
 
-    public Map<String, Object> get(Light light)
+    public Map<String, Object> get(Long lightId)
     {
         StringBuilder query = new StringBuilder("SELECT * FROM ")
             .append(LightDbModel.TABLE_NAME.value())
             .append(" WHERE id = '")
-            .append(light.getId())
+            .append(lightId)
             .append("'");
         return getLightData(dbRead.rawQuery(query.toString(), null));
     }
@@ -81,18 +81,21 @@ public class LightDao extends BaseDao
         return result;
     }
 
-    private void closeDatabases(){
-        if (dbWrite.isOpen()) {
+    private void closeDatabases()
+    {
+        if (dbWrite.isOpen())
+        {
             dbWrite.close();
         }
-        if (dbRead.isOpen()) {
+        if (dbRead.isOpen())
+        {
             dbRead.close();
         }
     }
 
-    public void delete(Light light)
+    public void update(Long lightId, ContentValues values)
     {
-        dbWrite.delete(LightDbModel.TABLE_NAME.value(), LightDbModel.ID.value() + " = " + light.getId(),
+        dbWrite.update(LightDbModel.TABLE_NAME.value(), values, LightDbModel.ID.value() + " = " + lightId,
             new String[] {});
     }
 }
