@@ -1,10 +1,6 @@
 package com.wintermute.gmassistant.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +9,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.wintermute.gmassistant.R;
-import com.wintermute.gmassistant.database.dao.LightDao;
+import com.wintermute.gmassistant.operations.LightOperations;
+import com.wintermute.gmassistant.view.model.Light;
 import com.wintermute.gmassistant.view.model.Scene;
 import com.wintermute.gmassistant.view.model.Track;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -65,11 +61,12 @@ public class SceneAdapter extends BaseAdapter
         TextView ambience = result.findViewById(R.id.ambience);
         Scene target = scenes.get(position);
 
-        Long light = target.getLight() != null ? target.getLight().getId() : 0L;
-        if (light != 0L)
+        Light light = target.getLight();
+        if (light != null)
         {
-            //TODO
-//            image.setImageBitmap(extractColor(light));
+
+            LightOperations operations = new LightOperations(ctx);
+            image.setImageBitmap(operations.extractColor(light));
         }
         name.setText(target.getName());
 
@@ -80,7 +77,8 @@ public class SceneAdapter extends BaseAdapter
         return result;
     }
 
-    private String computeName(Track track){
+    private String computeName(Track track)
+    {
         String result = track != null ? track.getName() : "";
         return result.length() > 30 ? result.substring(0, 27) + "..." : result;
     }

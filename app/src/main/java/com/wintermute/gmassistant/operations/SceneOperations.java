@@ -116,7 +116,7 @@ public class SceneOperations
         return scene;
     }
 
-    private Track addTrackToScene(Scene scene ,Long trackId, String tag)
+    private Track addTrackToScene(Scene scene, Long trackId, String tag)
     {
         TrackOperations trackOperations = new TrackOperations(ctx);
         TrackConfigOperations trackConfig = new TrackConfigOperations(ctx);
@@ -136,7 +136,7 @@ public class SceneOperations
      */
     public void startScene(Scene scene)
     {
-        new PlayerHandler(ctx).startPlayers(scene);
+        new PlayerHandler(ctx).playScene(scene);
     }
 
     public void createScene(Map<String, Object> sceneContent)
@@ -175,7 +175,10 @@ public class SceneOperations
 
         List<Track> tracks = Arrays.asList(scene.getEffect(), scene.getMusic(), scene.getAmbience());
         storeTrackConfig(scene, tracks);
-        assignLight(scene.getLight().getId(), scene.getId());
+        if (scene.getLight() != null)
+        {
+            assignLight(scene.getLight().getId(), scene.getId());
+        }
     }
 
     private void assignLight(Long lightId, Long sceneId)

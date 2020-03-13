@@ -2,14 +2,18 @@ package com.wintermute.gmassistant.handlers;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import com.wintermute.gmassistant.database.model.Tags;
-import com.wintermute.gmassistant.view.model.Scene;
-import com.wintermute.gmassistant.view.model.Track;
+import com.wintermute.gmassistant.operations.LightOperations;
 import com.wintermute.gmassistant.operations.PlayerOperations;
+import com.wintermute.gmassistant.services.LightConnection;
 import com.wintermute.gmassistant.services.player.AmbiencePlayer;
 import com.wintermute.gmassistant.services.player.EffectPlayer;
 import com.wintermute.gmassistant.services.player.MusicPlayer;
+import com.wintermute.gmassistant.view.model.Scene;
+import com.wintermute.gmassistant.view.model.Track;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -56,9 +60,21 @@ public class PlayerHandler
      *
      * @param scene to be started by players
      */
-    public void startPlayers(Scene scene)
+    public void playScene(Scene scene)
     {
         clearScene();
+        if (scene.getLight() != null)
+        {
+            LightOperations operations = new LightOperations(ctx);
+            List<String> bulbUrls = LightConnection.getInstance().getLightManagementUrls();
+            for (String url : bulbUrls)
+            {
+                operations.changeColor(url,
+                    operations.getRGBtoXY(Color.valueOf(new BigDecimal(scene.getLight().getColor()).intValue())));
+                operations.changeBrightness(url, scene.getLight().getBrightness());
+            }
+
+        }
         for (Track track : Arrays.asList(scene.getEffect(), scene.getMusic(), scene.getAmbience()))
         {
             if (track != null)
