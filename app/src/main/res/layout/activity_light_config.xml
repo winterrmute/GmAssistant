@@ -7,16 +7,19 @@
         android:layout_height="match_parent"
         tools:context=".view.light.SceneLightConfiguration">
 
-
-    <com.skydoves.colorpickerview.ColorPickerView
-            android:id="@+id/color_picker"
-            android:layout_width="409dp"
-            android:layout_height="300dp"
+    <com.flask.colorpicker.ColorPickerView
+            android:id="@+id/color_picker_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:alphaSlider="true"
+            app:alphaSliderView="@+id/v_alpha_slider"
+            app:density="12"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:palette="@drawable/palette"
-            app:selector="@drawable/wheel" />
+            app:lightnessSlider="true"
+            app:lightnessSliderView="@+id/v_lightness_slider"
+            app:wheelType="CIRCLE" />
 
     <Button
             android:id="@+id/light_submit"
@@ -30,19 +33,32 @@
             android:id="@+id/brightness_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="64dp"
             android:max="255"
             android:progress="255"
-            app:layout_constraintTop_toBottomOf="@+id/color_picker"
+            app:layout_constraintTop_toBottomOf="@+id/color_picker_view"
             tools:layout_editor_absoluteX="0dp" />
 
     <Switch
             android:id="@+id/light_in_real_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/change_light_in_realtime"
             android:checked="false"
+            android:text="@string/change_light_in_realtime"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/brightness_bar" />
+
+    <TextView
+            android:id="@+id/brightness_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/brightness"
+            android:textSize="20sp"
+            android:textColor="@android:color/black"
+            app:layout_constraintBottom_toTopOf="@+id/brightness_bar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/color_picker_view" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

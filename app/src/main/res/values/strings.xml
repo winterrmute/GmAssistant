@@ -80,6 +80,7 @@
 
     <!--   HueBulbs -->
     <string name="add_bulbs">select bulbs</string>
+    <string name="brightness">Brightness</string>
 
 
 </resources>

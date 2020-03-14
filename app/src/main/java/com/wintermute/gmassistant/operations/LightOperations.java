@@ -117,14 +117,14 @@ public class LightOperations
 
     public void changeColor(String url, double[] color)
     {
-        String req = "{ \"on\":true, \"xy\": [ " + color[0] + ", " + color[1] + " ], \"transitiontime\": 1, \"hue\": "
-            + "46920 }";
+//        String req = "{ \"on\":true, \"xy\": [ " + color[0] + ", " + color[1] + " ], \"transitiontime\": 1, \"hue\": "
+        String req = "{ \"on\":true, \"xy\": [ " + color[0] + ", " + color[1] + " ], \"transitiontime\": 1 }";
         ApiCaller.getInstance().callPut(ctx, url, req);
     }
 
     public void changeBrightness(String url, long brightness)
     {
-        String req = "{ \"on\":true, \"bri\": " + brightness + ", \"transitiontime\": 1, \"hue\": " + "46920 }";
+        String req = "{ \"on\":true, \"bri\": " + brightness + ", \"transitiontime\": 1 }";
         ApiCaller.getInstance().callPut(ctx, url, req);
     }
 }

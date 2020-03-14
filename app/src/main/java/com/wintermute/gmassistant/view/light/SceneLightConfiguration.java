@@ -7,8 +7,7 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import androidx.appcompat.app.AppCompatActivity;
-import com.skydoves.colorpickerview.ColorPickerView;
-import com.skydoves.colorpickerview.listeners.ColorListener;
+import com.flask.colorpicker.ColorPickerView;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.operations.LightOperations;
 import com.wintermute.gmassistant.services.LightConnection;
@@ -53,8 +52,8 @@ public class SceneLightConfiguration extends AppCompatActivity
             finish();
         });
 
-        ColorPickerView colorPickerView = findViewById(R.id.color_picker);
-        colorPickerView.setColorListener((ColorListener) (color, fromUser) ->
+        ColorPickerView colorPickerView = findViewById(R.id.color_picker_view);
+        colorPickerView.addOnColorChangedListener(color ->
         {
             sceneLightColor = color;
             double[] picked = light.getRGBtoXY(Color.valueOf(new BigDecimal(color).intValue()));
