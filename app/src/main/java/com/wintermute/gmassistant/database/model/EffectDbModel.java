@@ -7,7 +7,7 @@ public enum EffectDbModel
 {
     TABLE_NAME("effects"),
     TRACK_ID("trackId"),
-    GROUP_ID("groupId");
+    BOARD_ID("boardId");
 
     private String column;
 

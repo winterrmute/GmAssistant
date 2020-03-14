@@ -26,19 +26,19 @@ public class EffectsDao
     /**
      * Get track details.
      *
-     * @param groupId of group.
-     * @return selected track.
+     * @param boardId of selected board.
+     * @return selected trackIds assigned to this board.
      */
-    public List<Long> get(Long groupId)
+    public List<Long> get(Long boardId)
     {
         StringBuilder query = new StringBuilder("SELECT ")
             .append(EffectDbModel.TRACK_ID.value())
             .append(" FROM ")
             .append(EffectDbModel.TABLE_NAME.value())
             .append("  WHERE ")
-            .append(EffectDbModel.GROUP_ID.value())
+            .append(EffectDbModel.BOARD_ID.value())
             .append(" = '")
-            .append(groupId)
+            .append(boardId)
             .append("'");
         return getGroupData(dbRead.rawQuery(query.toString(), null), EffectDbModel.TRACK_ID.value());
     }
@@ -47,7 +47,7 @@ public class EffectsDao
     {
         StringBuilder query =
             new StringBuilder("SELECT DISTINCT groupId FROM ").append(EffectDbModel.TABLE_NAME.value());
-        return getGroupData(dbRead.rawQuery(query.toString(), null), EffectDbModel.GROUP_ID.value());
+        return getGroupData(dbRead.rawQuery(query.toString(), null), EffectDbModel.BOARD_ID.value());
     }
 
     private List<Long> getGroupData(Cursor query, String attribute)

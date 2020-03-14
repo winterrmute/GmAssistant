@@ -136,47 +136,22 @@ public class TrackDao
         return result;
     }
 
-    private Long getNumericalValue(Cursor cursor, String column)
+    private Long getNumericalValue(Cursor cursor, String attr)
     {
 
-        if (cursor.getColumnIndex(column) != -1)
+        if (cursor.getColumnIndex(attr) != -1)
         {
-            return cursor.getLong(cursor.getColumnIndex(column));
+            return cursor.getLong(cursor.getColumnIndex(attr));
         }
         return -1L;
     }
 
-    private String getStringValue(Cursor cursor, String column)
+    private String getStringValue(Cursor cursor, String attr)
     {
-        if (cursor.getColumnIndex(column) != -1)
+        if (cursor.getColumnIndex(attr) != -1)
         {
-            return cursor.getString(cursor.getColumnIndex(column));
+            return cursor.getString(cursor.getColumnIndex(attr));
         }
         return "-1";
-    }
-
-    /**
-     * Uptdate row in track table.
-     */
-    public void update(Track track)
-    {
-        //        StringBuilder query = new StringBuilder("UPDATE ")
-        //            .append(TrackDbModel.TABLE_NAME.value())
-        //            .append(" SET ")
-        //            .append(updateQueryBuilder(createObject(track)))
-        //            .append(" WHERE id = '")
-        //            .append(track.getId())
-        //            .append("'");
-        //        dbWrite.execSQL(query.toString());
-    }
-
-    /**
-     * Deletes row from database by id.
-     *
-     * @param id of track to remove.
-     */
-    public void deleteById(String id)
-    {
-        dbWrite.delete(TrackDbModel.TABLE_NAME.value(), TrackDbModel.ID.value() + " = " + id, new String[] {});
     }
 }

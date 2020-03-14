@@ -62,8 +62,11 @@
     <string name="ok_result">OK</string>
     <string name="cancel_result">Cancel</string>
 
-    <!--  EffectGroups  -->
+    <!--  Boards  -->
     <string name="add_effect_board">Add effect board</string>
+    <string name="add_effects">Add effects</string>
+    <string name="no_effects">No effects on this board</string>
+
     <string name="hue_ip_hint">192.168.1.1</string>
     <string name="hue_bridge_name">Display name:</string>
 

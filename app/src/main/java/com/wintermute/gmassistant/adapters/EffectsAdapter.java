@@ -65,4 +65,10 @@ public class EffectsAdapter extends BaseAdapter
         result.setTag(position);
         return result;
     }
+
+    public void updateDisplayedElements(List<Track> effects)
+    {
+        this.effects = effects;
+        notifyDataSetChanged();
+    }
 }

@@ -49,10 +49,10 @@ public class DbManager extends SQLiteOpenHelper
         "CREATE TABLE library ( id INTEGER PRIMARY KEY AUTOINCREMENT, path TEXT, tag TEXT, recursively TEXT)";
 
     private static final String EFFECTS =
-        "CREATE TABLE effects ( trackId INTEGER, groupId INTEGER, FOREIGN KEY (trackId) REFERENCES tracks (id) ON "
-            + "DELETE CASCADE, FOREIGN KEY" + " (groupId) REFERENCES groups (id) ON DELETE CASCADE )";
+        "CREATE TABLE effects ( trackId INTEGER, boardId INTEGER, FOREIGN KEY (trackId) REFERENCES tracks (id) ON "
+            + "DELETE CASCADE, FOREIGN KEY (boardId) REFERENCES boards (id) ON DELETE CASCADE )";
 
-    private static final String GROUPS = "CREATE TABLE groups (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)";
+    private static final String BOARDS = "CREATE TABLE boards (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, type TEXT)";
 
     private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS user_playlist";
 
@@ -66,7 +66,7 @@ public class DbManager extends SQLiteOpenHelper
     {
         Stream
             .of(PLAYLISTS, TRACKS, PLAYLISTS_CONTENT, SCENES, SCENE_TRACK_CONFIGS, LIGHTS, HUE_BRIDGES, HUE_BULBS,
-                LIBRARY, EFFECTS, GROUPS)
+                LIBRARY, EFFECTS, BOARDS)
             .forEach(db::execSQL);
     }
 

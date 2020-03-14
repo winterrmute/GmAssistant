@@ -10,17 +10,14 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
-import com.wintermute.gmassistant.adapters.EffectGroupsAdapter;
-import com.wintermute.gmassistant.view.StorageBrowser;
+import com.wintermute.gmassistant.adapters.BoardsAdapter;
 import com.wintermute.gmassistant.dialogs.ListDialog;
+import com.wintermute.gmassistant.operations.BoardOperations;
 import com.wintermute.gmassistant.view.model.Board;
-import com.wintermute.gmassistant.operations.EffectBoardOperations;
-import com.wintermute.gmassistant.operations.TrackOperations;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * List containing effect boards.
@@ -28,14 +25,13 @@ import java.util.stream.Collectors;
 public class EffectBoards extends AppCompatActivity
 {
 
-    public static final int COLLECT_TRACKS = 0;
     public static final int DELETE = 2;
     private Board board;
     private List<Board> boards;
     private ListView effectBoards;
-    private String groupName;
-    private ArrayList<String> collectedTracks;
-    private EffectBoardOperations operations;
+    private String boardName;
+    private BoardOperations operations;
+    private BoardsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -43,7 +39,7 @@ public class EffectBoards extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_effect_groups);
 
-        operations = new EffectBoardOperations(getApplicationContext());
+        operations = new BoardOperations(getApplicationContext());
         effectBoards = findViewById(R.id.effect_groups);
         showBoards();
 
@@ -53,14 +49,12 @@ public class EffectBoards extends AppCompatActivity
             board = boards.get(position);
             Intent dialog = new Intent(EffectBoards.this, ListDialog.class);
             dialog.putStringArrayListExtra("opts", new ArrayList<>(Collections.singletonList("delete")));
-            dialog.putExtra("lol", "also theoretisch...");
             startActivityForResult(dialog, DELETE);
             return true;
         });
 
-        Button addEffectGroup = findViewById(R.id.add_effect_group);
-        addEffectGroup.setOnClickListener(
-            v -> startActivityForResult(new Intent(this, StorageBrowser.class), COLLECT_TRACKS));
+        Button addBoard = findViewById(R.id.add_effect_group);
+        addBoard.setOnClickListener(v -> createBoard());
     }
 
     @Override
@@ -75,29 +69,16 @@ public class EffectBoards extends AppCompatActivity
                 if ("delete".equals(action))
                 {
                     operations.deleteBoard(board);
-                }
-            }
-            if (requestCode == COLLECT_TRACKS)
-            {
-                Toast
-                    .makeText(getApplicationContext(),
-                        "If you selected a large directory, please wait a moment. It could take a while...",
-                        Toast.LENGTH_LONG)
-                    .show();
-                collectedTracks = new ArrayList<>();
-                collectedTracks = data.getStringArrayListExtra("effects");
-                if (collectedTracks != null && collectedTracks.size() > 0)
-                {
-                    setGroupName();
+                    updateBoards();
                 }
             }
         }
     }
 
-    private void setGroupName()
+    private void createBoard()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Group Name");
+        builder.setTitle("Board Name");
 
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -106,43 +87,39 @@ public class EffectBoards extends AppCompatActivity
         builder.setPositiveButton(R.string.ok_result, (dialog, which) ->
         {
             dialog.dismiss();
-            groupName = input.getText().toString();
-            if (!"".equals(groupName))
+            boardName = input.getText().toString();
+            if (!"".equals(boardName))
             {
-                createGroup(collectedTracks);
-                finish();
+                Long createdBoardId = operations.createBoard(boardName, "effects");
+                openBoard(createdBoardId);
+                updateBoards();
             } else
             {
-                Toast.makeText(getApplicationContext(), "Set group name", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Set Board name", Toast.LENGTH_LONG).show();
             }
         });
         builder.setNegativeButton(R.string.cancel_result, (dialog, which) -> dialog.cancel());
         builder.show();
     }
 
-    private void createGroup(List<String> collected)
+    private void updateBoards()
     {
-        TrackOperations trackOperations = new TrackOperations(getApplicationContext());
-        List<Long> referencedEffects = collected
-            .stream()
-            .map(p -> trackOperations.storeTrackIfNotExist(trackOperations.createTrack(p)))
-            .collect(Collectors.toList());
-
-        operations.createBoard(groupName, referencedEffects);
+        boards = operations.loadViewElements("effects");
+        adapter.updateDisplayedElements(boards);
     }
 
     private void openBoard(Long id)
     {
-        Intent board = new Intent(this, com.wintermute.gmassistant.view.effects.EffectBoard.class);
-        board.putExtra("groupId", id);
+        Intent board = new Intent(this, EffectBoard.class);
+        board.putExtra("boardId", id);
         startActivity(board);
     }
 
     private void showBoards()
     {
-        EffectBoardOperations operations = new EffectBoardOperations(getApplicationContext());
-        boards = operations.loadViewElements();
-        EffectGroupsAdapter adapter = new EffectGroupsAdapter(this, boards);
+        operations = new BoardOperations(getApplicationContext());
+        boards = operations.loadViewElements("effects");
+        adapter = new BoardsAdapter(this, boards);
         effectBoards = findViewById(R.id.effect_groups);
         effectBoards.setAdapter(adapter);
     }
