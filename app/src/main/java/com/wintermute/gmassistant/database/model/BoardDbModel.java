@@ -8,7 +8,9 @@ public enum BoardDbModel
     TABLE_NAME("boards"),
     ID("id"),
     NAME("name"),
-    TYPE("type");
+    TYPE("type"),
+    PARENT("parent"),
+    HAS_CHILDREN("has_children");
 
     private String column;
 

@@ -45,7 +45,10 @@ public class BoardsView extends AppCompatActivity
         boardsView = findViewById(R.id.boards);
         showBoards();
 
-        boardsView.setOnItemClickListener((parent, view, position, id) -> openBoard(boards.get(position).getId()));
+        boardsView.setOnItemClickListener((parent, view, position, id) -> {
+            board = boards.get(position);
+            openBoard(boards.get(position));
+        });
         boardsView.setOnItemLongClickListener((parent, view, position, id) ->
         {
             board = boards.get(position);
@@ -65,13 +68,13 @@ public class BoardsView extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK)
         {
-            if (requestCode == 2)
+            if (requestCode == DELETE)
             {
                 String action = data.getStringExtra("action");
                 if ("delete".equals(action))
                 {
                     operations.deleteBoard(board);
-                    updateBoardsView();
+                    updateBoardsView(getIntent().getLongExtra("boardId", -1L));
                 }
             }
         }
@@ -92,9 +95,11 @@ public class BoardsView extends AppCompatActivity
             boardName = input.getText().toString();
             if (!"".equals(boardName))
             {
-                Long createdBoardId = operations.createBoard(boardName, getIntent().getStringExtra("boardCategory"));
-                openBoard(createdBoardId);
-                updateBoardsView();
+                Long parentId = board != null ? board.getId() : null;
+                Board newBoard =
+                    operations.createBoard(boardName, getIntent().getStringExtra("boardCategory"), parentId, null);
+                openBoard(newBoard);
+                updateBoardsView(getIntent().getLongExtra("boardId", -1L));
             } else
             {
                 Toast.makeText(getApplicationContext(), "Set Board name", Toast.LENGTH_LONG).show();
@@ -104,32 +109,50 @@ public class BoardsView extends AppCompatActivity
         builder.show();
     }
 
-    private void updateBoardsView()
+    private void updateBoardsView(Long parentId)
     {
         operations = operations == null ? new BoardOperations(getApplicationContext()) : operations;
-        boards = operations.loadViewElements(getIntent().getStringExtra("boardCategory"));
+        boards = operations.loadBoardsByParent(getIntent().getStringExtra("boardCategory"), parentId);
         adapter = adapter == null ? new BoardsAdapter(this, boards) : adapter;
         adapter.updateDisplayedElements(boards);
     }
 
-    private void openBoard(Long id)
+    private void openBoard(Board board)
     {
-        Class boardCategory = null;
-        if ("scenes".equals(getIntent().getStringExtra("boardCategory"))){
-            boardCategory = SceneBoard.class;
-        } else if ("effects".equals(getIntent().getStringExtra("boardCategory"))) {
-            boardCategory = EffectBoard.class;
-        }
+        board = operations.getBoard(board.getId());
+        if (!board.isHasChildren())
+        {
+            Class boardCategory = null;
+            if ("scenes".equals(getIntent().getStringExtra("boardCategory")))
+            {
+                boardCategory = SceneBoard.class;
+            } else if ("effects".equals(getIntent().getStringExtra("boardCategory")))
+            {
+                boardCategory = EffectBoard.class;
+            }
 
-        Intent board = new Intent(this, boardCategory);
-        board.putExtra("boardId", id);
-        startActivity(board);
+            Intent intent = new Intent(this, boardCategory);
+            intent.putExtra("boardId", board.getId());
+            startActivity(intent);
+        } else {
+            updateBoardsView(board.getId());
+        }
     }
 
     private void showBoards()
     {
-        updateBoardsView();
+        updateBoardsView(getIntent().getLongExtra("boardId", -1L));
         boardsView = findViewById(R.id.boards);
         boardsView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onBackPressed(){
+        if (board.getParent() != -1L) {
+            board = operations.getBoard(board.getParent());
+            updateBoardsView(board.getParent());
+        } else {
+            finish();
+        }
     }
 }

@@ -21,6 +21,7 @@ import java.util.Map;
 public class BoardOperations
 {
     private Context ctx;
+    private BoardDao dao;
 
     /**
      * Creates an instance
@@ -30,6 +31,7 @@ public class BoardOperations
     public BoardOperations(Context ctx)
     {
         this.ctx = ctx;
+        dao = new BoardDao(ctx);
     }
 
     /**
@@ -38,49 +40,78 @@ public class BoardOperations
      * @param name containing referenced effects
      * @param type of created board
      */
-    public Long createBoard(String name, String type)
+    public Board createBoard(String name, String type, Long parent, Boolean hasChildren)
     {
+        parent = parent == null ? -1L : parent;
+        hasChildren = hasChildren == null ? false : hasChildren;
         ContentValues values = new ContentValues();
         values.put(BoardDbModel.NAME.value(), name);
         values.put(BoardDbModel.TYPE.value(), type);
-
-        BoardDao dao = new BoardDao(ctx);
-        return dao.insert(values);
+        values.put(BoardDbModel.PARENT.value(), parent);
+        values.put(BoardDbModel.HAS_CHILDREN.value(), String.valueOf(hasChildren));
+        return getBoard(dao.insert(values));
     }
 
-    public void referenceEffectsToBoard(Long groupId, List<Track> boardEffects)
+    /**
+     * @param boardId to get from database.
+     * @return requested board.
+     */
+    public Board getBoard(Long boardId)
+    {
+        Map<String, Object> boardData = dao.get(boardId);
+        return new Board((Long) boardData.get(BoardDbModel.ID.value()), (String) boardData.get(BoardDbModel.NAME.value()),
+            (String) boardData.get(BoardDbModel.TYPE.value()), (Long) boardData.get(BoardDbModel.PARENT.value()),
+            Boolean.parseBoolean((String) boardData.get(BoardDbModel.HAS_CHILDREN.value())));
+    }
+
+    /**
+     * Assign effects to created board
+     *
+     * @param boardId to which the effects should be assigned.
+     * @param effects to assign to board id.
+     */
+    public void referenceEffectsToBoard(Long boardId, List<Track> effects)
     {
         EffectsDao effectsDao = new EffectsDao(ctx);
         TrackOperations trackOperations = new TrackOperations(ctx);
-        for (Track track : boardEffects)
+        for (Track track : effects)
         {
             track.setId(trackOperations.storeTrackIfNotExist(track));
             ContentValues values = new ContentValues();
             values.put(EffectDbModel.TRACK_ID.value(), track.getId());
-            values.put(EffectDbModel.BOARD_ID.value(), groupId);
+            values.put(EffectDbModel.BOARD_ID.value(), boardId);
             effectsDao.assignToBoard(values);
         }
     }
 
     public void deleteBoard(Board board)
     {
-        BoardDao dao = new BoardDao(ctx);
         dao.delete(board);
     }
 
     /**
-     * @return list of all effect boards.
+     * Loads children of selected boards if present.
+     *
+     * @param category of selected board.
+     * @param parentId if present, else -1 (root)
+     * @return children of selected board.
      */
-    public List<Board> loadViewElements(String category)
-    {
+    public List<Board> loadBoardsByParent(String category, Long parentId){
         List<Board> result = new ArrayList<>();
-        BoardDao dao = new BoardDao(ctx);
-        List<Map<String, Object>> received = dao.getCategory(category);
-
-        received
-            .stream()
-            .forEach(b -> result.add(new Board((Long) b.get("id"), (String) b.get("name"), (String) b.get("typer"))));
-
+        List<Long> received = dao.getBoards(category, parentId);
+        received.forEach(id -> result.add(getBoard(id)));
         return result;
+    }
+
+    /**
+     * Sets state to parent.
+     *
+     * @param boardId of board in which the child has been created.
+     */
+    public void addChildrenToBoard(Long boardId)
+    {
+        ContentValues values = new ContentValues();
+        values.put(BoardDbModel.HAS_CHILDREN.value(), "true");
+        dao.update(values, boardId);
     }
 }

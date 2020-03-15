@@ -53,7 +53,7 @@ public class DbManager extends SQLiteOpenHelper
             + "DELETE CASCADE, FOREIGN KEY (boardId) REFERENCES boards (id) ON DELETE CASCADE )";
 
     private static final String BOARDS =
-        "CREATE TABLE boards (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, type TEXT)";
+        "CREATE TABLE boards (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, type TEXT, parent TEXT, has_children TEXT)";
 
     private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS user_playlist";
 
