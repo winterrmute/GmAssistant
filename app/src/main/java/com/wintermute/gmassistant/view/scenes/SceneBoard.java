@@ -30,6 +30,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Allows the user to manage all scenes.
@@ -59,6 +60,15 @@ public class SceneBoard extends AppCompatActivity
 
         Button addScene = findViewById(R.id.add_scene);
         addScene.setOnClickListener((v) -> addScene());
+
+        Button randomScene = findViewById(R.id.random_scene);
+        randomScene.setOnClickListener((v) -> randomScene());
+    }
+
+    private void randomScene()
+    {
+        Random random = new Random();
+        operations.startScene(scenesAssignedToBoard.get(random.nextInt(scenesAssignedToBoard.size())));
     }
 
     private void displayBoard()
@@ -72,6 +82,7 @@ public class SceneBoard extends AppCompatActivity
             findViewById(R.id.add_child_board).setVisibility(View.GONE);
         } else
         {
+            findViewById(R.id.random_scene).setVisibility(View.GONE);
             findViewById(R.id.scene_view).setVisibility(View.GONE);
             Button addSubboard = findViewById(R.id.add_child_board);
             addSubboard.setOnClickListener(v -> createChildBoard());
@@ -81,10 +92,9 @@ public class SceneBoard extends AppCompatActivity
     private void initSceneView()
     {
         ListView sceneView = findViewById(R.id.scene_view);
-        sceneAdapter =
-            sceneAdapter == null ? new SceneAdapter(getApplicationContext(), scenesAssignedToBoard) : sceneAdapter;
-        sceneAdapter.updateDisplayedElements(scenesAssignedToBoard);
+        sceneAdapter = new SceneAdapter(getApplicationContext(), scenesAssignedToBoard);
         sceneView.setAdapter(sceneAdapter);
+        //        sceneAdapter.updateDisplayedElements(scenesAssignedToBoard);
 
         sceneView.setOnItemClickListener(
             (parent, view, position, id) -> operations.startScene(scenesAssignedToBoard.get(position)));
@@ -212,7 +222,8 @@ public class SceneBoard extends AppCompatActivity
                     operations.deleteElement(scene);
                 }
             }
-            displayBoard();
+            finish();
+            startActivity(getIntent());
         }
     }
 }

@@ -45,7 +45,8 @@ public class BoardsView extends AppCompatActivity
         boardsView = findViewById(R.id.boards);
         showBoards();
 
-        boardsView.setOnItemClickListener((parent, view, position, id) -> {
+        boardsView.setOnItemClickListener((parent, view, position, id) ->
+        {
             board = boards.get(position);
             openBoard(boards.get(position));
         });
@@ -134,7 +135,8 @@ public class BoardsView extends AppCompatActivity
             Intent intent = new Intent(this, boardCategory);
             intent.putExtra("boardId", board.getId());
             startActivity(intent);
-        } else {
+        } else
+        {
             updateBoardsView(board.getId());
         }
     }
@@ -147,12 +149,15 @@ public class BoardsView extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed(){
-        if (board.getParent() != -1L) {
+    public void onBackPressed()
+    {
+        if (board == null || board.getParent() == -1L)
+        {
+            finish();
+        } else
+        {
             board = operations.getBoard(board.getParent());
             updateBoardsView(board.getParent());
-        } else {
-            finish();
         }
     }
 }

@@ -26,7 +26,8 @@ public class DbManager extends SQLiteOpenHelper
 
     private static final String SCENES =
         "CREATE TABLE scenes ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, light INTEGER, effect INTEGER, "
-            + "music INTEGER, ambience INTEGER, boardId INTEGER, FOREIGN KEY (boardId) REFERENCES boards (id) ON DELETE CASCADE)";
+            + "music INTEGER, ambience INTEGER, boardId INTEGER, FOREIGN KEY (boardId) REFERENCES boards (id) ON "
+            + "DELETE CASCADE)";
 
     private static final String SCENE_TRACK_CONFIGS =
         "CREATE TABLE scene_track_configs ( sceneId INTEGER, trackId INTEGER, volume INTEGER, delay"
@@ -53,7 +54,8 @@ public class DbManager extends SQLiteOpenHelper
             + "DELETE CASCADE, FOREIGN KEY (boardId) REFERENCES boards (id) ON DELETE CASCADE )";
 
     private static final String BOARDS =
-        "CREATE TABLE boards (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, type TEXT, parent TEXT, has_children TEXT)";
+        "CREATE TABLE boards (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, type TEXT, parent INTEGER, "
+            + "has_children TEXT)";
 
     private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS user_playlist";
 

@@ -101,12 +101,13 @@ public class SceneOperations
      * @param boardId of selected board
      * @return scenes assigned to selected board
      */
-    public List<Scene> getScenesAssignedToBoard(Long boardId){
+    public List<Scene> getScenesAssignedToBoard(Long boardId)
+    {
         List<Map<String, Object>> scenesAssignedToBoard = dao.getScenesAssignedToBoard(boardId);
         List<Scene> result = new ArrayList<>();
-        for (Map<String, Object> sceneId : scenesAssignedToBoard){
+        for (Map<String, Object> sceneId : scenesAssignedToBoard)
+        {
             result.add(getScene(dao.getById((Long) sceneId.get("id"))));
-
         }
         return result;
     }
@@ -178,10 +179,8 @@ public class SceneOperations
         }
         scene.setId(dao.insert(dbData));
 
-        if (scene.getEffect() != null && scene.getMusic() != null && scene.getAmbience() != null){
-            List<Track> tracks = Arrays.asList(scene.getEffect(), scene.getMusic(), scene.getAmbience());
-            storeTrackConfig(scene, tracks);
-        }
+        List<Track> tracks = Arrays.asList(scene.getEffect(), scene.getMusic(), scene.getAmbience());
+        storeTrackConfig(scene, tracks);
         if (scene.getLight() != null)
         {
             assignLight(scene.getLight().getId(), scene.getId());
