@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.view.effects;
+package com.wintermute.gmassistant.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +13,9 @@ import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.BoardsAdapter;
 import com.wintermute.gmassistant.dialogs.ListDialog;
 import com.wintermute.gmassistant.operations.BoardOperations;
+import com.wintermute.gmassistant.view.effects.EffectBoard;
 import com.wintermute.gmassistant.view.model.Board;
+import com.wintermute.gmassistant.view.scenes.SceneBoard;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,13 +24,13 @@ import java.util.List;
 /**
  * List containing effect boards.
  */
-public class EffectBoards extends AppCompatActivity
+public class BoardsView extends AppCompatActivity
 {
 
     public static final int DELETE = 2;
     private Board board;
     private List<Board> boards;
-    private ListView effectBoards;
+    private ListView boardsView;
     private String boardName;
     private BoardOperations operations;
     private BoardsAdapter adapter;
@@ -40,20 +42,20 @@ public class EffectBoards extends AppCompatActivity
         setContentView(R.layout.activity_effect_groups);
 
         operations = new BoardOperations(getApplicationContext());
-        effectBoards = findViewById(R.id.effect_groups);
+        boardsView = findViewById(R.id.boards);
         showBoards();
 
-        effectBoards.setOnItemClickListener((parent, view, position, id) -> openBoard(boards.get(position).getId()));
-        effectBoards.setOnItemLongClickListener((parent, view, position, id) ->
+        boardsView.setOnItemClickListener((parent, view, position, id) -> openBoard(boards.get(position).getId()));
+        boardsView.setOnItemLongClickListener((parent, view, position, id) ->
         {
             board = boards.get(position);
-            Intent dialog = new Intent(EffectBoards.this, ListDialog.class);
+            Intent dialog = new Intent(BoardsView.this, ListDialog.class);
             dialog.putStringArrayListExtra("opts", new ArrayList<>(Collections.singletonList("delete")));
             startActivityForResult(dialog, DELETE);
             return true;
         });
 
-        Button addBoard = findViewById(R.id.add_effect_group);
+        Button addBoard = findViewById(R.id.add_board);
         addBoard.setOnClickListener(v -> createBoard());
     }
 
@@ -69,7 +71,7 @@ public class EffectBoards extends AppCompatActivity
                 if ("delete".equals(action))
                 {
                     operations.deleteBoard(board);
-                    updateBoards();
+                    updateBoardsView();
                 }
             }
         }
@@ -90,9 +92,9 @@ public class EffectBoards extends AppCompatActivity
             boardName = input.getText().toString();
             if (!"".equals(boardName))
             {
-                Long createdBoardId = operations.createBoard(boardName, "effects");
+                Long createdBoardId = operations.createBoard(boardName, getIntent().getStringExtra("boardCategory"));
                 openBoard(createdBoardId);
-                updateBoards();
+                updateBoardsView();
             } else
             {
                 Toast.makeText(getApplicationContext(), "Set Board name", Toast.LENGTH_LONG).show();
@@ -102,25 +104,32 @@ public class EffectBoards extends AppCompatActivity
         builder.show();
     }
 
-    private void updateBoards()
+    private void updateBoardsView()
     {
-        boards = operations.loadViewElements("effects");
+        operations = operations == null ? new BoardOperations(getApplicationContext()) : operations;
+        boards = operations.loadViewElements(getIntent().getStringExtra("boardCategory"));
+        adapter = adapter == null ? new BoardsAdapter(this, boards) : adapter;
         adapter.updateDisplayedElements(boards);
     }
 
     private void openBoard(Long id)
     {
-        Intent board = new Intent(this, EffectBoard.class);
+        Class boardCategory = null;
+        if ("scenes".equals(getIntent().getStringExtra("boardCategory"))){
+            boardCategory = SceneBoard.class;
+        } else if ("effects".equals(getIntent().getStringExtra("boardCategory"))) {
+            boardCategory = EffectBoard.class;
+        }
+
+        Intent board = new Intent(this, boardCategory);
         board.putExtra("boardId", id);
         startActivity(board);
     }
 
     private void showBoards()
     {
-        operations = new BoardOperations(getApplicationContext());
-        boards = operations.loadViewElements("effects");
-        adapter = new BoardsAdapter(this, boards);
-        effectBoards = findViewById(R.id.effect_groups);
-        effectBoards.setAdapter(adapter);
+        updateBoardsView();
+        boardsView = findViewById(R.id.boards);
+        boardsView.setAdapter(adapter);
     }
 }

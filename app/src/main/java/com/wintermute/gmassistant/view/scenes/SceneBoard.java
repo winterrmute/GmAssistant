@@ -14,9 +14,9 @@ import com.wintermute.gmassistant.hue.ApiCaller;
 import com.wintermute.gmassistant.hue.CallbackListener;
 import com.wintermute.gmassistant.hue.model.HueBridge;
 import com.wintermute.gmassistant.operations.LightConfigOperations;
+import com.wintermute.gmassistant.operations.SceneOperations;
 import com.wintermute.gmassistant.services.LightConnection;
 import com.wintermute.gmassistant.view.model.Scene;
-import com.wintermute.gmassistant.operations.SceneOperations;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,41 +31,60 @@ import java.util.List;
  *
  * @author wintermute
  */
-public class SceneView extends AppCompatActivity
+public class SceneBoard extends AppCompatActivity
 {
 
+    public static final int CREATE_SCENE = 1;
+    public static final int DELETE_SCENE = 2;
     private ListView sceneView;
     private Scene scene;
     private HueBridge bridge;
     private SceneOperations operations;
-    private List<Scene> allScenes;
+    private List<Scene> scenesAssignedToBoard;
+    private SceneAdapter sceneAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scene_panel);
-
+        displayBoard();
         connectLights();
 
-        allScenes = new ArrayList<>();
         operations = new SceneOperations(getApplicationContext());
         showScenes();
 
         sceneView.setOnItemClickListener(
-            (parent, view, position, id) -> operations.startScene(allScenes.get(position)));
+            (parent, view, position, id) -> operations.startScene(scenesAssignedToBoard.get(position)));
 
         sceneView.setOnItemLongClickListener((parent, view, position, id) ->
         {
-            scene = allScenes.get(position);
-            Intent dialog = new Intent(SceneView.this, ListDialog.class);
+            scene = scenesAssignedToBoard.get(position);
+            Intent dialog = new Intent(SceneBoard.this, ListDialog.class);
             dialog.putStringArrayListExtra("opts", new ArrayList<>(Collections.singletonList("delete")));
-            startActivityForResult(dialog, 2);
+            startActivityForResult(dialog, DELETE_SCENE);
             return true;
         });
 
         Button addScene = findViewById(R.id.add_scene);
         addScene.setOnClickListener((v) -> addScene());
+    }
+
+    /**
+     * Show all scenes as listView
+     */
+    private void showScenes()
+    {
+        displayBoard();
+        sceneView = findViewById(R.id.scene_view);
+        sceneView.setAdapter(sceneAdapter);
+    }
+
+    private void displayBoard() {
+        operations = operations == null ? new SceneOperations(getApplicationContext()) : operations;
+        scenesAssignedToBoard = operations.getScenesAssignedToBoard(getIntent().getLongExtra("boardId", -1L));
+        sceneAdapter = sceneAdapter == null ? new SceneAdapter(getApplicationContext(), scenesAssignedToBoard) : sceneAdapter;
+        sceneAdapter.updateDisplayedElements(scenesAssignedToBoard);
     }
 
     private void connectLights()
@@ -94,6 +113,9 @@ public class SceneView extends AppCompatActivity
     {
         return new CallbackListener()
         {
+            private final Toast noConnection =
+                Toast.makeText(getApplicationContext(), "Could not connect to philips hue!", Toast.LENGTH_LONG);
+
             @Override
             public void onResponse(JSONArray response)
             {
@@ -101,17 +123,13 @@ public class SceneView extends AppCompatActivity
                 {
                     if (response.getJSONObject(0).has("error"))
                     {
-                        Toast
-                            .makeText(getApplicationContext(), "Could not connect to philips hue!", Toast.LENGTH_LONG)
-                            .show();
+                        noConnection.show();
                         return;
                     }
                     LightConnection.getInstance().init(getApplicationContext(), bridge);
                 } catch (JSONException e)
                 {
-                    Toast
-                        .makeText(getApplicationContext(), "Could not connect to philips hue!", Toast.LENGTH_LONG)
-                        .show();
+                    noConnection.show();
                     e.printStackTrace();
                 }
             }
@@ -125,7 +143,7 @@ public class SceneView extends AppCompatActivity
             @Override
             public void onError(String msg)
             {
-                Toast.makeText(getApplicationContext(), "Could not connect to philips hue!", Toast.LENGTH_LONG).show();
+                noConnection.show();
             }
         };
     }
@@ -135,8 +153,9 @@ public class SceneView extends AppCompatActivity
      */
     private void addScene()
     {
-        Intent sceneConfig = new Intent(SceneView.this, SceneConfig.class);
-        startActivityForResult(sceneConfig, 1);
+        Intent sceneConfig = new Intent(SceneBoard.this, SceneConfig.class);
+        sceneConfig.putExtra("boardId", getIntent().getLongExtra("boardId", -1L));
+        startActivityForResult(sceneConfig, CREATE_SCENE);
     }
 
     @Override
@@ -145,7 +164,7 @@ public class SceneView extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK)
         {
-            if (requestCode == 2)
+            if (requestCode == DELETE_SCENE)
             {
                 String action = data.getStringExtra("action");
                 if ("delete".equals(action))
@@ -155,16 +174,5 @@ public class SceneView extends AppCompatActivity
             }
             showScenes();
         }
-    }
-
-    /**
-     * Show all scenes as listView
-     */
-    private void showScenes()
-    {
-        allScenes = operations.loadViewElements();
-        SceneAdapter sceneAdapter = new SceneAdapter(this, allScenes);
-        sceneView = findViewById(R.id.scene_view);
-        sceneView.setAdapter(sceneAdapter);
     }
 }

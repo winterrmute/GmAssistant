@@ -63,7 +63,7 @@
     <string name="cancel_result">Cancel</string>
 
     <!--  Boards  -->
-    <string name="add_effect_board">Add effect board</string>
+    <string name="add_effect_board">Add board</string>
     <string name="add_effects">Add effects</string>
     <string name="no_effects">No effects on this board</string>
 

@@ -58,7 +58,7 @@ public class BoardOperations
             ContentValues values = new ContentValues();
             values.put(EffectDbModel.TRACK_ID.value(), track.getId());
             values.put(EffectDbModel.BOARD_ID.value(), groupId);
-            effectsDao.addToGroup(values);
+            effectsDao.assignToBoard(values);
         }
     }
 

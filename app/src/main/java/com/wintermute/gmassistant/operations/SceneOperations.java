@@ -27,8 +27,6 @@ public class SceneOperations
     private Context ctx;
     private SceneDao dao;
 
-    private Scene scene;
-
     /**
      * Creates an instance
      *
@@ -38,25 +36,6 @@ public class SceneOperations
     {
         this.ctx = ctx;
         dao = new SceneDao(ctx);
-    }
-
-    /**
-     * Gets all scenes stored in database
-     *
-     * @return list of scenes
-     */
-    public List<Scene> loadViewElements()
-    {
-        List<Scene> result = new ArrayList<>();
-        List<Map<String, Object>> foundScenes = dao.getAll();
-        if (foundScenes.size() > 0)
-        {
-            for (Map<String, Object> sceneContent : foundScenes)
-            {
-                result.add(getModel(sceneContent));
-            }
-        }
-        return result;
     }
 
     /**
@@ -77,14 +56,16 @@ public class SceneOperations
      * @param content model data
      * @return composed model
      */
-    private Scene getModel(Map<String, Object> content)
+    public Scene getScene(Map<String, Object> content)
     {
         Scene scene = new Scene();
         scene.setId((Long) content.get(SceneDbModel.ID.value()));
         scene.setName((String) content.get(SceneDbModel.NAME.value()));
+        scene.setBoardId((Long) content.get(SceneDbModel.BOARD_ID.value()));
         content.remove(SceneDbModel.TABLE_NAME.value());
-        content.remove(SceneDbModel.NAME.value());
         content.remove(SceneDbModel.ID.value());
+        content.remove(SceneDbModel.NAME.value());
+        content.remove(SceneDbModel.BOARD_ID.value());
 
         for (Map.Entry<String, Object> entry : content.entrySet())
         {
@@ -94,8 +75,8 @@ public class SceneOperations
                 {
                     if (entry.getKey().equals(SceneDbModel.LIGHT.value()))
                     {
-                        LightOperations operations = new LightOperations(ctx);
-                        Light light = operations.getLight((Long) entry.getValue());
+                        LightOperations lightOperations = new LightOperations(ctx);
+                        Light light = lightOperations.getLight((Long) entry.getValue());
                         scene.setLight(light);
                     }
                     if (entry.getKey().equals(SceneDbModel.EFFECT.value()))
@@ -114,6 +95,20 @@ public class SceneOperations
             }
         }
         return scene;
+    }
+
+    /**
+     * @param boardId of selected board
+     * @return scenes assigned to selected board
+     */
+    public List<Scene> getScenesAssignedToBoard(Long boardId){
+        List<Map<String, Object>> scenesAssignedToBoard = dao.getScenesAssignedToBoard(boardId);
+        List<Scene> result = new ArrayList<>();
+        for (Map<String, Object> sceneId : scenesAssignedToBoard){
+            result.add(getScene(dao.getById((Long) sceneId.get("id"))));
+
+        }
+        return result;
     }
 
     private Track addTrackToScene(Scene scene, Long trackId, String tag)
@@ -170,6 +165,11 @@ public class SceneOperations
                 scene.setAmbience((Track) sceneContent.get(SceneDbModel.AMBIENCE.value()));
                 dbData.put(SceneDbModel.AMBIENCE.value(), scene.getAmbience().getId());
             }
+            if (entry.equals(SceneDbModel.BOARD_ID.value()))
+            {
+                scene.setBoardId((Long) sceneContent.get(SceneDbModel.BOARD_ID.value()));
+                dbData.put(SceneDbModel.BOARD_ID.value(), scene.getBoardId());
+            }
         }
         scene.setId(dao.insert(dbData));
 
@@ -187,7 +187,7 @@ public class SceneOperations
         operations.assignLightToScene(lightId, sceneId);
     }
 
-    void storeTrackConfig(Scene scene, List<Track> tracks)
+    private void storeTrackConfig(Scene scene, List<Track> tracks)
     {
         TrackConfigOperations operations = new TrackConfigOperations(ctx);
         for (Track track : tracks)

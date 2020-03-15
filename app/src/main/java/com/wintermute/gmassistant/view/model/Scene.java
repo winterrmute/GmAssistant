@@ -21,15 +21,17 @@ public class Scene implements Parcelable
     private Track effect;
     private Track music;
     private Track ambience;
+    private Long boardId;
 
     protected Scene(Parcel in)
     {
         if (in.readByte() == 0) { id = null; } else { id = in.readLong(); }
         name = in.readString();
-        this.light = in.readParcelable(Light.class.getClassLoader());
-        this.effect = in.readParcelable(Track.class.getClassLoader());
-        this.music = in.readParcelable(Track.class.getClassLoader());
-        this.ambience = in.readParcelable(Track.class.getClassLoader());
+        light = in.readParcelable(Light.class.getClassLoader());
+        effect = in.readParcelable(Track.class.getClassLoader());
+        music = in.readParcelable(Track.class.getClassLoader());
+        ambience = in.readParcelable(Track.class.getClassLoader());
+        if (in.readByte() == 0) { boardId = null; } else { boardId = in.readLong(); }
     }
 
     public static final Creator<Scene> CREATOR = new Creator<Scene>()
@@ -56,18 +58,20 @@ public class Scene implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        if (id != null)
+        if (id == null) { dest.writeByte((byte) 0); } else
         {
-            dest.writeInt(1);
+            dest.writeByte((byte) 1);
             dest.writeLong(id);
-        } else
-        {
-            dest.writeInt(0);
         }
         dest.writeString(name);
         dest.writeParcelable(light, flags);
         dest.writeParcelable(effect, flags);
         dest.writeParcelable(music, flags);
         dest.writeParcelable(ambience, flags);
+        if (boardId == null) { dest.writeByte((byte) 0); } else
+        {
+            dest.writeByte((byte) 1);
+            dest.writeLong(boardId);
+        }
     }
 }

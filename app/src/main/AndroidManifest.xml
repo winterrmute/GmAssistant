@@ -23,13 +23,13 @@
         <activity android:name=".hue.HueBridges"></activity>
         <activity android:name=".hue.HueBulbSelector" />
         <activity android:name=".hue.HueBridgeRegistrator" />
-        <activity android:name=".view.effects.EffectBoards" />
+        <activity android:name=".view.BoardsView" />
         <activity android:name=".view.effects.EffectBoard" />
         <activity android:name=".view.library.LibraryContent" />
         <activity
                 android:name=".dialogs.ListDialog"
                 android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".view.scenes.SceneView" />
+        <activity android:name=".view.scenes.SceneBoard" />
         <activity android:name=".view.HueSettingsView" />
         <activity android:name=".view.light.SceneLightConfiguration" />
         <activity android:name=".view.scenes.SceneConfig" />

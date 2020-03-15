@@ -4,10 +4,10 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.effects.EffectBoards">
+        tools:context=".view.BoardsView">
 
     <ListView
-            android:id="@+id/effect_groups"
+            android:id="@+id/boards"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -15,7 +15,7 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
     <Button
-            android:id="@+id/add_effect_group"
+            android:id="@+id/add_board"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/add_effect_board"

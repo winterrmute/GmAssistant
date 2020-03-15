@@ -7,10 +7,9 @@ import android.os.Bundle;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.hue.HueBridges;
+import com.wintermute.gmassistant.view.BoardsView;
 import com.wintermute.gmassistant.view.library.LibraryContent;
 import com.wintermute.gmassistant.view.playlist.PlaylistView;
-import com.wintermute.gmassistant.view.effects.EffectBoards;
-import com.wintermute.gmassistant.view.scenes.SceneView;
 
 /**
  * Startup activity. Provides Game masters panel.
@@ -25,20 +24,22 @@ public class GmAssistant extends AppCompatActivity
 
         grantUserPermission();
 
-        Button playlistPanel = findViewById(R.id.manage_playlists);
-        playlistPanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, PlaylistView.class)));
+        Button playlistView = findViewById(R.id.manage_playlists);
+        playlistView.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, PlaylistView.class)));
 
-        Button trackPanel = findViewById(R.id.manage_tracks);
-        trackPanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, LibraryContent.class)));
+        Button audioFileView = findViewById(R.id.manage_tracks);
+        audioFileView.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, LibraryContent.class)));
 
-        Button scenePanel = findViewById(R.id.manage_scenes);
-        scenePanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, SceneView.class)));
+        Button scenesBoard = findViewById(R.id.manage_scenes);
+        scenesBoard.setOnClickListener(
+            l -> startActivity(new Intent(GmAssistant.this, BoardsView.class).putExtra("boardCategory", "scenes")));
 
-        Button lightPanel = findViewById(R.id.manage_lights);
-        lightPanel.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, HueBridges.class)));
+        Button hueManagementView = findViewById(R.id.manage_lights);
+        hueManagementView.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, HueBridges.class)));
 
         Button effectBoards = findViewById(R.id.effect_board);
-        effectBoards.setOnClickListener(l -> startActivity(new Intent(GmAssistant.this, EffectBoards.class)));
+        effectBoards.setOnClickListener(
+            l -> startActivity(new Intent(GmAssistant.this, BoardsView.class).putExtra("boardCategory", "effects")));
     }
 
     /**

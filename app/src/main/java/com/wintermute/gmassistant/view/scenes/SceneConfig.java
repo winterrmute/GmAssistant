@@ -36,7 +36,7 @@ import java.util.Map;
 public class SceneConfig extends AppCompatActivity
 {
 
-    public static final int LIGHT_CONFIG = 4;
+    public static final int LIGHT_FOR_SCENE = 4;
     private EditText nameField;
 
     private Button effect;
@@ -106,6 +106,7 @@ public class SceneConfig extends AppCompatActivity
         if (!nameField.getText().toString().equals(""))
         {
             content.put(SceneDbModel.NAME.value(), nameField.getText());
+            content.put(SceneDbModel.BOARD_ID.value(), getIntent().getLongExtra("boardId", -1L));
             storeTracks();
             storeLight();
             operations.createScene(content);
@@ -281,7 +282,7 @@ public class SceneConfig extends AppCompatActivity
     private void setLights()
     {
         Intent lightConfigurator = new Intent(SceneConfig.this, SceneLightConfiguration.class);
-        startActivityForResult(lightConfigurator, 4);
+        startActivityForResult(lightConfigurator, LIGHT_FOR_SCENE);
     }
 
     @Override
@@ -290,7 +291,7 @@ public class SceneConfig extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK)
         {
-            if (requestCode == LIGHT_CONFIG)
+            if (requestCode == LIGHT_FOR_SCENE)
             {
                 configuredLight = data.getParcelableExtra("light");
                 if (configuredLight != null)

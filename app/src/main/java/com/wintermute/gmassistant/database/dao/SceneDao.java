@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.wintermute.gmassistant.database.DbManager;
 import com.wintermute.gmassistant.database.model.SceneDbModel;
-import com.wintermute.gmassistant.database.model.TrackDbModel;
 import com.wintermute.gmassistant.view.model.Scene;
 
 import java.util.ArrayList;
@@ -29,7 +28,6 @@ public class SceneDao
         DbManager dbManager = new DbManager(ctx);
         dbRead = dbManager.getReadableDatabase();
         dbWrite = dbManager.getWritableDatabase();
-        dbWrite.execSQL("PRAGMA foreign_keys=ON;");
     }
 
     /**
@@ -43,11 +41,16 @@ public class SceneDao
     }
 
     /**
-     * @return list of scenes.
+     * @param boardId holding scenes
+     * @return scenes assigned to selected board
      */
-    public List<Map<String, Object>> getAll()
+    public List<Map<String, Object>> getScenesAssignedToBoard(Long boardId)
     {
-        String query = "SELECT * FROM " + SceneDbModel.TABLE_NAME.value();
+        String query = new StringBuilder("SELECT * FROM ")
+            .append(SceneDbModel.TABLE_NAME.value())
+            .append(" WHERE boardId = ")
+            .append(boardId)
+            .toString();
         return getSceneData(dbRead.rawQuery(query, null));
     }
 
@@ -80,7 +83,7 @@ public class SceneDao
             Map<String, Object> content = new HashMap<>();
             for (String attr : SceneDbModel.getValues())
             {
-                if (!attr.equals(TrackDbModel.TABLE_NAME.value()))
+                if (!attr.equals(SceneDbModel.TABLE_NAME.value()))
                 {
                     if (attr.equals(SceneDbModel.NAME.value()))
                     {
@@ -94,12 +97,6 @@ public class SceneDao
             result.add(content);
         }
         return result;
-    }
-
-    public void updateScene(Scene scene)
-    {
-        dbWrite.update(SceneDbModel.TABLE_NAME.value(), null, SceneDbModel.ID.value() + " = " + scene.getId(),
-            new String[] {});
     }
 
     private Long getNumericalValue(Cursor query, String attr)

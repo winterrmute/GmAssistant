@@ -28,7 +28,6 @@ public class BoardDao
         DbManager dbManager = new DbManager(ctx);
         dbRead = dbManager.getReadableDatabase();
         dbWrite = dbManager.getWritableDatabase();
-        dbWrite.execSQL("PRAGMA foreign_keys=ON;");
     }
 
     /**
@@ -45,34 +44,6 @@ public class BoardDao
             .append(category)
             .append("'");
         return getData(dbRead.rawQuery(query.toString(), null));
-    }
-
-    /**
-     * Get Board details.
-     *
-     * @param id of group.
-     * @return selected Board.
-     */
-    public Map<Long, String> get(Long id)
-    {
-        StringBuilder query = new StringBuilder("SELECT * FROM ")
-            .append(BoardDbModel.TABLE_NAME.value())
-            .append("  WHERE id = '")
-            .append(id)
-            .append("'");
-        return getBoardData(dbRead.rawQuery(query.toString(), null));
-    }
-
-    private Map<Long, String> getBoardData(Cursor query)
-    {
-        Map<Long, String> groups = new HashMap<>();
-        while (query.moveToNext())
-        {
-            Long id = query.getLong(query.getColumnIndex("id"));
-            String name = query.getString(query.getColumnIndex("name"));
-            groups.put(id, name);
-        }
-        return groups;
     }
 
     private List<Map<String, Object>> getData(Cursor query)

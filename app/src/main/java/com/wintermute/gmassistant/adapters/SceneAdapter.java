@@ -82,4 +82,10 @@ public class SceneAdapter extends BaseAdapter
         String result = track != null ? track.getName() : "";
         return result.length() > 30 ? result.substring(0, 27) + "..." : result;
     }
+
+    public void updateDisplayedElements(List<Scene> scenes)
+    {
+        this.scenes = scenes;
+        notifyDataSetChanged();
+    }
 }

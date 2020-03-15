@@ -65,15 +65,18 @@ public class PlayerHandler
         clearScene();
         if (scene.getLight() != null)
         {
-            LightOperations operations = new LightOperations(ctx);
-            List<String> bulbUrls = LightConnection.getInstance().getLightManagementUrls();
-            for (String url : bulbUrls)
+            Runnable light = () ->
             {
-                operations.changeColor(url,
-                    operations.getRGBtoXY(Color.valueOf(new BigDecimal(scene.getLight().getColor()).intValue())));
-                operations.changeBrightness(url, scene.getLight().getBrightness());
-            }
-
+                LightOperations operations = new LightOperations(ctx);
+                List<String> bulbUrls = LightConnection.getInstance().getLightManagementUrls();
+                for (String url : bulbUrls)
+                {
+                    operations.changeColor(url,
+                        operations.getRGBtoXY(Color.valueOf(new BigDecimal(scene.getLight().getColor()).intValue())));
+                    operations.changeBrightness(url, scene.getLight().getBrightness());
+                }
+            };
+            new Thread(light).start();
         }
         for (Track track : Arrays.asList(scene.getEffect(), scene.getMusic(), scene.getAmbience()))
         {

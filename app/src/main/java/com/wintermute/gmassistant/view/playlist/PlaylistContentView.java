@@ -135,7 +135,6 @@ public class PlaylistContentView extends AppCompatActivity
     private void setTag(int position, String tag)
     {
         allTracks.get(position).setTag(tag);
-        trackDao.update(allTracks.get(position));
         renderFilesAsList();
     }
 
@@ -144,7 +143,6 @@ public class PlaylistContentView extends AppCompatActivity
      */
     void renderFilesAsList()
     {
-//        allTracks = trackDao.getReferencedTracks(this.getIntent().getStringExtra("playlistId"));
         TrackAdapter songAdapter = new TrackAdapter(this, allTracks);
         songView = findViewById(R.id.track_list);
         songView.setAdapter(songAdapter);

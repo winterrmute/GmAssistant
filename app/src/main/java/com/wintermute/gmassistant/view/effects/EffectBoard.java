@@ -169,10 +169,7 @@ public class EffectBoard extends AppCompatActivity
 
     private void updateView(List<Track> newContent)
     {
-        if (adapter == null)
-        {
-            adapter = new EffectsAdapter(getApplicationContext(), newContent);
-        }
+        adapter = adapter == null ? adapter = new EffectsAdapter(getApplicationContext(), newContent) : adapter;
         adapter.updateDisplayedElements(newContent);
         finish();
         startActivity(getIntent());

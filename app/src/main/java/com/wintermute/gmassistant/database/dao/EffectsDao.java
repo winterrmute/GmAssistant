@@ -20,7 +20,6 @@ public class EffectsDao
         DbManager dbManager = new DbManager(ctx);
         dbRead = dbManager.getReadableDatabase();
         dbWrite = dbManager.getWritableDatabase();
-        dbWrite.execSQL("PRAGMA foreign_keys=ON;");
     }
 
     /**
@@ -40,17 +39,10 @@ public class EffectsDao
             .append(" = '")
             .append(boardId)
             .append("'");
-        return getGroupData(dbRead.rawQuery(query.toString(), null), EffectDbModel.TRACK_ID.value());
+        return getBoardData(dbRead.rawQuery(query.toString(), null), EffectDbModel.TRACK_ID.value());
     }
 
-    public List<Long> getBoards()
-    {
-        StringBuilder query =
-            new StringBuilder("SELECT DISTINCT groupId FROM ").append(EffectDbModel.TABLE_NAME.value());
-        return getGroupData(dbRead.rawQuery(query.toString(), null), EffectDbModel.BOARD_ID.value());
-    }
-
-    private List<Long> getGroupData(Cursor query, String attribute)
+    private List<Long> getBoardData(Cursor query, String attribute)
     {
         List<Long> groups = new ArrayList<>();
         while (query.moveToNext())
@@ -60,7 +52,7 @@ public class EffectsDao
         return groups;
     }
 
-    public Long addToGroup(ContentValues values)
+    public Long assignToBoard(ContentValues values)
     {
         return dbWrite.insert(EffectDbModel.TABLE_NAME.value(), null, values);
     }

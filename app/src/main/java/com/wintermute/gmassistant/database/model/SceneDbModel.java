@@ -11,17 +11,18 @@ public enum SceneDbModel
     MUSIC("music"),
     AMBIENCE("ambience"),
     NAME("name"),
-    LIGHT("light");
+    LIGHT("light"),
+    BOARD_ID("boardId");
 
-    private String column;
+    private String attr;
 
     SceneDbModel(String column)
     {
-        this.column= column;
+        this.attr = column;
     }
 
     public String value(){
-        return column;
+        return attr;
     }
 
     public static List<String> getValues(){
