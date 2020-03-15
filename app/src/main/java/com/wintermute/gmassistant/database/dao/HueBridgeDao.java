@@ -24,6 +24,7 @@ public class HueBridgeDao
         DbManager dbManager = new DbManager(ctx);
         dbRead = dbManager.getReadableDatabase();
         dbWrite = dbManager.getWritableDatabase();
+        dbWrite.execSQL("PRAGMA foreign_keys=ON;");
     }
 
     public Long insert(ContentValues values)

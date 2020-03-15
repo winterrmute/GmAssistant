@@ -28,6 +28,7 @@ public class SceneDao
         DbManager dbManager = new DbManager(ctx);
         dbRead = dbManager.getReadableDatabase();
         dbWrite = dbManager.getWritableDatabase();
+        dbWrite.execSQL("PRAGMA foreign_keys=ON;");
     }
 
     /**

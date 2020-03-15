@@ -32,6 +32,7 @@ public class PlaylistDao extends BaseDao
         DbManager dbManager = new DbManager(ctx);
         dbRead = dbManager.getReadableDatabase();
         dbWrite = dbManager.getWritableDatabase();
+        dbWrite.execSQL("PRAGMA foreign_keys=ON;");
     }
 
     /**
@@ -115,14 +116,6 @@ public class PlaylistDao extends BaseDao
     {
         StringBuilder query = new StringBuilder("SELECT * FROM " + TABLE_NAME);
         return mapObject(dbRead.rawQuery(query.toString(), null));
-    }
-
-    /**
-     * @return list of playlist names.
-     */
-    public List<String> getPlaylistNames()
-    {
-        return getAll().stream().map(Playlist::getName).collect(Collectors.toList());
     }
 
     /**

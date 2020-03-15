@@ -31,6 +31,7 @@ public class DirectoryDao extends BaseDao
         DbManager dbManager = new DbManager(ctx);
         dbRead = dbManager.getReadableDatabase();
         dbWrite = dbManager.getWritableDatabase();
+        dbWrite.execSQL("PRAGMA foreign_keys=ON;");
     }
 
     /**
@@ -57,16 +58,6 @@ public class DirectoryDao extends BaseDao
         obj.put(TAG_KEY, target.getTag());
         obj.put(RECURSIVELY_KEY, target.getRecursive());
         return removeEmptyValues(obj);
-    }
-
-    public Directory getById(String directoryId)
-    {
-        StringBuilder query = new StringBuilder("SELECT * FROM ")
-            .append(TABLE_NAME)
-            .append(" WHERE id = '")
-            .append(directoryId)
-            .append("'");
-        return mapObject(dbRead.rawQuery(query.toString(), null)).get(0);
     }
 
     public List<Directory> getDirectoriesForCategory(String tag)

@@ -144,26 +144,31 @@ public class SceneOperations
             {
                 scene.setName(sceneContent.get(SceneDbModel.NAME.value()).toString());
                 dbData.put(SceneDbModel.NAME.value(), scene.getName());
+                continue;
             }
             if (entry.equals(SceneDbModel.LIGHT.value()))
             {
                 scene.setLight((Light) sceneContent.get(SceneDbModel.LIGHT.value()));
                 dbData.put(SceneDbModel.LIGHT.value(), scene.getLight().getId());
+                continue;
             }
             if (entry.equals(SceneDbModel.EFFECT.value()))
             {
                 scene.setEffect((Track) sceneContent.get(SceneDbModel.EFFECT.value()));
                 dbData.put(SceneDbModel.EFFECT.value(), scene.getEffect().getId());
+                continue;
             }
             if (entry.equals(SceneDbModel.MUSIC.value()))
             {
                 scene.setMusic((Track) sceneContent.get(SceneDbModel.MUSIC.value()));
                 dbData.put(SceneDbModel.MUSIC.value(), scene.getMusic().getId());
+                continue;
             }
             if (entry.equals(SceneDbModel.AMBIENCE.value()))
             {
                 scene.setAmbience((Track) sceneContent.get(SceneDbModel.AMBIENCE.value()));
                 dbData.put(SceneDbModel.AMBIENCE.value(), scene.getAmbience().getId());
+                continue;
             }
             if (entry.equals(SceneDbModel.BOARD_ID.value()))
             {
@@ -173,8 +178,10 @@ public class SceneOperations
         }
         scene.setId(dao.insert(dbData));
 
-        List<Track> tracks = Arrays.asList(scene.getEffect(), scene.getMusic(), scene.getAmbience());
-        storeTrackConfig(scene, tracks);
+        if (scene.getEffect() != null && scene.getMusic() != null && scene.getAmbience() != null){
+            List<Track> tracks = Arrays.asList(scene.getEffect(), scene.getMusic(), scene.getAmbience());
+            storeTrackConfig(scene, tracks);
+        }
         if (scene.getLight() != null)
         {
             assignLight(scene.getLight().getId(), scene.getId());

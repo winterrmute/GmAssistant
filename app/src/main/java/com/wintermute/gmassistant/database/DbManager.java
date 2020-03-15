@@ -26,7 +26,7 @@ public class DbManager extends SQLiteOpenHelper
 
     private static final String SCENES =
         "CREATE TABLE scenes ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, light INTEGER, effect INTEGER, "
-            + "music INTEGER, ambience INTEGER, boardId INTEGER, FOREIGN KEY (boardId) REFERENCES board (id) ON DELETE CASCADE)";
+            + "music INTEGER, ambience INTEGER, boardId INTEGER, FOREIGN KEY (boardId) REFERENCES boards (id) ON DELETE CASCADE)";
 
     private static final String SCENE_TRACK_CONFIGS =
         "CREATE TABLE scene_track_configs ( sceneId INTEGER, trackId INTEGER, volume INTEGER, delay"

@@ -56,9 +56,9 @@ public class BoardsAdapter extends BaseAdapter
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        LinearLayout result = (LinearLayout) inflater.inflate(R.layout.audio_file, parent, false);
-        TextView groupName = result.findViewById(R.id.name);
-        groupName.setText(boards.get(position).getName());
+        LinearLayout result = (LinearLayout) inflater.inflate(R.layout.file, parent, false);
+        TextView boardName = result.findViewById(R.id.file_name);
+        boardName.setText(boards.get(position).getName());
         result.setTag(position);
         return result;
     }

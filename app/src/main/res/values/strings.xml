@@ -3,7 +3,7 @@
     <string name="gm_panel">gm panel</string>
     <string name="manage_playlists">Playlists</string>
     <string name="manage_tracks">Audio files</string>
-    <string name="manage_scenes">Scenes</string>
+    <string name="manage_scenes">Scenes Board</string>
     <string name="manage_lights">Philips Hue configuration</string>
     <string name="effect_board">Effect Boards</string>
 

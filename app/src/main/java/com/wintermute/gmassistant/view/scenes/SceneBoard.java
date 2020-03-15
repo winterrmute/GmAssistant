@@ -51,9 +51,6 @@ public class SceneBoard extends AppCompatActivity
         displayBoard();
         connectLights();
 
-        operations = new SceneOperations(getApplicationContext());
-        showScenes();
-
         sceneView.setOnItemClickListener(
             (parent, view, position, id) -> operations.startScene(scenesAssignedToBoard.get(position)));
 
@@ -70,21 +67,13 @@ public class SceneBoard extends AppCompatActivity
         addScene.setOnClickListener((v) -> addScene());
     }
 
-    /**
-     * Show all scenes as listView
-     */
-    private void showScenes()
-    {
-        displayBoard();
-        sceneView = findViewById(R.id.scene_view);
-        sceneView.setAdapter(sceneAdapter);
-    }
-
     private void displayBoard() {
         operations = operations == null ? new SceneOperations(getApplicationContext()) : operations;
         scenesAssignedToBoard = operations.getScenesAssignedToBoard(getIntent().getLongExtra("boardId", -1L));
         sceneAdapter = sceneAdapter == null ? new SceneAdapter(getApplicationContext(), scenesAssignedToBoard) : sceneAdapter;
         sceneAdapter.updateDisplayedElements(scenesAssignedToBoard);
+        sceneView = findViewById(R.id.scene_view);
+        sceneView.setAdapter(sceneAdapter);
     }
 
     private void connectLights()
@@ -172,7 +161,7 @@ public class SceneBoard extends AppCompatActivity
                     operations.deleteElement(scene);
                 }
             }
-            showScenes();
+            displayBoard();
         }
     }
 }
