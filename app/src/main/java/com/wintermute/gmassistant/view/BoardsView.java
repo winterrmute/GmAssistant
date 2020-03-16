@@ -120,7 +120,6 @@ public class BoardsView extends AppCompatActivity
 
     private void openBoard(Board board)
     {
-        board = operations.getBoard(board.getId());
         if (!board.isHasChildren())
         {
             Class boardCategory = null;
