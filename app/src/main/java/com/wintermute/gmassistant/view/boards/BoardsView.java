@@ -185,6 +185,9 @@ public class BoardsView extends AppCompatActivity
     {
         Button addContent = findViewById(R.id.add_content);
         addContent.setVisibility(View.VISIBLE);
+        if (board == null) {
+            findViewById(R.id.add_content).setVisibility(View.GONE);
+        }
         if ("scenes".equals(category))
         {
             addContent.setText(R.string.add_scene);
