@@ -2,8 +2,6 @@ package com.wintermute.gmassistant.view.boards;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -35,16 +33,20 @@ public class EffectBoard extends AppCompatActivity
     private SeekBar volume;
     private PlayerOperations player;
     private ImageButton stopPlayer;
-    private Button addEffects;
-    private EffectsAdapter adapter;
+    private Long currentBoard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_effect_board);
+        currentBoard = getIntent().getLongExtra("boardId", -1L);
         initComponents();
         displayBoard();
+        if (getIntent().getBooleanExtra("newEffectBoard", false))
+        {
+            startActivityForResult(new Intent(this, StorageBrowser.class), COLLECT_TRACKS);
+        }
     }
 
     private void initComponents()
@@ -53,29 +55,16 @@ public class EffectBoard extends AppCompatActivity
         volume = findViewById(R.id.volume);
         effectsGrid = findViewById(R.id.effect_grid);
         stopPlayer = findViewById(R.id.stop_player);
-        addEffects = findViewById(R.id.add_effects);
     }
 
     private void displayBoard()
     {
         List<Long> effectIds = getEffects();
-        if (effectIds.size() > 0)
-        {
-            addEffects.setVisibility(View.GONE);
-            player = new PlayerOperations();
-            prepareVolumeSettings();
-            initEffectsGrid();
-            showEffects(effectIds);
-            stopPlayer.setOnClickListener(v -> player.stopPlayer(Tags.EFFECT.value()));
-        } else
-        {
-            addEffects.setOnClickListener(
-                v -> startActivityForResult(new Intent(this, StorageBrowser.class), COLLECT_TRACKS));
-            findViewById(R.id.volume_label).setVisibility(View.GONE);
-            stopPlayer.setVisibility(View.GONE);
-            volume.setVisibility(View.GONE);
-            effectsGrid.setVisibility(View.GONE);
-        }
+        player = new PlayerOperations();
+        prepareVolumeSettings();
+        initEffectsGrid();
+        showEffects(effectIds);
+        stopPlayer.setOnClickListener(v -> player.stopPlayer(Tags.EFFECT.value()));
     }
 
     private void initEffectsGrid()
@@ -107,15 +96,14 @@ public class EffectBoard extends AppCompatActivity
             Track track = operations.get(id);
             effects.add(track);
         }
-        adapter = new EffectsAdapter(getApplicationContext(), effects);
+        EffectsAdapter adapter = new EffectsAdapter(getApplicationContext(), effects);
         effectsGrid.setAdapter(adapter);
     }
 
     private List<Long> getEffects()
     {
         EffectsDao dao = new EffectsDao(getApplicationContext());
-        Long groupId = getIntent().getLongExtra("boardId", -1L);
-        return dao.get(groupId);
+        return dao.get(currentBoard);
     }
 
     private void prepareVolumeSettings()
@@ -161,18 +149,18 @@ public class EffectBoard extends AppCompatActivity
                     .map(track::createTrack)
                     .collect(Collectors.toList());
                 BoardOperations operations = new BoardOperations(getApplicationContext());
-                operations.referenceEffectsToBoard(getIntent().getLongExtra("boardId", -1L), effects);
-                updateView(effects);
+                operations.referenceEffectsToBoard(currentBoard, effects);
             }
+            refreshActivity();
         }
     }
 
-    private void updateView(List<Track> newContent)
+    private void refreshActivity()
     {
-        adapter = adapter == null ? adapter = new EffectsAdapter(getApplicationContext(), newContent) : adapter;
-        adapter.updateDisplayedElements(newContent);
         finish();
-        startActivity(getIntent());
+        Intent intent = new Intent(getApplicationContext(), this.getClass());
+        intent.putExtra("boardId", currentBoard);
+        startActivity(intent);
     }
 
     @Override
@@ -182,6 +170,14 @@ public class EffectBoard extends AppCompatActivity
         {
             player.stopPlayer(Tags.EFFECT.value());
         }
+        goBackToBoardsOverview();
+    }
+
+    private void goBackToBoardsOverview()
+    {
+        Intent boards = new Intent(getApplicationContext(), BoardsView.class);
+        boards.putExtra("boardId", currentBoard);
+        startActivity(boards);
         finish();
     }
 }

@@ -16,6 +16,7 @@ import com.wintermute.gmassistant.hue.model.HueBridge;
 import com.wintermute.gmassistant.operations.LightConfigOperations;
 import com.wintermute.gmassistant.operations.SceneOperations;
 import com.wintermute.gmassistant.services.LightConnection;
+import com.wintermute.gmassistant.view.boards.BoardsView;
 import com.wintermute.gmassistant.view.model.Scene;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -41,12 +42,15 @@ public class SceneBoard extends AppCompatActivity
     private HueBridge bridge;
     private SceneOperations operations;
     private List<Scene> scenesAssignedToBoard;
+    private Long currentBoard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scene_board);
+        currentBoard = getIntent().getLongExtra("boardId", -1L);
+
         displayBoardContent();
         connectLights();
 
@@ -66,8 +70,7 @@ public class SceneBoard extends AppCompatActivity
     private void displayBoardContent()
     {
         operations = operations == null ? new SceneOperations(getApplicationContext()) : operations;
-        Long parentBoard = getIntent().getLongExtra("boardId", -1L);
-        scenesAssignedToBoard = operations.getScenesAssignedToBoard(parentBoard);
+        scenesAssignedToBoard = operations.getScenesAssignedToBoard(currentBoard);
         initSceneView();
     }
 
@@ -97,7 +100,7 @@ public class SceneBoard extends AppCompatActivity
     private void addScene()
     {
         Intent sceneConfig = new Intent(SceneBoard.this, SceneConfig.class);
-        sceneConfig.putExtra("boardId", getIntent().getLongExtra("boardId", -1L));
+        sceneConfig.putExtra("boardId", currentBoard);
         startActivityForResult(sceneConfig, CREATE_SCENE);
     }
 
@@ -179,5 +182,18 @@ public class SceneBoard extends AppCompatActivity
             finish();
             startActivity(getIntent());
         }
+    }
+
+    @Override
+    public void onBackPressed(){
+        goBackToBoardsOverview();
+    }
+
+    private void goBackToBoardsOverview()
+    {
+        Intent boards = new Intent(getApplicationContext(), BoardsView.class);
+        boards.putExtra("boardId", currentBoard);
+        startActivity(boards);
+        finish();
     }
 }

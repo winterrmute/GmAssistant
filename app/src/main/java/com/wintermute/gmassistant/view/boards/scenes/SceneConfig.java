@@ -54,6 +54,7 @@ public class SceneConfig extends AppCompatActivity
     private ImageView colorView;
 
     private String tag;
+    private Long currentBoard;
 
     private SceneOperations operations;
     private PlayerOperations player;
@@ -66,6 +67,8 @@ public class SceneConfig extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scene_configuration);
+
+        currentBoard = getIntent().getLongExtra("boardId", -1L);
 
         operations = new SceneOperations(getApplicationContext());
         player = new PlayerOperations();
@@ -106,17 +109,25 @@ public class SceneConfig extends AppCompatActivity
         if (!nameField.getText().toString().equals(""))
         {
             content.put(SceneDbModel.NAME.value(), nameField.getText());
-            content.put(SceneDbModel.BOARD_ID.value(), getIntent().getLongExtra("boardId", -1L));
+            content.put(SceneDbModel.BOARD_ID.value(), currentBoard);
             storeTracks();
             storeLight();
             operations.createScene(content);
             setResult(RESULT_OK);
             player.stopAll();
+            goToSceneBoardView();
             finish();
         } else
         {
             Toast.makeText(this, "Please set scene name!", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void goToSceneBoardView()
+    {
+        Intent sceneBoard = new Intent(getApplicationContext(), SceneBoard.class);
+        sceneBoard.putExtra("boardId", currentBoard);
+        startActivity(sceneBoard);
     }
 
     private void storeLight()

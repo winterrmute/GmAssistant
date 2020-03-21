@@ -54,7 +54,8 @@ public class StorageBrowser extends AppCompatActivity
             {
                 setResult(RESULT_OK, getIntent().putExtra("path", path.getPath()));
                 finish();
-            } else {
+            } else
+            {
                 selectRecursive();
             }
         });
@@ -132,7 +133,8 @@ public class StorageBrowser extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed()
+    {
         setResult(RESULT_CANCELED);
         finish();
     }

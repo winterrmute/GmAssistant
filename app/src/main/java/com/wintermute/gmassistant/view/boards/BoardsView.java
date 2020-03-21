@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.BoardsAdapter;
+import com.wintermute.gmassistant.database.dao.EffectsDao;
 import com.wintermute.gmassistant.dialogs.ListDialog;
 import com.wintermute.gmassistant.operations.BoardOperations;
 import com.wintermute.gmassistant.operations.SceneOperations;
@@ -45,10 +46,28 @@ public class BoardsView extends AppCompatActivity
         setContentView(R.layout.activity_boards);
 
         init();
-        operations = new BoardOperations(getApplicationContext());
+        handleBackFromCategoryBoard();
 
         Button addBoard = findViewById(R.id.add_board);
         addBoard.setOnClickListener(v -> createBoard());
+    }
+
+    private void handleBackFromCategoryBoard()
+    {
+        if (getIntent().getLongExtra("boardId", -1L) != -1L)
+        {
+            board = operations.getBoard(getIntent().getLongExtra("boardId", -1L));
+            category = board.getType();
+            if (operations.getParent(board) != null)
+            {
+                board = operations.getParent(board);
+                updateBoardsView(board.getId());
+            } else
+            {
+                board = null;
+                updateBoardsView(null);
+            }
+        }
     }
 
     @Override
@@ -86,14 +105,14 @@ public class BoardsView extends AppCompatActivity
             {
                 if (board != null)
                 {
-                    operations.makeParent(board.getId());
+                    operations.setParentFlag(board.getId());
                     board = operations.createNestedBoard(boardName, board.getType(), false, board.getId());
                 } else
                 {
                     board = operations.createBoard(boardName, category, false, true);
                     if (isRoot(board))
                     {
-                        operations.makeRoot(board.getId());
+                        operations.setTopLevelFlag(board.getId());
                     }
                 }
                 openBoard();
@@ -117,7 +136,7 @@ public class BoardsView extends AppCompatActivity
         operations = operations == null ? new BoardOperations(getApplicationContext()) : operations;
         if (board == null)
         {
-            boards = operations.getRoots(category);
+            boards = operations.getTopLevelBoards(category);
         } else
         {
             boards = operations.getNestedBoards(category, parentId);
@@ -175,6 +194,7 @@ public class BoardsView extends AppCompatActivity
             Intent intent = new Intent(getApplicationContext(), boardCategory);
             intent.putExtra("boardId", board.getId());
             startActivity(intent);
+            finish();
         } else
         {
             updateBoardsView(board.getId());
@@ -185,7 +205,8 @@ public class BoardsView extends AppCompatActivity
     {
         Button addContent = findViewById(R.id.add_content);
         addContent.setVisibility(View.VISIBLE);
-        if (board == null) {
+        if (board == null)
+        {
             findViewById(R.id.add_content).setVisibility(View.GONE);
         }
         if ("scenes".equals(category))
@@ -200,18 +221,32 @@ public class BoardsView extends AppCompatActivity
         } else
         {
             addContent.setText(R.string.add_effects);
-            addContent.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), EffectBoard.class)));
+            addContent.setOnClickListener(v ->
+            {
+                Intent intent = new Intent(getApplicationContext(), EffectBoard.class);
+                intent.putExtra("newEffectBoard", true);
+                intent.putExtra("boardId", board.getId());
+                startActivity(intent);
+            });
         }
     }
 
     private boolean hasElements(Board board)
     {
-        SceneOperations operations = new SceneOperations(getApplicationContext());
-        return operations.getScenesAssignedToBoard(board.getId()).size() > 0;
+        if (board.getType().equals("scenes"))
+        {
+            SceneOperations operations = new SceneOperations(getApplicationContext());
+            return operations.getScenesAssignedToBoard(board.getId()).size() > 0;
+        } else
+        {
+            EffectsDao dao = new EffectsDao(getApplicationContext());
+            return dao.get(board.getId()).size() > 0;
+        }
     }
 
     private void init()
     {
+        operations = new BoardOperations(getApplicationContext());
         initBoardList();
         category = getIntent().getStringExtra("boardCategory");
         currentBoardId = getIntent().getLongExtra("boardId", -1L);

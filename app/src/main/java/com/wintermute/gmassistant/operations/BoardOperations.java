@@ -120,7 +120,7 @@ public class BoardOperations
         return parentId != null ? getBoard(parentId) : null;
     }
 
-    public List<Board> getRoots(String category)
+    public List<Board> getTopLevelBoards(String category)
     {
         List<Map<String, Object>> rootBoards = dao.getRootBoards(category);
         return rootBoards.stream().map(e -> getBoard((Long) e.get("id"))).collect(Collectors.toList());
@@ -131,7 +131,7 @@ public class BoardOperations
      *
      * @param boardId to update board.
      */
-    public void makeParent(Long boardId)
+    public void setParentFlag(Long boardId)
     {
         update(BoardDbModel.IS_PARENT.value(), boardId);
     }
@@ -141,7 +141,7 @@ public class BoardOperations
      *
      * @param boardId to update board.
      */
-    public void makeRoot(Long boardId)
+    public void setTopLevelFlag(Long boardId)
     {
         update(BoardDbModel.IS_ROOT.value(), boardId);
     }
