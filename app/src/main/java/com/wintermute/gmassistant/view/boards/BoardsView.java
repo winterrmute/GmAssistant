@@ -38,6 +38,7 @@ public class BoardsView extends AppCompatActivity
     private BoardsAdapter adapter;
     private String category;
     private Long currentBoardId;
+    private List<String> path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -50,6 +51,8 @@ public class BoardsView extends AppCompatActivity
 
         Button addBoard = findViewById(R.id.add_board);
         addBoard.setOnClickListener(v -> createBoard());
+
+        updateActivityTitle();
     }
 
     private void handleBackFromCategoryBoard()
@@ -181,6 +184,13 @@ public class BoardsView extends AppCompatActivity
 
     private void openBoard()
     {
+        if (path == null)
+        {
+            path = new ArrayList<>();
+        }
+        path.add(board.getName());
+        updateActivityTitle();
+
         if (hasElements(board))
         {
             Class boardCategory = null;
@@ -191,6 +201,7 @@ public class BoardsView extends AppCompatActivity
             {
                 boardCategory = EffectBoard.class;
             }
+
             Intent intent = new Intent(getApplicationContext(), boardCategory);
             intent.putExtra("boardId", board.getId());
             startActivity(intent);
@@ -198,6 +209,24 @@ public class BoardsView extends AppCompatActivity
         } else
         {
             updateBoardsView(board.getId());
+        }
+    }
+
+    private void updateActivityTitle()
+    {
+        //TODO:
+        String title = category.substring(0, 1).toUpperCase() + category.substring(1).toLowerCase();
+        if (path == null)
+        {
+            setTitle(title);
+        } else
+        {
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < path.size(); i++)
+            {
+                builder.append(path.get(i)).append("/");
+            }
+            setTitle(title + ": " + builder.toString());
         }
     }
 
