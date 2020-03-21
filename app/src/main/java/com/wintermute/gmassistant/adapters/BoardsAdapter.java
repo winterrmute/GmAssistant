@@ -20,31 +20,37 @@ import java.util.List;
 public class BoardsAdapter extends BaseAdapter
 {
 
-    private List<Board> boards;
+    private List<Board> adapterList;
     private LayoutInflater inflater;
 
     /**
      * Creates an instance.
      *
      * @param ctx application context.
-     * @param effectGroups effects container for board.
+     * @param boards effects container for board.
      */
-    public BoardsAdapter(Context ctx, List<Board> effectGroups)
+    public BoardsAdapter(Context ctx, List<Board> boards)
     {
-        this.boards = effectGroups;
+        adapterList = boards;
         inflater = LayoutInflater.from(ctx);
+    }
+
+    public void updateDisplayedElements(List<Board> boards)
+    {
+        adapterList = boards;
+        notifyDataSetChanged();
     }
 
     @Override
     public int getCount()
     {
-        return boards.size();
+        return adapterList.size();
     }
 
     @Override
     public Object getItem(int position)
     {
-        return boards.get(position);
+        return adapterList.get(position);
     }
 
     @Override
@@ -58,14 +64,8 @@ public class BoardsAdapter extends BaseAdapter
     {
         LinearLayout result = (LinearLayout) inflater.inflate(R.layout.file, parent, false);
         TextView boardName = result.findViewById(R.id.file_name);
-        boardName.setText(boards.get(position).getName());
+        boardName.setText(adapterList.get(position).getName());
         result.setTag(position);
         return result;
-    }
-
-    public void updateDisplayedElements(List<Board> boards)
-    {
-        this.boards = boards;
-        notifyDataSetChanged();
     }
 }

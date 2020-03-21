@@ -6,7 +6,7 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.R;
 import com.wintermute.gmassistant.adapters.TrackAdapter;
-import com.wintermute.gmassistant.view.scenes.SceneConfig;
+import com.wintermute.gmassistant.view.boards.scenes.SceneConfig;
 import com.wintermute.gmassistant.database.dao.PlaylistContentDao;
 import com.wintermute.gmassistant.database.dao.TrackDao;
 import com.wintermute.gmassistant.dialogs.ListDialog;

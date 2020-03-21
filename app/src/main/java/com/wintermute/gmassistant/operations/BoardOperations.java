@@ -12,6 +12,7 @@ import com.wintermute.gmassistant.view.model.Track;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Manages handling effect boards.
@@ -40,16 +41,25 @@ public class BoardOperations
      * @param name containing referenced effects
      * @param type of created board
      */
-    public Board createBoard(String name, String type, Long parent, Boolean hasChildren)
+    public Board createBoard(String name, String type, Boolean isParent, Boolean isRoot)
     {
-        parent = parent == null ? -1L : parent;
-        hasChildren = hasChildren == null ? false : hasChildren;
+        isParent = isParent == null ? false : isParent;
         ContentValues values = new ContentValues();
         values.put(BoardDbModel.NAME.value(), name);
         values.put(BoardDbModel.TYPE.value(), type);
-        values.put(BoardDbModel.PARENT.value(), parent);
-        values.put(BoardDbModel.HAS_CHILDREN.value(), String.valueOf(hasChildren));
+        values.put(BoardDbModel.IS_PARENT.value(), String.valueOf(isParent));
+        values.put(BoardDbModel.IS_ROOT.value(), String.valueOf(isRoot));
         return getBoard(dao.insert(values));
+    }
+
+    public Board createNestedBoard(String name, String type, Boolean isParent, Long parentId)
+    {
+        Board board = createBoard(name, type, isParent, false);
+        ContentValues values = new ContentValues();
+        values.put("boardId", board.getId());
+        values.put("parentId", parentId);
+        dao.createNestedBoard(values);
+        return board;
     }
 
     /**
@@ -59,9 +69,9 @@ public class BoardOperations
     public Board getBoard(Long boardId)
     {
         Map<String, Object> boardData = dao.get(boardId);
-        return new Board((Long) boardData.get(BoardDbModel.ID.value()), (String) boardData.get(BoardDbModel.NAME.value()),
-            (String) boardData.get(BoardDbModel.TYPE.value()), (Long) boardData.get(BoardDbModel.PARENT.value()),
-            Boolean.parseBoolean((String) boardData.get(BoardDbModel.HAS_CHILDREN.value())));
+        return new Board((Long) boardData.get(BoardDbModel.ID.value()),
+            (String) boardData.get(BoardDbModel.NAME.value()), (String) boardData.get(BoardDbModel.TYPE.value()),
+            Boolean.parseBoolean((String) boardData.get(BoardDbModel.IS_PARENT.value())), Boolean.parseBoolean((String) boardData.get(BoardDbModel.IS_ROOT.value())));
     }
 
     /**
@@ -96,22 +106,49 @@ public class BoardOperations
      * @param parentId if present, else -1 (root)
      * @return children of selected board.
      */
-    public List<Board> loadBoardsByParent(String category, Long parentId){
+    public List<Board> getNestedBoards(String category, Long parentId)
+    {
         List<Board> result = new ArrayList<>();
         List<Long> received = dao.getBoards(category, parentId);
         received.forEach(id -> result.add(getBoard(id)));
         return result;
     }
 
-    /**
-     * Sets state to parent.
-     *
-     * @param boardId of board in which the child has been created.
-     */
-    public void addChildrenToBoard(Long boardId)
+    public Board getParent(Board board)
     {
+        Long parentId = dao.getParentId(board);
+        return parentId != null ? getBoard(parentId) : null;
+    }
+
+    public List<Board> getRoots(String category)
+    {
+        List<Map<String, Object>> rootBoards = dao.getRootBoards(category);
+        return rootBoards.stream().map(e -> getBoard((Long) e.get("id"))).collect(Collectors.toList());
+    }
+
+    /**
+     * Make board to parent board
+     *
+     * @param boardId to update board.
+     */
+    public void makeParent(Long boardId)
+    {
+        update(BoardDbModel.IS_PARENT.value(), boardId);
+    }
+
+    /**
+     * Make board to top level board
+     *
+     * @param boardId to update board.
+     */
+    public void makeRoot(Long boardId)
+    {
+        update(BoardDbModel.IS_ROOT.value(), boardId);
+    }
+
+    private void update(String attr, Long boardId){
         ContentValues values = new ContentValues();
-        values.put(BoardDbModel.HAS_CHILDREN.value(), "true");
+        values.put(attr, "true");
         dao.update(values, boardId);
     }
 }

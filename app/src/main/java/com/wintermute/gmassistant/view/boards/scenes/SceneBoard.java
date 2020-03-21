@@ -1,14 +1,10 @@
-package com.wintermute.gmassistant.view.scenes;
+package com.wintermute.gmassistant.view.boards.scenes;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
-import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.Request;
 import com.wintermute.gmassistant.R;
@@ -17,7 +13,6 @@ import com.wintermute.gmassistant.dialogs.ListDialog;
 import com.wintermute.gmassistant.hue.ApiCaller;
 import com.wintermute.gmassistant.hue.CallbackListener;
 import com.wintermute.gmassistant.hue.model.HueBridge;
-import com.wintermute.gmassistant.operations.BoardOperations;
 import com.wintermute.gmassistant.operations.LightConfigOperations;
 import com.wintermute.gmassistant.operations.SceneOperations;
 import com.wintermute.gmassistant.services.LightConnection;
@@ -46,16 +41,13 @@ public class SceneBoard extends AppCompatActivity
     private HueBridge bridge;
     private SceneOperations operations;
     private List<Scene> scenesAssignedToBoard;
-    private SceneAdapter sceneAdapter;
-    private String boardName;
-    private Long parentBoard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scene_board);
-        displayBoard();
+        displayBoardContent();
         connectLights();
 
         Button addScene = findViewById(R.id.add_scene);
@@ -71,30 +63,20 @@ public class SceneBoard extends AppCompatActivity
         operations.startScene(scenesAssignedToBoard.get(random.nextInt(scenesAssignedToBoard.size())));
     }
 
-    private void displayBoard()
+    private void displayBoardContent()
     {
         operations = operations == null ? new SceneOperations(getApplicationContext()) : operations;
-        parentBoard = getIntent().getLongExtra("boardId", -1L);
+        Long parentBoard = getIntent().getLongExtra("boardId", -1L);
         scenesAssignedToBoard = operations.getScenesAssignedToBoard(parentBoard);
-        if (scenesAssignedToBoard.size() > 0)
-        {
-            initSceneView();
-            findViewById(R.id.add_child_board).setVisibility(View.GONE);
-        } else
-        {
-            findViewById(R.id.random_scene).setVisibility(View.GONE);
-            findViewById(R.id.scene_view).setVisibility(View.GONE);
-            Button addSubboard = findViewById(R.id.add_child_board);
-            addSubboard.setOnClickListener(v -> createChildBoard());
-        }
+        initSceneView();
     }
 
     private void initSceneView()
     {
         ListView sceneView = findViewById(R.id.scene_view);
-        sceneAdapter = new SceneAdapter(getApplicationContext(), scenesAssignedToBoard);
+        SceneAdapter sceneAdapter = new SceneAdapter(getApplicationContext(), scenesAssignedToBoard);
         sceneView.setAdapter(sceneAdapter);
-        //        sceneAdapter.updateDisplayedElements(scenesAssignedToBoard);
+//        sceneAdapter.updateDisplayedElements(scenesAssignedToBoard);
 
         sceneView.setOnItemClickListener(
             (parent, view, position, id) -> operations.startScene(scenesAssignedToBoard.get(position)));
@@ -107,34 +89,6 @@ public class SceneBoard extends AppCompatActivity
             startActivityForResult(dialog, DELETE_SCENE);
             return true;
         });
-    }
-
-    private void createChildBoard()
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Board Name");
-
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setView(input);
-
-        builder.setPositiveButton(R.string.ok_result, (dialog, which) ->
-        {
-            dialog.dismiss();
-            boardName = input.getText().toString();
-            if (!"".equals(boardName))
-            {
-                BoardOperations operations = new BoardOperations(getApplicationContext());
-                operations.createBoard(boardName, "scenes", parentBoard, false);
-                operations.addChildrenToBoard(parentBoard);
-                finish();
-            } else
-            {
-                Toast.makeText(getApplicationContext(), "Set Board name", Toast.LENGTH_LONG).show();
-            }
-        });
-        builder.setNegativeButton(R.string.cancel_result, (dialog, which) -> dialog.cancel());
-        builder.show();
     }
 
     /**

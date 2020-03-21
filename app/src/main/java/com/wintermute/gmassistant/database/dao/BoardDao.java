@@ -34,12 +34,32 @@ public class BoardDao
     /**
      * Creates new board.
      *
-     * @param values board name.
+     * @param values board model data.
      * @return id of created board.
      */
     public Long insert(ContentValues values)
     {
         return dbWrite.insert(BoardDbModel.TABLE_NAME.value(), null, values);
+    }
+
+    /**
+     * Create entry for board in nested_board table. That means, that this board is not placed on top level.
+     *
+     * @param values board id and its parent id
+     */
+    public void createNestedBoard(ContentValues values)
+    {
+        dbWrite.insert(BoardDbModel.NESTED_BOARDS_TABLE_NAME.value(), null, values);
+    }
+
+    public List<Map<String, Object>> getRootBoards(String category)
+    {
+        StringBuilder query = new StringBuilder("SELECT * FROM ")
+            .append(BoardDbModel.TABLE_NAME.value())
+            .append("  WHERE type = '")
+            .append(category)
+            .append("' AND isRoot = 'true'");
+        return getData(dbRead.rawQuery(query.toString(), null));
     }
 
     /**
@@ -79,39 +99,41 @@ public class BoardDao
         return getData(dbRead.rawQuery(query.toString(), null)).get(0);
     }
 
-    /**
-     * @param category of board.
-     * @return selected boards by category.
-     */
-    public List<Map<String, Object>> getCategory(String category)
+    public Long getParentId(Board board)
     {
-        StringBuilder query = new StringBuilder("SELECT * FROM ")
-            .append(BoardDbModel.TABLE_NAME.value())
-            .append("  WHERE type = '")
-            .append(category)
-            .append("'");
-        return getData(dbRead.rawQuery(query.toString(), null));
+        StringBuilder query = new StringBuilder("SELECT parentId FROM ")
+            .append(BoardDbModel.NESTED_BOARDS_TABLE_NAME.value())
+            .append("  WHERE ")
+            .append(BoardDbModel.NESTED_BOARD_ID.value())
+            .append(" = ")
+            .append(board.getId());
+        Map<String, Long> data = getParentBoardData(dbRead.rawQuery(query.toString(), null));
+        return data.get("id");
     }
 
-    /**
-     * @param category of boards.
-     * @param parentId of parent board.
-     * @return boards that are first level children of parent board.
-     */
     public List<Long> getBoards(String category, Long parentId)
     {
-        StringBuilder query = new StringBuilder("SELECT * FROM ")
+        StringBuilder query = new StringBuilder("SELECT id FROM ")
             .append(BoardDbModel.TABLE_NAME.value())
-            .append("  WHERE type = '")
+            .append(" INNER JOIN ")
+            .append(BoardDbModel.NESTED_BOARDS_TABLE_NAME.value())
+            .append(" ON ")
+            .append(BoardDbModel.NESTED_BOARDS_TABLE_NAME.value())
+            .append(".boardId = boards.id")
+            .append(" WHERE ")
+            .append(BoardDbModel.NESTED_BOARDS_TABLE_NAME.value())
+            .append(".parentId =")
+            .append(parentId)
+            .append(" AND ")
+            .append(BoardDbModel.TABLE_NAME.value())
+            .append(".type = '")
             .append(category)
-            .append("' AND ")
-            .append(BoardDbModel.PARENT.value())
-            .append(" = ")
-            .append(parentId);
+            .append("'");
         return getIds(dbRead.rawQuery(query.toString(), null));
     }
 
-    private List<Long> getIds(Cursor query){
+    private List<Long> getIds(Cursor query)
+    {
         List<Long> result = new ArrayList<>();
         while (query.moveToNext())
         {
@@ -127,20 +149,27 @@ public class BoardDao
         while (query.moveToNext())
         {
             board = new HashMap<>();
-            for (String attr : BoardDbModel.getValues())
+            for (String attr : BoardDbModel.getAttrs())
             {
-                if (!attr.equals(BoardDbModel.TABLE_NAME.value()))
+                if (attr.equals(BoardDbModel.ID.value()))
                 {
-                    if (attr.equals(BoardDbModel.ID.value()) || attr.equals(BoardDbModel.PARENT.value()))
-                    {
-                        board.put(attr, query.getLong(query.getColumnIndex(attr)));
-                    } else
-                    {
-                        board.put(attr, query.getString(query.getColumnIndex(attr)));
-                    }
+                    board.put(attr, query.getLong(query.getColumnIndex(attr)));
+                } else
+                {
+                    board.put(attr, query.getString(query.getColumnIndex(attr)));
                 }
             }
             result.add(board);
+        }
+        return result;
+    }
+
+    private Map<String, Long> getParentBoardData(Cursor query)
+    {
+        Map<String, Long> result = new HashMap<>();
+        while (query.moveToNext())
+        {
+            result.put("id", query.getLong(query.getColumnIndex("parentId")));
         }
         return result;
     }

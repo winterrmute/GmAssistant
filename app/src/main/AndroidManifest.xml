@@ -20,19 +20,19 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
-        <activity android:name=".hue.HueBridges"></activity>
+        <activity android:name=".hue.HueBridges"/>
         <activity android:name=".hue.HueBulbSelector" />
         <activity android:name=".hue.HueBridgeRegistrator" />
-        <activity android:name=".view.BoardsView" />
-        <activity android:name=".view.effects.EffectBoard" />
+        <activity android:name=".view.boards.BoardsView" />
+        <activity android:name=".view.boards.EffectBoard" />
         <activity android:name=".view.library.LibraryContent" />
         <activity
                 android:name=".dialogs.ListDialog"
                 android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".view.scenes.SceneBoard" />
+        <activity android:name=".view.boards.scenes.SceneBoard" />
         <activity android:name=".view.HueSettingsView" />
         <activity android:name=".view.light.SceneLightConfiguration" />
-        <activity android:name=".view.scenes.SceneConfig" />
+        <activity android:name=".view.boards.scenes.SceneConfig" />
         <activity android:name=".view.playlist.AddNewPlaylist" />
         <activity android:name=".view.playlist.PlaylistContentView" />
         <activity android:name=".view.StorageBrowser" />

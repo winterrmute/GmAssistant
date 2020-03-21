@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.view.scenes;
+package com.wintermute.gmassistant.view.boards.scenes;
 
 import android.content.Intent;
 import android.os.Bundle;

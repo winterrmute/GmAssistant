@@ -1,4 +1,4 @@
-package com.wintermute.gmassistant.view.effects;
+package com.wintermute.gmassistant.view.boards;
 
 import android.content.Intent;
 import android.os.Bundle;

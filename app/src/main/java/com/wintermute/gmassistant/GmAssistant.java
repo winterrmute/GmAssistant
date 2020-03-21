@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import com.wintermute.gmassistant.hue.HueBridges;
-import com.wintermute.gmassistant.view.BoardsView;
+import com.wintermute.gmassistant.view.boards.BoardsView;
 import com.wintermute.gmassistant.view.library.LibraryContent;
 import com.wintermute.gmassistant.view.playlist.PlaylistView;
 

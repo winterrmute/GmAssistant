@@ -54,8 +54,11 @@ public class DbManager extends SQLiteOpenHelper
             + "DELETE CASCADE, FOREIGN KEY (boardId) REFERENCES boards (id) ON DELETE CASCADE )";
 
     private static final String BOARDS =
-        "CREATE TABLE boards (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, type TEXT, parent INTEGER, "
-            + "has_children TEXT)";
+        "CREATE TABLE boards (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, type TEXT, isParent TEXT, isRoot TEXT)";
+
+    private static final String NESTED_BOARDS =
+        "CREATE TABLE nested_boards (boardId INTEGER, parentId INTEGER, FOREIGN KEY (boardId) REFERENCES boards (id) ON DELETE CASCADE, "
+            + "FOREIGN KEY (parentId) REFERENCES boards (id) ON DELETE CASCADE)";
 
     private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS user_playlist";
 
@@ -69,7 +72,7 @@ public class DbManager extends SQLiteOpenHelper
     {
         Stream
             .of(PLAYLISTS, TRACKS, PLAYLISTS_CONTENT, SCENES, SCENE_TRACK_CONFIGS, LIGHTS, HUE_BRIDGES, HUE_BULBS,
-                LIBRARY, EFFECTS, BOARDS)
+                LIBRARY, EFFECTS, BOARDS, NESTED_BOARDS)
             .forEach(db::execSQL);
         db.execSQL("PRAGMA foreign_keys=ON;");
     }

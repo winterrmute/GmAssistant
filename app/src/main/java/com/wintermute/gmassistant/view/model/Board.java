@@ -10,6 +10,6 @@ public class Board
     private Long id;
     private String name;
     private String type;
-    private Long parent;
-    private boolean hasChildren;
+    private boolean parent;
+    private boolean isRoot;
 }

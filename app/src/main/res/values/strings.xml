@@ -47,7 +47,6 @@
     <!--  SceneHandler  -->
     <string name="add_scene">Add new scene</string>
     <string name="random_scene">Start random scene</string>
-    <string name="add_children">Add further board in this board</string>
 
     <!--  LightConfig  -->
     <string name="submit_light">Submit</string>
