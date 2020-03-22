@@ -43,6 +43,7 @@ public class SceneBoard extends AppCompatActivity
     private SceneOperations operations;
     private List<Scene> scenesAssignedToBoard;
     private Long currentBoard;
+    private ApiCaller apiCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -50,6 +51,7 @@ public class SceneBoard extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scene_board);
         currentBoard = getIntent().getLongExtra("boardId", -1L);
+        apiCall = new ApiCaller();
 
         displayBoardContent();
         connectLights();
@@ -79,7 +81,7 @@ public class SceneBoard extends AppCompatActivity
         ListView sceneView = findViewById(R.id.scene_view);
         SceneAdapter sceneAdapter = new SceneAdapter(getApplicationContext(), scenesAssignedToBoard);
         sceneView.setAdapter(sceneAdapter);
-//        sceneAdapter.updateDisplayedElements(scenesAssignedToBoard);
+        //        sceneAdapter.updateDisplayedElements(scenesAssignedToBoard);
 
         sceneView.setOnItemClickListener(
             (parent, view, position, id) -> operations.startScene(scenesAssignedToBoard.get(position)));
@@ -114,10 +116,8 @@ public class SceneBoard extends AppCompatActivity
             if (bridge != null)
             {
                 String url = "http://" + bridge.getIp() + "/api/" + bridge.getUsername() + "/lights";
-                ApiCaller
-                    .getInstance()
-                    .makeCustomCall(getApplicationContext(), Request.Method.GET, url,
-                        "{\"devicetype\":\"gm_assistant#gm_assistant\"}", getCallbackListener());
+                apiCall.makeCustomCall(getApplicationContext(), Request.Method.GET, url,
+                    "{\"devicetype\":\"gm_assistant#gm_assistant\"}", getCallbackListener());
             }
         } catch (NullPointerException ignored)
         {
@@ -185,7 +185,8 @@ public class SceneBoard extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed()
+    {
         goBackToBoardsOverview();
     }
 

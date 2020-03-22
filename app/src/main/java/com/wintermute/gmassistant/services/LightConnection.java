@@ -8,36 +8,32 @@ import com.wintermute.gmassistant.operations.LightConfigOperations;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Establishes connection to philips hue bridge and holds the information.
+ */
 public class LightConnection
 {
-    private static LightConnection instance;
     private HueBridge bridge;
     private List<HueBulb> bulbs;
 
+    private LightConnection() {}
+
+    /**
+     * @return an ApiCaller instance exactly when it´s required.
+     */
     public static LightConnection getInstance()
     {
-        if (instance == null)
-        {
-            instance = new LightConnection();
-            return instance;
-        }
-        return instance;
+        return LightConnection.LayInit.instance;
     }
 
     public void init(Context ctx, HueBridge bridge)
     {
         this.bridge = bridge;
-
         LightConfigOperations operations = new LightConfigOperations(ctx);
         bulbs = operations.getConnectedBulbs(bridge);
     }
 
-    public void kill()
-    {
-        instance = null;
-    }
-
-    public String getLightsUrl()
+    private String getLightsUrl()
     {
         return "http://" + bridge.getIp() + "/api/" + bridge.getUsername() + "/lights";
     }
@@ -53,5 +49,10 @@ public class LightConnection
             }
         }
         return result;
+    }
+
+    private static class LayInit
+    {
+        private static final LightConnection instance = new LightConnection();
     }
 }

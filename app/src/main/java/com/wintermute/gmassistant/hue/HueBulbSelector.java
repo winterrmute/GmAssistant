@@ -35,6 +35,7 @@ public class HueBulbSelector extends AppCompatActivity
     private List<HueBulb> bulbList = new ArrayList<>();
     private Map<String, HueBulb> selected = new HashMap<>();
     private HueBridge bridge;
+    private ApiCaller apiCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -43,6 +44,7 @@ public class HueBulbSelector extends AppCompatActivity
         setContentView(R.layout.activity_hue_bulb_selector);
 
         bulbsView = findViewById(R.id.bulbs);
+        apiCall = new ApiCaller();
         checkConnection();
         createSelectableListAdapter();
 
@@ -84,7 +86,7 @@ public class HueBulbSelector extends AppCompatActivity
     {
         bridge = getIntent().getParcelableExtra("bridge");
         String url = "http://" + bridge.getIp() + "/api/" + bridge.getUsername() + "/lights";
-        ApiCaller.getInstance().makeCall(getApplicationContext(), Request.Method.GET, url, "{}", getCallbackListener());
+        apiCall.customRequest(getApplicationContext(), Request.Method.GET, url, "{}", getCallbackListener());
     }
 
     private void listBulbs(JSONObject response)

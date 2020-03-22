@@ -10,7 +10,6 @@ import android.graphics.Rect;
 import com.wintermute.gmassistant.database.dao.LightDao;
 import com.wintermute.gmassistant.hue.ApiCaller;
 import com.wintermute.gmassistant.view.model.Light;
-import com.wintermute.gmassistant.view.model.Scene;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -25,6 +24,7 @@ public class LightOperations
 {
     private Context ctx;
     private LightDao dao;
+    private ApiCaller apiCall;
 
     /**
      * Creates an instance
@@ -35,6 +35,7 @@ public class LightOperations
     {
         this.ctx = ctx;
         dao = new LightDao(ctx);
+        apiCall = new ApiCaller();
     }
 
     public Light getLight(Long id)
@@ -80,8 +81,8 @@ public class LightOperations
     /**
      * Extract RGB and convert it to xy coordinates.
      *
-     * @param pickedColor
-     * @return coordinates
+     * @param pickedColor to translate for philips hue.
+     * @return coordinates x and y to send req to philips hue.
      */
     public double[] getRGBtoXY(Color pickedColor)
     {
@@ -117,14 +118,13 @@ public class LightOperations
 
     public void changeColor(String url, double[] color)
     {
-//        String req = "{ \"on\":true, \"xy\": [ " + color[0] + ", " + color[1] + " ], \"transitiontime\": 1, \"hue\": "
         String req = "{ \"on\":true, \"xy\": [ " + color[0] + ", " + color[1] + " ], \"transitiontime\": 1 }";
-        ApiCaller.getInstance().callPut(ctx, url, req);
+        apiCall.putRequest(ctx, url, req);
     }
 
     public void changeBrightness(String url, long brightness)
     {
         String req = "{ \"on\":true, \"bri\": " + brightness + ", \"transitiontime\": 1 }";
-        ApiCaller.getInstance().callPut(ctx, url, req);
+        apiCall.putRequest(ctx, url, req);
     }
 }

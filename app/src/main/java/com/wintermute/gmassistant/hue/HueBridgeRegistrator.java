@@ -39,6 +39,7 @@ public class HueBridgeRegistrator extends AppCompatActivity
     private Button registerDevice;
     private HueBridge bridge;
     private LightConfigOperations operations;
+    private ApiCaller apiCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -65,7 +66,8 @@ public class HueBridgeRegistrator extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed()
+    {
         setResult(RESULT_OK);
         finish();
     }
@@ -81,6 +83,7 @@ public class HueBridgeRegistrator extends AppCompatActivity
         connectionStatus = findViewById(R.id.connection_status);
         pairBulbs.setVisibility(View.GONE);
         connectionStatus.setVisibility(View.GONE);
+        apiCall = new ApiCaller();
 
         if (getIntent().hasExtra("bridge"))
         {
@@ -96,18 +99,14 @@ public class HueBridgeRegistrator extends AppCompatActivity
     private void testConnection(HueBridge bridge)
     {
         String url = "http://" + bridge.getIp() + "/api/" + bridge.getUsername() + "/lights";
-        ApiCaller
-            .getInstance()
-            .makeCustomCall(getApplicationContext(), Request.Method.GET, url, "{}", getCallbackListener());
+        apiCall.makeCustomCall(getApplicationContext(), Request.Method.GET, url, "{}", getCallbackListener());
     }
 
     public void register()
     {
         String url = "http://" + ipAddress.getText().toString() + "/api";
-        ApiCaller
-            .getInstance()
-            .makeCustomCall(getApplicationContext(), Request.Method.POST, url,
-                "{\"devicetype\":\"gm_assistant#gm_assistant\"}", getCallbackListener());
+        apiCall.makeCustomCall(getApplicationContext(), Request.Method.POST, url,
+            "{\"devicetype\":\"gm_assistant#gm_assistant\"}", getCallbackListener());
     }
 
     @NotNull
