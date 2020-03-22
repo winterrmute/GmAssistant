@@ -8,7 +8,8 @@ public enum LightDbModel
     TABLE_NAME("lights"),
     ID("id"),
     COLOR("color"),
-    BRIGHTNESS("brightness");
+    BRIGHTNESS("brightness"),
+    RESET_LIGHTS("resetLight");
 
     private String column;
 

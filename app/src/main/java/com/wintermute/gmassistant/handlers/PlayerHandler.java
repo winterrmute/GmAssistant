@@ -68,7 +68,7 @@ public class PlayerHandler
             Runnable light = () ->
             {
                 LightOperations operations = new LightOperations(ctx);
-                List<String> bulbUrls = LightConnection.getInstance().getLightManagementUrls();
+                List<String> bulbUrls = LightConnection.getInstance().getBulbs();
                 for (String url : bulbUrls)
                 {
                     operations.changeColor(url,

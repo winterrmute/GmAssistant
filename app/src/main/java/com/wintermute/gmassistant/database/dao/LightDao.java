@@ -21,11 +21,6 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper = false)
 public class LightDao extends BaseDao
 {
-    private static final String TABLE_NAME = "light";
-    private static final String ID_KEY = "id";
-    private static final String COLOR_KEY = "color";
-    private static final String BRIGHTNESS_KEY = "brightness";
-
     private SQLiteDatabase dbRead;
     private SQLiteDatabase dbWrite;
 

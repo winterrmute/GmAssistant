@@ -31,7 +31,7 @@
                 android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".view.boards.scenes.SceneBoard" />
         <activity android:name=".view.HueSettingsView" />
-        <activity android:name=".view.light.SceneLightConfiguration" />
+        <activity android:name=".view.light.LightConfiguration" />
         <activity android:name=".view.boards.scenes.SceneConfig" />
         <activity android:name=".view.playlist.AddNewPlaylist" />
         <activity android:name=".view.playlist.PlaylistContentView" />

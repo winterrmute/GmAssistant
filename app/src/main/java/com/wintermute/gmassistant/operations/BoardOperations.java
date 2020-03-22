@@ -151,4 +151,15 @@ public class BoardOperations
         values.put(attr, "true");
         dao.update(values, boardId);
     }
+
+    public void addLightToBoard(Long boardId, Long lightId){
+        ContentValues values = new ContentValues();
+        values.put("lightEffect", lightId);
+        dao.update(values, boardId);
+    }
+
+    public Long getLight(Long boardId)
+    {
+        return dao.getLightForBoard(boardId);
+    }
 }

@@ -54,12 +54,12 @@ public class BoardDao
 
     public List<Map<String, Object>> getRootBoards(String category)
     {
-        StringBuilder query = new StringBuilder("SELECT * FROM ")
+        String query = new StringBuilder("SELECT * FROM ")
             .append(BoardDbModel.TABLE_NAME.value())
             .append("  WHERE type = '")
             .append(category)
-            .append("' AND isRoot = 'true'");
-        return getData(dbRead.rawQuery(query.toString(), null));
+            .append("' AND isRoot = 'true'").toString();
+        return getData(dbRead.rawQuery(query, null));
     }
 
     /**
@@ -91,29 +91,29 @@ public class BoardDao
      */
     public Map<String, Object> get(Long boardId)
     {
-        StringBuilder query = new StringBuilder("SELECT * FROM ")
+        String query = new StringBuilder("SELECT * FROM ")
             .append(BoardDbModel.TABLE_NAME.value())
             .append("  WHERE id = '")
             .append(boardId)
-            .append("'");
-        return getData(dbRead.rawQuery(query.toString(), null)).get(0);
+            .append("'").toString();
+        return getData(dbRead.rawQuery(query, null)).get(0);
     }
 
     public Long getParentId(Board board)
     {
-        StringBuilder query = new StringBuilder("SELECT parentId FROM ")
+        String query = new StringBuilder("SELECT parentId FROM ")
             .append(BoardDbModel.NESTED_BOARDS_TABLE_NAME.value())
             .append("  WHERE ")
             .append(BoardDbModel.NESTED_BOARD_ID.value())
             .append(" = ")
-            .append(board.getId());
-        Map<String, Long> data = getParentBoardData(dbRead.rawQuery(query.toString(), null));
+            .append(board.getId()).toString();
+        Map<String, Long> data = getParentBoardData(dbRead.rawQuery(query, null));
         return data.get("id");
     }
 
     public List<Long> getBoards(String category, Long parentId)
     {
-        StringBuilder query = new StringBuilder("SELECT id FROM ")
+        String query = new StringBuilder("SELECT id FROM ")
             .append(BoardDbModel.TABLE_NAME.value())
             .append(" INNER JOIN ")
             .append(BoardDbModel.NESTED_BOARDS_TABLE_NAME.value())
@@ -128,8 +128,8 @@ public class BoardDao
             .append(BoardDbModel.TABLE_NAME.value())
             .append(".type = '")
             .append(category)
-            .append("'");
-        return getIds(dbRead.rawQuery(query.toString(), null));
+            .append("'").toString();
+        return getIds(dbRead.rawQuery(query, null));
     }
 
     private List<Long> getIds(Cursor query)
@@ -170,6 +170,26 @@ public class BoardDao
         while (query.moveToNext())
         {
             result.put("id", query.getLong(query.getColumnIndex("parentId")));
+        }
+        return result;
+    }
+
+    public Long getLightForBoard(Long boardId)
+    {
+        String query = new StringBuilder("SELECT lightEffect FROM ")
+            .append(BoardDbModel.TABLE_NAME.value())
+            .append(" WHERE id = ")
+            .append(boardId).toString();
+        Map<String, Long> data = getLight(dbRead.rawQuery(query, null));
+        return data.get("light");
+    }
+
+    private Map<String, Long> getLight(Cursor query)
+    {
+        Map<String, Long> result = new HashMap<>();
+        while (query.moveToNext())
+        {
+            result.put("light", query.getLong(query.getColumnIndex("lightEffect")));
         }
         return result;
     }

@@ -35,7 +35,7 @@ public class DbManager extends SQLiteOpenHelper
             + "REFERENCES tracks (id))";
 
     private static final String LIGHTS =
-        "CREATE TABLE lights ( id INTEGER PRIMARY KEY AUTOINCREMENT, color REAL, brightness REAL, sceneId INTEGER, "
+        "CREATE TABLE lights ( id INTEGER PRIMARY KEY AUTOINCREMENT, color REAL, brightness REAL, sceneId INTEGER, resetLight INTEGER, "
             + "FOREIGN KEY (sceneId) REFERENCES scenes (id) ON DELETE CASCADE)";
 
     private static final String HUE_BRIDGES =
@@ -54,10 +54,12 @@ public class DbManager extends SQLiteOpenHelper
             + "DELETE CASCADE, FOREIGN KEY (boardId) REFERENCES boards (id) ON DELETE CASCADE )";
 
     private static final String BOARDS =
-        "CREATE TABLE boards (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, type TEXT, isParent TEXT, isRoot TEXT)";
+        "CREATE TABLE boards (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, type TEXT, isParent TEXT, isRoot TEXT,"
+            + " lightEffect INTEGER, FOREIGN KEY (lightEffect) REFERENCES lights (id))";
 
     private static final String NESTED_BOARDS =
-        "CREATE TABLE nested_boards (boardId INTEGER, parentId INTEGER, FOREIGN KEY (boardId) REFERENCES boards (id) ON DELETE CASCADE, "
+        "CREATE TABLE nested_boards (boardId INTEGER, parentId INTEGER, FOREIGN KEY (boardId) REFERENCES boards (id) "
+            + "ON DELETE CASCADE, "
             + "FOREIGN KEY (parentId) REFERENCES boards (id) ON DELETE CASCADE)";
 
     private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS user_playlist";

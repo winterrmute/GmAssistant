@@ -5,7 +5,7 @@
         android:id="@+id/btn"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.light.SceneLightConfiguration">
+        tools:context=".view.light.LightConfiguration">
 
     <com.flask.colorpicker.ColorPickerView
             android:id="@+id/color_picker_view"
@@ -59,6 +59,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/color_picker_view" />
+
+    <Switch
+            android:id="@+id/reset_after_effect_finished"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/change_permanent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/light_in_real_time" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

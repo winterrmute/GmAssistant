@@ -33,19 +33,19 @@ public class LightConnection
         bulbs = operations.getConnectedBulbs(bridge);
     }
 
-    private String getLightsUrl()
+    private String getLightManagementUrl()
     {
         return "http://" + bridge.getIp() + "/api/" + bridge.getUsername() + "/lights";
     }
 
-    public List<String> getLightManagementUrls()
+    public List<String> getBulbs()
     {
         List<String> result = new ArrayList<>();
         if (bulbs != null)
         {
             for (HueBulb bulb : bulbs)
             {
-                result.add(getLightsUrl() + "/" + bulb.getId().toString() + "/state");
+                result.add(getLightManagementUrl() + "/" + bulb.getId().toString() + "/state");
             }
         }
         return result;

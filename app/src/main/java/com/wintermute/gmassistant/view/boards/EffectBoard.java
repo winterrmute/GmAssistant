@@ -1,7 +1,9 @@
 package com.wintermute.gmassistant.view.boards;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -12,11 +14,16 @@ import com.wintermute.gmassistant.adapters.EffectsAdapter;
 import com.wintermute.gmassistant.database.dao.EffectsDao;
 import com.wintermute.gmassistant.database.model.Tags;
 import com.wintermute.gmassistant.operations.BoardOperations;
+import com.wintermute.gmassistant.operations.LightOperations;
 import com.wintermute.gmassistant.operations.PlayerOperations;
 import com.wintermute.gmassistant.operations.TrackOperations;
+import com.wintermute.gmassistant.services.LightConnection;
 import com.wintermute.gmassistant.view.StorageBrowser;
+import com.wintermute.gmassistant.view.light.LightConfiguration;
+import com.wintermute.gmassistant.view.model.Light;
 import com.wintermute.gmassistant.view.model.Track;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,20 +35,22 @@ public class EffectBoard extends AppCompatActivity
 {
 
     private static final int COLLECT_TRACKS = 1;
+    private static final int LIGHT_CONFIGURATION = 2;
     private List<Track> effects;
     private GridView effectsGrid;
     private SeekBar volume;
     private PlayerOperations player;
     private ImageButton stopPlayer;
+    private Button lightEffects;
     private Long currentBoard;
+    private Light light;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_effect_board);
-        currentBoard = getIntent().getLongExtra("boardId", -1L);
-        initComponents();
+        init();
         displayBoard();
         if (getIntent().getBooleanExtra("newEffectBoard", false))
         {
@@ -49,12 +58,23 @@ public class EffectBoard extends AppCompatActivity
         }
     }
 
-    private void initComponents()
+    private void init()
     {
+        currentBoard = getIntent().getLongExtra("boardId", -1L);
         effects = new ArrayList<>();
         volume = findViewById(R.id.volume);
         effectsGrid = findViewById(R.id.effect_grid);
         stopPlayer = findViewById(R.id.stop_player);
+        lightEffects = findViewById(R.id.light_for_effect);
+        initLight();
+    }
+
+    private void initLight()
+    {
+        BoardOperations board = new BoardOperations(getApplicationContext());
+        Long lightId = board.getLight(currentBoard);
+        LightOperations lightOperations = new LightOperations(getApplicationContext());
+        light = lightOperations.getLight(lightId);
     }
 
     private void displayBoard()
@@ -65,6 +85,14 @@ public class EffectBoard extends AppCompatActivity
         initEffectsGrid();
         showEffects(effectIds);
         stopPlayer.setOnClickListener(v -> player.stopPlayer(Tags.EFFECT.value()));
+        lightEffects.setOnClickListener(v -> startLightConfiguration());
+    }
+
+    private void startLightConfiguration()
+    {
+        Intent lightConfig = new Intent(getApplicationContext(), LightConfiguration.class);
+        lightConfig.putExtra("effectBoard", true);
+        startActivityForResult(lightConfig, LIGHT_CONFIGURATION);
     }
 
     private void initEffectsGrid()
@@ -76,6 +104,10 @@ public class EffectBoard extends AppCompatActivity
             track.setVolume((long) volume.getProgress());
             try
             {
+                if (light != null)
+                {
+                    changeLight();
+                }
                 player.startByTag(getApplicationContext(), track);
             } catch (Exception e)
             {
@@ -86,6 +118,18 @@ public class EffectBoard extends AppCompatActivity
                     .show();
             }
         });
+    }
+
+    private void changeLight()
+    {
+        LightOperations operations = new LightOperations(getApplicationContext());
+        List<String> bulbUrls = LightConnection.getInstance().getBulbs();
+        for (String url : bulbUrls)
+        {
+            operations.changeColor(url,
+                operations.getRGBtoXY(Color.valueOf(new BigDecimal(light.getColor()).intValue())));
+            operations.changeBrightness(url, light.getBrightness());
+        }
     }
 
     private void showEffects(List<Long> effectIds)
@@ -136,23 +180,42 @@ public class EffectBoard extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK)
         {
+            if (requestCode == COLLECT_TRACKS)
             {
-                Toast
-                    .makeText(getApplicationContext(),
-                        "If you selected a large directory, please wait a moment. It could take a while...",
-                        Toast.LENGTH_LONG)
-                    .show();
-                TrackOperations track = new TrackOperations(getApplicationContext());
-                List<Track> effects = data
-                    .getStringArrayListExtra("effects")
-                    .stream()
-                    .map(track::createTrack)
-                    .collect(Collectors.toList());
-                BoardOperations operations = new BoardOperations(getApplicationContext());
-                operations.referenceEffectsToBoard(currentBoard, effects);
+                {
+                    addTracksToBoard(data);
+                }
+                refreshActivity();
+            } else if (requestCode == LIGHT_CONFIGURATION)
+            {
+                addLightToBoard(data);
             }
-            refreshActivity();
         }
+    }
+
+    private void addLightToBoard(Intent data)
+    {
+        light = data.getParcelableExtra("light");
+        LightOperations operations = new LightOperations(getApplicationContext());
+        if (light != null)
+        {
+            Long lightId = operations.createLight(light);
+            BoardOperations boards = new BoardOperations(getApplicationContext());
+            boards.addLightToBoard(currentBoard, lightId);
+        }
+    }
+
+    private void addTracksToBoard(Intent data)
+    {
+        Toast
+            .makeText(getApplicationContext(),
+                "If you selected a large directory, please wait a moment. It could take a while...", Toast.LENGTH_LONG)
+            .show();
+        TrackOperations track = new TrackOperations(getApplicationContext());
+        List<Track> effects =
+            data.getStringArrayListExtra("effects").stream().map(track::createTrack).collect(Collectors.toList());
+        BoardOperations operations = new BoardOperations(getApplicationContext());
+        operations.referenceEffectsToBoard(currentBoard, effects);
     }
 
     private void refreshActivity()

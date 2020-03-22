@@ -17,7 +17,7 @@ import com.wintermute.gmassistant.view.StorageBrowser;
 import com.wintermute.gmassistant.view.library.LibraryContent;
 import com.wintermute.gmassistant.database.model.SceneDbModel;
 import com.wintermute.gmassistant.database.model.Tags;
-import com.wintermute.gmassistant.view.light.SceneLightConfiguration;
+import com.wintermute.gmassistant.view.light.LightConfiguration;
 import com.wintermute.gmassistant.view.model.Light;
 import com.wintermute.gmassistant.view.model.Track;
 import com.wintermute.gmassistant.operations.PlayerOperations;
@@ -292,7 +292,7 @@ public class SceneConfig extends AppCompatActivity
      */
     private void setLights()
     {
-        Intent lightConfigurator = new Intent(SceneConfig.this, SceneLightConfiguration.class);
+        Intent lightConfigurator = new Intent(SceneConfig.this, LightConfiguration.class);
         startActivityForResult(lightConfigurator, LIGHT_FOR_SCENE);
     }
 

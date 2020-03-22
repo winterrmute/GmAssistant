@@ -14,12 +14,14 @@ public class Light implements Parcelable
     private Long id;
     private Long color;
     private Long brightness;
+    private Long resetLight;
 
-    protected Light(Parcel in)
+    private Light(Parcel in)
     {
         if (in.readByte() == 0) { id = null; } else { id = in.readLong(); }
         if (in.readByte() == 0) { color = null; } else { color = in.readLong(); }
         if (in.readByte() == 0) { brightness = null; } else { brightness = in.readLong(); }
+        if (in.readByte() == 0) { resetLight = null; } else { resetLight = in.readLong(); }
     }
 
     public static final Creator<Light> CREATOR = new Creator<Light>()
@@ -60,6 +62,11 @@ public class Light implements Parcelable
         {
             dest.writeByte((byte) 1);
             dest.writeLong(brightness);
+        }
+        if (resetLight == null) { dest.writeByte((byte) 0); } else
+        {
+            dest.writeByte((byte) 1);
+            dest.writeLong(resetLight);
         }
     }
 }

@@ -3,6 +3,7 @@ package com.wintermute.gmassistant.view.light;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Switch;
@@ -16,13 +17,14 @@ import com.wintermute.gmassistant.view.model.Light;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class SceneLightConfiguration extends AppCompatActivity
+public class LightConfiguration extends AppCompatActivity
 {
 
     private int brightness;
     private LightOperations light;
     private List<String> lightManagementUrls;
     private Switch lightInRealtime;
+    private Switch resetLightsAfterEffect;
     private int sceneLightColor;
 
     @Override
@@ -31,27 +33,29 @@ public class SceneLightConfiguration extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_light_config);
 
+        init();
+    }
+
+    private void init()
+    {
         light = new LightOperations(getApplicationContext());
         //TODO: nullpointer if connected bulbs not present
-        lightManagementUrls = LightConnection.getInstance().getLightManagementUrls();
+        lightManagementUrls = LightConnection.getInstance().getBulbs();
         lightInRealtime = findViewById(R.id.light_in_real_time);
+        resetLightsAfterEffect = findViewById(R.id.reset_after_effect_finished);
 
-        Button btn = findViewById(R.id.light_submit);
-        btn.setOnClickListener(v ->
-        {
-            Intent result = new Intent();
-            try
-            {
-                result.putExtra("light", new Light(null, (long) sceneLightColor, (long) brightness));
-                setResult(RESULT_OK, result);
-            } catch (Exception e)
-            {
-                e.printStackTrace();
-                setResult(RESULT_CANCELED);
-            }
-            finish();
-        });
+        boolean configForEffect = getIntent().getBooleanExtra("effectBoard", false);
+        if (!configForEffect){
+            resetLightsAfterEffect.setVisibility(View.GONE);
+        }
 
+        initColorPicker();
+        initBrightnessBar();
+        initSubmitButton();
+    }
+
+    private void initColorPicker()
+    {
         ColorPickerView colorPickerView = findViewById(R.id.color_picker_view);
         colorPickerView.addOnColorChangedListener(color ->
         {
@@ -62,7 +66,10 @@ public class SceneLightConfiguration extends AppCompatActivity
                 lightManagementUrls.forEach(url -> light.changeColor(url, picked));
             }
         });
+    }
 
+    private void initBrightnessBar()
+    {
         SeekBar seekbar = findViewById(R.id.brightness_bar);
         brightness = seekbar.getMax();
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
@@ -78,16 +85,31 @@ public class SceneLightConfiguration extends AppCompatActivity
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar)
-            {
-
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) {}
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar)
-            {
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+    }
 
+    private void initSubmitButton()
+    {
+        Button btn = findViewById(R.id.light_submit);
+        btn.setOnClickListener(v ->
+        {
+            Intent result = new Intent();
+            try
+            {
+                Long resetLights = resetLightsAfterEffect.isSelected() ? 1L : 0L;
+                Light light = new Light(null, (long) sceneLightColor, (long) brightness, resetLights);
+                result.putExtra("light", light);
+                setResult(RESULT_OK, result);
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+                setResult(RESULT_CANCELED);
             }
+            finish();
         });
     }
 }
