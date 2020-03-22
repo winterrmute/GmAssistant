@@ -12,15 +12,13 @@ import org.json.JSONObject;
 public class ApiCaller
 {
 
-    public static ApiCaller instance;
+    private ApiCaller() {}
 
-    public static ApiCaller getInstance()
-    {
-        if (instance == null)
-        {
-            return new ApiCaller();
-        }
-        return instance;
+    /**
+     * @return an ApiCaller instance exactly when it´s required.
+     */
+    public static ApiCaller getInstance() {
+        return LayInit.instance;
     }
 
     public void makeCustomCall(Context ctx, int method, String url, String body, CallbackListener listener)
@@ -40,7 +38,15 @@ public class ApiCaller
         requestQueue.add(req);
     }
 
-    public void callPut(Context ctx, String url, String body){
+    /**
+     * Makes PUT call.
+     *
+     * @param ctx application context
+     * @param url target
+     * @param body content to send
+     */
+    public void callPut(Context ctx, String url, String body)
+    {
         RequestQueue requestQueue = Volley.newRequestQueue(ctx);
         JSONObject reqBody = null;
         try
@@ -50,9 +56,9 @@ public class ApiCaller
         {
             e.printStackTrace();
         }
-        JsonObjectRequest req = new JsonObjectRequest(Request.Method.PUT, url, reqBody, response -> {}, error -> {
-            System.out.println(error.toString());
-        });
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.PUT, url, reqBody, response ->
+        {
+        }, error -> System.out.println(error.toString()));
         requestQueue.add(req);
     }
 
@@ -71,5 +77,10 @@ public class ApiCaller
         JsonObjectRequest req = new JsonObjectRequest(method, url, reqBody, listener::onResponse,
             error -> listener.onError(String.valueOf(error)));
         requestQueue.add(req);
+    }
+
+    private static class LayInit
+    {
+        private static final ApiCaller instance = new ApiCaller();
     }
 }
